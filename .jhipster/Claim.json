@@ -1,0 +1,189 @@
+{
+  "name": "Claim",
+  "fields": [
+    {
+      "fieldName": "guid",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "isQueued",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "parsed",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "identifier",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "use",
+      "fieldType": "Use",
+      "fieldValues": "Claim (claim),PreAuthorization (preauthorization),Predetermination (predetermination)",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "type",
+      "fieldType": "ClaimTypeEnum",
+      "fieldValues": "Institutional (institutional),Oral (oral),Pharmacy (pharmacy),Professional (professional),Vision (vision)",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "subType",
+      "fieldType": "ClaimSubTypeEnum",
+      "fieldValues": "Ip (InPatient),Op (OutPatient),Emr (Emergency)"
+    },
+    {
+      "fieldName": "eligibilityOffline",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "eligibilityOfflineDate",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "authorizationOfflineDate",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "billableStart",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "billableEnd",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "priority",
+      "fieldType": "PriorityEnum",
+      "fieldValues": "Stat (Immediate),Normal (Normal),Deferred (Deferred)",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "fundsReserve",
+      "fieldType": "FundsReserveEnum",
+      "fieldValues": "Patient (Patient),Provider (Provider),None (None)"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "claimErrorMessages",
+      "otherEntityRelationshipName": "claim",
+      "relationshipName": "errors"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "related",
+      "otherEntityRelationshipName": "claim",
+      "relationshipName": "relateds"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "careTeam",
+      "otherEntityRelationshipName": "claim",
+      "relationshipName": "careTeam"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "supportingInfo",
+      "otherEntityRelationshipName": "claim",
+      "relationshipName": "supportingInfos"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "diagnosis",
+      "otherEntityRelationshipName": "claim",
+      "relationshipName": "diagnoses"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "insurance",
+      "otherEntityRelationshipName": "claim",
+      "relationshipName": "insurances"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "item",
+      "otherEntityRelationshipName": "claim",
+      "relationshipName": "items"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "encounter",
+      "otherEntityRelationshipName": "claim",
+      "relationshipName": "encounter"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "coverageEligibilityResponse",
+      "otherEntityRelationshipName": "claim",
+      "relationshipName": "eligibilityResponse"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "patient",
+      "otherEntityRelationshipName": "claim",
+      "relationshipName": "patient"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "organization",
+      "otherEntityRelationshipName": "claim",
+      "relationshipName": "provider"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "organization",
+      "otherEntityRelationshipName": "claim",
+      "relationshipName": "insurer"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "referenceIdentifier",
+      "otherEntityRelationshipName": "claim",
+      "relationshipName": "prescription"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "referenceIdentifier",
+      "otherEntityRelationshipName": "claim",
+      "relationshipName": "originalPrescription"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "payee",
+      "otherEntityRelationshipName": "claim",
+      "relationshipName": "payee"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "referenceIdentifier",
+      "otherEntityRelationshipName": "claim",
+      "relationshipName": "referral"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "location",
+      "otherEntityRelationshipName": "claim",
+      "relationshipName": "facility"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "accident",
+      "otherEntityRelationshipName": "claim",
+      "relationshipName": "accident"
+    }
+  ],
+  "entityTableName": "claim",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["hcpNphiesPortal"],
+  "changelogDate": "20210630072537"
+}

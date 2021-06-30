@@ -1,0 +1,90 @@
+{
+  "name": "Coverage",
+  "fields": [
+    {
+      "fieldName": "guid",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "forceId",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "coverageType",
+      "fieldType": "CoverageTypeEnum",
+      "fieldValues": "EHCPOL (Extended healthcare),PUBLICPOL (Public healthcare)",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "subscriberId",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "dependent",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "relationShip",
+      "fieldType": "RelationShipEnum",
+      "fieldValues": "Child (Child),Parent (Parent),Spouse (Spouse),Common (Common Law Spouse),Other (Other),Self (Self),Injured (Injured)",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "network",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "subrogation",
+      "fieldType": "Boolean"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "classComponent",
+      "otherEntityRelationshipName": "coverage",
+      "relationshipName": "classComponents"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "costToBeneficiaryComponent",
+      "otherEntityRelationshipName": "coverage",
+      "relationshipName": "costToBeneficiaryComponents"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "patient",
+      "otherEntityRelationshipName": "coverage",
+      "relationshipName": "subscriberPatient"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "patient",
+      "otherEntityRelationshipName": "coverage",
+      "relationshipName": "beneficiary"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "organization",
+      "otherEntityRelationshipName": "coverage",
+      "relationshipName": "payor"
+    },
+    {
+      "relationshipType": "many-to-many",
+      "otherEntityName": "coverageEligibilityRequest",
+      "otherEntityRelationshipName": "coverages",
+      "relationshipName": "coverageEligibilityRequests",
+      "ownerSide": false
+    }
+  ],
+  "entityTableName": "coverage",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["hcpNphiesPortal"],
+  "changelogDate": "20210630072559"
+}

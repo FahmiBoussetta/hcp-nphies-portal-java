@@ -1,0 +1,45 @@
+{
+  "name": "Payload",
+  "fields": [
+    {
+      "fieldName": "contentString",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "attachment",
+      "otherEntityRelationshipName": "payload",
+      "relationshipName": "contentAttachment"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "referenceIdentifier",
+      "otherEntityRelationshipName": "payload",
+      "relationshipName": "contentReference"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "communication",
+      "otherEntityRelationshipName": "payload",
+      "relationshipName": "communication"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "communicationRequest",
+      "otherEntityRelationshipName": "payload",
+      "relationshipName": "communicationRequest"
+    }
+  ],
+  "entityTableName": "payload",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["hcpNphiesPortal"],
+  "changelogDate": "20210630072555"
+}
