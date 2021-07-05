@@ -1,13 +1,19 @@
 package com.platformsandsolutions.hcpnphiesportal.web.rest;
 
+import com.platformsandsolutions.hcpnphiesportal.domain.ClassComponent;
+import com.platformsandsolutions.hcpnphiesportal.domain.CostToBeneficiaryComponent;
 import com.platformsandsolutions.hcpnphiesportal.domain.Coverage;
 import com.platformsandsolutions.hcpnphiesportal.repository.CoverageRepository;
 import com.platformsandsolutions.hcpnphiesportal.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
@@ -35,9 +41,17 @@ public class CoverageResource {
     private String applicationName;
 
     private final CoverageRepository coverageRepository;
+    private final ClassComponentResource classComponentResource;
+    private final CostToBeneficiaryComponentResource costToBeneficiaryComponentResource;
 
-    public CoverageResource(CoverageRepository coverageRepository) {
+    public CoverageResource(
+        CoverageRepository coverageRepository,
+        ClassComponentResource classComponentResource,
+        CostToBeneficiaryComponentResource costToBeneficiaryComponentResource
+    ) {
         this.coverageRepository = coverageRepository;
+        this.classComponentResource = classComponentResource;
+        this.costToBeneficiaryComponentResource = costToBeneficiaryComponentResource;
     }
 
     /**
@@ -53,7 +67,21 @@ public class CoverageResource {
         if (coverage.getId() != null) {
             throw new BadRequestAlertException("A new coverage cannot already have an ID", ENTITY_NAME, "idexists");
         }
+
+        coverage.setGuid(UUID.randomUUID().toString());
+
         Coverage result = coverageRepository.save(coverage);
+
+        for (ClassComponent subEntity : coverage.getClassComponents()) {
+            log.debug("create classComponent : {}", subEntity.getId());
+            classComponentResource.createClassComponent(subEntity);
+        }
+
+        for (CostToBeneficiaryComponent subEntity : coverage.getCostToBeneficiaryComponents()) {
+            log.debug("create costToBeneficiaryComponent : {}", subEntity.getId());
+            costToBeneficiaryComponentResource.createCostToBeneficiaryComponent(subEntity);
+        }
+
         return ResponseEntity
             .created(new URI("/api/coverages/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
@@ -87,7 +115,62 @@ public class CoverageResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
+        if (coverage.getGuid() == null || coverage.getGuid() == "") {
+            coverage.setGuid(UUID.randomUUID().toString());
+        }
+
         Coverage result = coverageRepository.save(coverage);
+
+        Collection<Long> newList = coverage
+            .getClassComponents()
+            .stream()
+            .map(ClassComponent::getId)
+            .collect(Collectors.toCollection(ArrayList::new));
+
+        List<ClassComponent> oldList = classComponentResource.getAllClassComponents();
+        for (ClassComponent subEntity : oldList) {
+            if (
+                subEntity.getCoverage() != null &&
+                subEntity.getCoverage().getId().equals(coverage.getId()) &&
+                !newList.contains(subEntity.getId())
+            ) {
+                log.debug("delete classComponent : {}", subEntity.getId());
+                classComponentResource.deleteClassComponent(subEntity.getId());
+            }
+        }
+
+        for (ClassComponent subEntity : coverage.getClassComponents()) {
+            if (!oldList.contains(subEntity)) {
+                log.debug("add classComponent : {}", subEntity.getId());
+                classComponentResource.createClassComponent(subEntity);
+            }
+        }
+
+        Collection<Long> newListCost = coverage
+            .getCostToBeneficiaryComponents()
+            .stream()
+            .map(CostToBeneficiaryComponent::getId)
+            .collect(Collectors.toCollection(ArrayList::new));
+
+        List<CostToBeneficiaryComponent> oldListCost = costToBeneficiaryComponentResource.getAllCostToBeneficiaryComponents();
+        for (CostToBeneficiaryComponent subEntity : oldListCost) {
+            if (
+                subEntity.getCoverage() != null &&
+                subEntity.getCoverage().getId().equals(coverage.getId()) &&
+                !newListCost.contains(subEntity.getId())
+            ) {
+                log.debug("delete CostToBeneficiaryComponent : {}", subEntity.getId());
+                costToBeneficiaryComponentResource.deleteCostToBeneficiaryComponent(subEntity.getId());
+            }
+        }
+
+        for (CostToBeneficiaryComponent subEntity : coverage.getCostToBeneficiaryComponents()) {
+            if (!oldListCost.contains(subEntity)) {
+                log.debug("add CostToBeneficiaryComponent : {}", subEntity.getId());
+                costToBeneficiaryComponentResource.createCostToBeneficiaryComponent(subEntity);
+            }
+        }
+
         return ResponseEntity
             .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, coverage.getId().toString()))

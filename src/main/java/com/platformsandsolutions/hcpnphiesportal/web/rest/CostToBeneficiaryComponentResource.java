@@ -1,13 +1,17 @@
 package com.platformsandsolutions.hcpnphiesportal.web.rest;
 
 import com.platformsandsolutions.hcpnphiesportal.domain.CostToBeneficiaryComponent;
+import com.platformsandsolutions.hcpnphiesportal.domain.ExemptionComponent;
 import com.platformsandsolutions.hcpnphiesportal.repository.CostToBeneficiaryComponentRepository;
 import com.platformsandsolutions.hcpnphiesportal.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
@@ -35,9 +39,14 @@ public class CostToBeneficiaryComponentResource {
     private String applicationName;
 
     private final CostToBeneficiaryComponentRepository costToBeneficiaryComponentRepository;
+    private final ExemptionComponentResource exemptionComponentResource;
 
-    public CostToBeneficiaryComponentResource(CostToBeneficiaryComponentRepository costToBeneficiaryComponentRepository) {
+    public CostToBeneficiaryComponentResource(
+        CostToBeneficiaryComponentRepository costToBeneficiaryComponentRepository,
+        ExemptionComponentResource exemptionComponentResource
+    ) {
         this.costToBeneficiaryComponentRepository = costToBeneficiaryComponentRepository;
+        this.exemptionComponentResource = exemptionComponentResource;
     }
 
     /**
@@ -56,6 +65,12 @@ public class CostToBeneficiaryComponentResource {
             throw new BadRequestAlertException("A new costToBeneficiaryComponent cannot already have an ID", ENTITY_NAME, "idexists");
         }
         CostToBeneficiaryComponent result = costToBeneficiaryComponentRepository.save(costToBeneficiaryComponent);
+
+        // for (ExemptionComponent subEntity : costToBeneficiaryComponent.getExceptions()) {
+        //     log.debug("create exemptionComponent : {}", subEntity.getId());
+        //     exemptionComponentResource.createExemptionComponent(subEntity);
+        // }
+
         return ResponseEntity
             .created(new URI("/api/cost-to-beneficiary-components/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
@@ -90,6 +105,32 @@ public class CostToBeneficiaryComponentResource {
         }
 
         CostToBeneficiaryComponent result = costToBeneficiaryComponentRepository.save(costToBeneficiaryComponent);
+
+        Collection<Long> newList = costToBeneficiaryComponent
+            .getExceptions()
+            .stream()
+            .map(ExemptionComponent::getId)
+            .collect(Collectors.toCollection(ArrayList::new));
+
+        List<ExemptionComponent> oldList = exemptionComponentResource.getAllExemptionComponents();
+        for (ExemptionComponent subEntity : oldList) {
+            if (
+                subEntity.getCostToBeneficiary() != null &&
+                subEntity.getCostToBeneficiary().getId().equals(costToBeneficiaryComponent.getId()) &&
+                !newList.contains(subEntity.getId())
+            ) {
+                log.debug("delete exemptionComponent : {}", subEntity.getId());
+                exemptionComponentResource.deleteExemptionComponent(subEntity.getId());
+            }
+        }
+
+        for (ExemptionComponent subEntity : costToBeneficiaryComponent.getExceptions()) {
+            if (!oldList.contains(subEntity)) {
+                log.debug("add exemptionComponent : {}", subEntity.getId());
+                exemptionComponentResource.createExemptionComponent(subEntity);
+            }
+        }
+
         return ResponseEntity
             .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, costToBeneficiaryComponent.getId().toString()))

@@ -4,9 +4,9 @@ package com.platformsandsolutions.hcpnphiesportal.domain.enumeration;
  * The FundsReserveEnum enumeration.
  */
 public enum FundsReserveEnum {
-    Patient,
-    Provider,
-    None;
+    Patient("Patient"),
+    Provider("Provider"),
+    None("None");
 
     private final String value;
 

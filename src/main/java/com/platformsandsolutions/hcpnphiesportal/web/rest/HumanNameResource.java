@@ -1,13 +1,18 @@
 package com.platformsandsolutions.hcpnphiesportal.web.rest;
 
+import com.platformsandsolutions.hcpnphiesportal.domain.Givens;
 import com.platformsandsolutions.hcpnphiesportal.domain.HumanName;
+import com.platformsandsolutions.hcpnphiesportal.repository.GivensRepository;
 import com.platformsandsolutions.hcpnphiesportal.repository.HumanNameRepository;
 import com.platformsandsolutions.hcpnphiesportal.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
@@ -35,9 +40,11 @@ public class HumanNameResource {
     private String applicationName;
 
     private final HumanNameRepository humanNameRepository;
+    private final GivensRepository givensRepository;
 
-    public HumanNameResource(HumanNameRepository humanNameRepository) {
+    public HumanNameResource(HumanNameRepository humanNameRepository, GivensRepository givensRepository) {
         this.humanNameRepository = humanNameRepository;
+        this.givensRepository = givensRepository;
     }
 
     /**
@@ -54,6 +61,12 @@ public class HumanNameResource {
             throw new BadRequestAlertException("A new humanName cannot already have an ID", ENTITY_NAME, "idexists");
         }
         HumanName result = humanNameRepository.save(humanName);
+
+        for (Givens given : humanName.getGivens()) {
+            log.debug("create given : {}", given.getId());
+            givensRepository.save(given);
+        }
+
         return ResponseEntity
             .created(new URI("/api/human-names/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
@@ -87,7 +100,26 @@ public class HumanNameResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
+        Collection<Long> newList = humanName.getGivens().stream().map(Givens::getId).collect(Collectors.toCollection(ArrayList::new));
+
+        List<Givens> old = givensRepository.findAll();
+
         HumanName result = humanNameRepository.save(humanName);
+        List<Givens> oldList = old;
+        for (Givens given : oldList) {
+            if (given.getHuman() != null && given.getHuman().getId().equals(humanName.getId()) && !newList.contains(given.getId())) {
+                log.debug("delete given : {}", given.getId());
+                givensRepository.deleteById(given.getId());
+            }
+        }
+
+        for (Givens given : humanName.getGivens()) {
+            if (!oldList.contains(given)) {
+                log.debug("add given : {}", given.getId());
+                givensRepository.save(given);
+            }
+        }
+
         return ResponseEntity
             .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, humanName.getId().toString()))

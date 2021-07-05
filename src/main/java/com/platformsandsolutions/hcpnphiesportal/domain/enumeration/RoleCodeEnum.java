@@ -4,12 +4,12 @@ package com.platformsandsolutions.hcpnphiesportal.domain.enumeration;
  * The RoleCodeEnum enumeration.
  */
 public enum RoleCodeEnum {
-    Doctor,
-    Nurse,
-    Pharmacist,
-    Researcher,
+    Doctor("Doctor"),
+    Nurse("Nurse"),
+    Pharmacist("Pharmacist"),
+    Researcher("Researcher"),
     Teacher("Teacher or educator"),
-    Dentist,
+    Dentist("Dentist"),
     Physio("Physiotherapist"),
     Speech("Speechtherapist"),
     Ict("ICT professional");

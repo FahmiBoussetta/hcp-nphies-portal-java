@@ -1,16 +1,18 @@
 package com.platformsandsolutions.hcpnphiesportal.domain.enumeration;
 
+import platform.fhir_client.utils.*;
+
 /**
  * The RelationShipEnum enumeration.
  */
 public enum RelationShipEnum {
-    Child,
-    Parent,
-    Spouse,
+    Child("Child"),
+    Parent("Parent"),
+    Spouse("Spouse"),
     Common("Common Law Spouse"),
-    Other,
-    Self,
-    Injured;
+    Other("Other"),
+    Self("Self"),
+    Injured("Injured");
 
     private final String value;
 
@@ -20,5 +22,14 @@ public enum RelationShipEnum {
 
     public String getValue() {
         return value;
+    }
+
+    public Enums.RelationShipEnum convert() {
+        for (Enums.RelationShipEnum e : Enums.RelationShipEnum.values()) {
+            if (e.getDescription() == this.getValue()) {
+                return e;
+            }
+        }
+        return null;
     }
 }

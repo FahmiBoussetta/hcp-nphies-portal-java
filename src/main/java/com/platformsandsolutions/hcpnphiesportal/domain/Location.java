@@ -3,9 +3,22 @@ package com.platformsandsolutions.hcpnphiesportal.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.LocationTypeEnum;
 import java.io.Serializable;
-import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.UUID;
+import java.util.stream.Collectors;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import platform.fhir_client.models.CoreResourceModel;
+import platform.fhir_client.models.LocationModel;
 
 /**
  * A Location.
@@ -101,7 +114,8 @@ public class Location implements Serializable {
         this.managingOrganization = organization;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and
+    // setters here
 
     @Override
     public boolean equals(Object o) {
@@ -116,18 +130,30 @@ public class Location implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        // see
+        // https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
     }
 
     // prettier-ignore
     @Override
     public String toString() {
-        return "Location{" +
-            "id=" + getId() +
-            ", guid='" + getGuid() + "'" +
-            ", identifier='" + getIdentifier() + "'" +
-            ", type='" + getType() + "'" +
-            "}";
+        return "Location{" + "id=" + getId() + ", guid='" + getGuid() + "'" + ", identifier='" + getIdentifier() + "'"
+                + ", type='" + getType() + "'" + "}";
+    }
+
+    public LocationModel convert(ArrayList<CoreResourceModel> coreResources) {
+        if (coreResources.stream().anyMatch(x -> x.getId() == UUID.fromString(this.getGuid()))) {
+            return (LocationModel) coreResources.stream().filter(x -> x.getId() == UUID.fromString(this.getGuid())).findFirst().get();
+        }
+        LocationModel loc = new LocationModel();
+        loc.setId(UUID.fromString(this.getGuid()));
+        loc.setIdentifier(this.getIdentifier());
+        if (this.getManagingOrganization() != null) {
+            loc.setManagingOrganization(this.getManagingOrganization().convert(coreResources));
+        }
+        loc.setType(this.getType().convert());
+        coreResources.add(loc);
+        return loc;
     }
 }

@@ -4,10 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.ExemptionTypeEnum;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.Date;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import platform.fhir_client.models.ClassComponentModel;
+import platform.fhir_client.models.ExemptionComponentModel;
 
 /**
  * A ExemptionComponent.
@@ -132,5 +135,13 @@ public class ExemptionComponent implements Serializable {
             ", start='" + getStart() + "'" +
             ", end='" + getEnd() + "'" +
             "}";
+    }
+
+    public ExemptionComponentModel convert() {
+        ExemptionComponentModel model = new ExemptionComponentModel();
+        model.setEnd(Date.from(this.getEnd()));
+        model.setType(this.getType().convert());
+        model.setStart(Date.from(this.getStart()));
+        return model;
     }
 }

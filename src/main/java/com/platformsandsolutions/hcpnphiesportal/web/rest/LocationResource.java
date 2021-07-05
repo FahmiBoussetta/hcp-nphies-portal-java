@@ -8,6 +8,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -51,6 +52,7 @@ public class LocationResource {
         if (location.getId() != null) {
             throw new BadRequestAlertException("A new location cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        location.setGuid(UUID.randomUUID().toString());
         Location result = locationRepository.save(location);
         return ResponseEntity
             .created(new URI("/api/locations/" + result.getId()))
@@ -83,6 +85,10 @@ public class LocationResource {
 
         if (!locationRepository.existsById(id)) {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+
+        if (location.getGuid() == null || location.getGuid() == "") {
+            location.setGuid(UUID.randomUUID().toString());
         }
 
         Location result = locationRepository.save(location);

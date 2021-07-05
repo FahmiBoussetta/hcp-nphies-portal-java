@@ -5,6 +5,7 @@ import java.io.Serializable;
 import javax.persistence.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import platform.fhir_client.models.ContactModel;
 
 /**
  * A Contact.
@@ -161,5 +162,14 @@ public class Contact implements Serializable {
             ", mobile='" + getMobile() + "'" +
             ", url='" + getUrl() + "'" +
             "}";
+    }
+
+    public ContactModel convert() {
+        ContactModel contact = new ContactModel();
+        contact.setPhone(this.getPhone());
+        contact.setMobile(this.getMobile());
+        contact.setEmail(this.getEmail());
+        contact.setUrl(this.getUrl());
+        return contact;
     }
 }

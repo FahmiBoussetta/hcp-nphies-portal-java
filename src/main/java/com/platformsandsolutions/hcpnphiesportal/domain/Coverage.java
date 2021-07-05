@@ -4,12 +4,17 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.CoverageTypeEnum;
 import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.RelationShipEnum;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import platform.fhir_client.models.CoreResourceModel;
+import platform.fhir_client.models.CoverageModel;
 
 /**
  * A Coverage.
@@ -53,12 +58,12 @@ public class Coverage implements Serializable {
     @Column(name = "subrogation")
     private Boolean subrogation;
 
-    @OneToMany(mappedBy = "coverage")
+    @OneToMany(mappedBy = "coverage", fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "coverage" }, allowSetters = true)
     private Set<ClassComponent> classComponents = new HashSet<>();
 
-    @OneToMany(mappedBy = "coverage")
+    @OneToMany(mappedBy = "coverage", fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "exceptions", "coverage" }, allowSetters = true)
     private Set<CostToBeneficiaryComponent> costToBeneficiaryComponents = new HashSet<>();
@@ -330,7 +335,8 @@ public class Coverage implements Serializable {
         this.coverageEligibilityRequests = coverageEligibilityRequests;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and
+    // setters here
 
     @Override
     public boolean equals(Object o) {
@@ -345,23 +351,44 @@ public class Coverage implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        // see
+        // https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
     }
 
     // prettier-ignore
     @Override
     public String toString() {
-        return "Coverage{" +
-            "id=" + getId() +
-            ", guid='" + getGuid() + "'" +
-            ", forceId='" + getForceId() + "'" +
-            ", coverageType='" + getCoverageType() + "'" +
-            ", subscriberId='" + getSubscriberId() + "'" +
-            ", dependent='" + getDependent() + "'" +
-            ", relationShip='" + getRelationShip() + "'" +
-            ", network='" + getNetwork() + "'" +
-            ", subrogation='" + getSubrogation() + "'" +
-            "}";
+        return "Coverage{" + "id=" + getId() + ", guid='" + getGuid() + "'" + ", forceId='" + getForceId() + "'"
+                + ", coverageType='" + getCoverageType() + "'" + ", subscriberId='" + getSubscriberId() + "'"
+                + ", dependent='" + getDependent() + "'" + ", relationShip='" + getRelationShip() + "'" + ", network='"
+                + getNetwork() + "'" + ", subrogation='" + getSubrogation() + "'" + "}";
+    }
+
+    public CoverageModel convert(ArrayList<CoreResourceModel> coreResources) {
+        if (coreResources.stream().anyMatch(x -> x.getId() == UUID.fromString(this.getGuid()))) {
+            return (CoverageModel) coreResources.stream().filter(x -> x.getId() == UUID.fromString(this.getGuid())).findFirst().get();
+        }
+        CoverageModel cov = new CoverageModel();
+        cov.setId(UUID.fromString(this.getGuid()));
+        cov.setIdentifier("cov-" + this.getId());
+        cov.setCoverageType(this.getCoverageType().convert());
+        cov.setSubscriberId(this.getSubscriberId());
+        cov.setDependent(this.getDependent());
+        cov.setRelationship(this.getRelationShip().convert());
+        cov.setNetwork(this.getNetwork());
+        cov.setSubrogation(this.getSubrogation());
+        cov.setBeneficiary(this.getBeneficiary().convert(coreResources));
+        cov.setClassComponents(this.getClassComponents().stream().map(i -> i.convert()).collect(Collectors.toCollection(ArrayList::new)));
+        cov.setCostToBeneficiaryComponents(
+            this.getCostToBeneficiaryComponents().stream().map(i -> i.convert()).collect(Collectors.toCollection(ArrayList::new))
+        );
+        cov.setPayor(this.getPayor().convert(coreResources));
+        if (this.getSubscriberPatient() != null) {
+            cov.setSubscriber(this.getSubscriberPatient().convert(coreResources));
+        }
+
+        coreResources.add(cov);
+        return cov;
     }
 }

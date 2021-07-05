@@ -3,11 +3,17 @@ package com.platformsandsolutions.hcpnphiesportal.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.OrganizationTypeEnum;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
 import javax.persistence.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import platform.fhir_client.models.CoreResourceModel;
+import platform.fhir_client.models.CoverageModel;
+import platform.fhir_client.models.OrganizationModel;
 
 /**
  * A Organization.
@@ -186,7 +192,8 @@ public class Organization implements Serializable {
         this.address = address;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and
+    // setters here
 
     @Override
     public boolean equals(Object o) {
@@ -201,21 +208,37 @@ public class Organization implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        // see
+        // https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
     }
 
     // prettier-ignore
     @Override
     public String toString() {
-        return "Organization{" +
-            "id=" + getId() +
-            ", guid='" + getGuid() + "'" +
-            ", forceId='" + getForceId() + "'" +
-            ", organizationLicense='" + getOrganizationLicense() + "'" +
-            ", baseUrl='" + getBaseUrl() + "'" +
-            ", organizationType='" + getOrganizationType() + "'" +
-            ", name='" + getName() + "'" +
-            "}";
+        return "Organization{" + "id=" + getId() + ", guid='" + getGuid() + "'" + ", forceId='" + getForceId() + "'"
+                + ", organizationLicense='" + getOrganizationLicense() + "'" + ", baseUrl='" + getBaseUrl() + "'"
+                + ", organizationType='" + getOrganizationType() + "'" + ", name='" + getName() + "'" + "}";
+    }
+
+    public OrganizationModel convert(ArrayList<CoreResourceModel> coreResources) {
+        if (coreResources.stream().anyMatch(x -> x.getId() == UUID.fromString(this.getGuid()))) {
+            return (OrganizationModel) coreResources.stream().filter(x -> x.getId() == UUID.fromString(this.getGuid())).findFirst().get();
+        }
+        OrganizationModel org = new OrganizationModel();
+        org.setId(UUID.fromString(this.getGuid()));
+        org.setBaseUrl(this.getBaseUrl());
+        if (this.getAddress() != null) {
+            org.setAddress(this.getAddress().convert());
+        }
+        if (this.getAddress() != null) {
+            org.setContacts(this.getContacts().stream().map(i -> i.convert()).collect(Collectors.toCollection(ArrayList::new)));
+        }
+        org.setForceId(this.getForceId());
+        org.setName(this.getName());
+        org.setOrganizationLicense(this.getOrganizationLicense());
+        org.setOrganizationType(this.getOrganizationType().convert());
+        coreResources.add(org);
+        return org;
     }
 }

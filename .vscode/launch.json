@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-HcpNphiesPortalApp<hcp-nphies-portal>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "mainClass": "com.platformsandsolutions.hcpnphiesportal.HcpNphiesPortalApp",
+            "projectName": "hcp-nphies-portal",
+            "args": ""
+        }
+    ]
+}

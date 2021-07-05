@@ -4,7 +4,7 @@ package com.platformsandsolutions.hcpnphiesportal.domain.enumeration;
  * The DischargeDispositionEnum enumeration.
  */
 public enum DischargeDispositionEnum {
-    Home,
+    Home("Home"),
     DASHalt_home("Alternative home"),
     DASHother_hcf("Other healthcare facility"),
     Hosp("Hospice"),

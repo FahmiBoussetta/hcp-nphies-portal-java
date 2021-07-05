@@ -6,9 +6,9 @@ package com.platformsandsolutions.hcpnphiesportal.domain.enumeration;
 public enum SupportingInfoCodeVisitEnum {
     New_visit("New Visit"),
     Follow_up("Follow Up"),
-    Refill,
+    Refill("Refill"),
     Walk_in("Walk in"),
-    Referral;
+    Referral("Referral");
 
     private final String value;
 

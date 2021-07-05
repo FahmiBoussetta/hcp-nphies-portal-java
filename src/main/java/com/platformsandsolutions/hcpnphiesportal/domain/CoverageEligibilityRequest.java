@@ -4,12 +4,16 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.PriorityEnum;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import platform.fhir_client.models.*;
 
 /**
  * A CoverageEligibilityRequest.
@@ -51,7 +55,7 @@ public class CoverageEligibilityRequest implements Serializable {
     @JsonIgnoreProperties(value = { "coverageEligibilityRequest" }, allowSetters = true)
     private Set<CovEliErrorMessages> errors = new HashSet<>();
 
-    @OneToMany(mappedBy = "coverageEligibilityRequest")
+    @OneToMany(mappedBy = "coverageEligibilityRequest", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "coverageEligibilityRequest" }, allowSetters = true)
     private Set<ListEligibilityPurposeEnum> purposes = new HashSet<>();
@@ -318,7 +322,23 @@ public class CoverageEligibilityRequest implements Serializable {
         this.coverages = coverages;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+    public CoverageEligibilityRequestModel convert(ArrayList<CoreResourceModel> coreResources) {
+        CoverageEligibilityRequestModel model = new CoverageEligibilityRequestModel();
+        model.setCoverages(
+            this.getCoverages().stream().map(i -> i.convert(coreResources)).collect(Collectors.toCollection(ArrayList::new))
+        );
+        if (this.getFacility() != null) {
+            model.setFacility(this.getFacility().convert(coreResources));
+        }
+        model.setPatient(this.getPatient().convert(coreResources));
+        model.setInsurer(this.getInsurer().convert(coreResources));
+        model.setIdentifier(this.getIdentifier());
+        model.setPurposes(this.getPurposes().stream().map(i -> i.convert()).collect(Collectors.toCollection(ArrayList::new)));
+        model.setServicedDate(Date.from(this.getServicedDate()));
+        model.setServicedDateEnd(Date.from(this.getServicedDate()));
+        model.setPriority(this.getPriority().convert());
+        return model;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -333,21 +353,17 @@ public class CoverageEligibilityRequest implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        // see
+        // https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
     }
 
     // prettier-ignore
-    @Override
-    public String toString() {
-        return "CoverageEligibilityRequest{" +
-            "id=" + getId() +
-            ", guid='" + getGuid() + "'" +
-            ", parsed='" + getParsed() + "'" +
-            ", priority='" + getPriority() + "'" +
-            ", identifier='" + getIdentifier() + "'" +
-            ", servicedDate='" + getServicedDate() + "'" +
-            ", servicedDateEnd='" + getServicedDateEnd() + "'" +
-            "}";
-    }
+	@Override
+	public String toString() {
+		return "CoverageEligibilityRequest{" + "id=" + getId() + ", guid='" + getGuid() + "'" + ", parsed='"
+				+ getParsed() + "'" + ", priority='" + getPriority() + "'" + ", identifier='" + getIdentifier() + "'"
+				+ ", servicedDate='" + getServicedDate() + "'" + ", servicedDateEnd='" + getServicedDateEnd() + "'"
+				+ "}";
+	}
 }

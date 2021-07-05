@@ -1,5 +1,7 @@
 package com.platformsandsolutions.hcpnphiesportal.domain.enumeration;
 
+import platform.fhir_client.utils.*;
+
 /**
  * The CoverageTypeEnum enumeration.
  */
@@ -15,5 +17,9 @@ public enum CoverageTypeEnum {
 
     public String getValue() {
         return value;
+    }
+
+    public Enums.CoverageTypeEnum convert() {
+        return Enums.CoverageTypeEnum.valueOf(this.name());
     }
 }

@@ -42,6 +42,16 @@ export const createEntity = createAsyncThunk(
   { serializeError: serializeAxiosError }
 );
 
+export const sendEntity = createAsyncThunk(
+  'coverageEligibilityRequest/send_entity',
+  async (entity: ICoverageEligibilityRequest, thunkAPI) => {
+    const result = await axios.post<ICoverageEligibilityRequest>(`${apiUrl}/send/${entity.id}`, cleanEntity(entity));
+    thunkAPI.dispatch(getEntities({}));
+    return result;
+  },
+  { serializeError: serializeAxiosError }
+);
+
 export const updateEntity = createAsyncThunk(
   'coverageEligibilityRequest/update_entity',
   async (entity: ICoverageEligibilityRequest, thunkAPI) => {

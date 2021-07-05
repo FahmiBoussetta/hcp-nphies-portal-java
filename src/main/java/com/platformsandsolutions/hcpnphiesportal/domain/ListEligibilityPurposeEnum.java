@@ -6,6 +6,7 @@ import java.io.Serializable;
 import javax.persistence.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import platform.fhir_client.utils.*;
 
 /**
  * A ListEligibilityPurposeEnum.
@@ -69,7 +70,8 @@ public class ListEligibilityPurposeEnum implements Serializable {
         this.coverageEligibilityRequest = coverageEligibilityRequest;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and
+    // setters here
 
     @Override
     public boolean equals(Object o) {
@@ -84,16 +86,23 @@ public class ListEligibilityPurposeEnum implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        // see
+        // https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
     }
 
     // prettier-ignore
-    @Override
-    public String toString() {
-        return "ListEligibilityPurposeEnum{" +
-            "id=" + getId() +
-            ", erp='" + getErp() + "'" +
-            "}";
+	@Override
+	public String toString() {
+		return "ListEligibilityPurposeEnum{" + "id=" + getId() + ", erp='" + getErp() + "'" + "}";
+	}
+
+    public Enums.EligibilityPurposeEnum convert() {
+        for (Enums.EligibilityPurposeEnum e : Enums.EligibilityPurposeEnum.values()) {
+            if (e.getDescription() == this.erp.getValue()) {
+                return e;
+            }
+        }
+        return null;
     }
 }

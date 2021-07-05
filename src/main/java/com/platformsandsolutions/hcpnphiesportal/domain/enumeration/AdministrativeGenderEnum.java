@@ -1,12 +1,14 @@
 package com.platformsandsolutions.hcpnphiesportal.domain.enumeration;
 
+import platform.fhir_client.utils.*;
+
 /**
  * The AdministrativeGenderEnum enumeration.
  */
 public enum AdministrativeGenderEnum {
-    Male,
-    Female,
-    Unknown,
+    Male("Male"),
+    Female("Female"),
+    Unknown("Unknown"),
     U("Undetermined"),
     N("Undifferentiated"),
     A("Sex changed to Male"),
@@ -21,5 +23,14 @@ public enum AdministrativeGenderEnum {
 
     public String getValue() {
         return value;
+    }
+
+    public Enums.AdministrativeGenderEnum convert() {
+        for (Enums.AdministrativeGenderEnum e : Enums.AdministrativeGenderEnum.values()) {
+            if (e.getDescription() == this.getValue()) {
+                return e;
+            }
+        }
+        return null;
     }
 }

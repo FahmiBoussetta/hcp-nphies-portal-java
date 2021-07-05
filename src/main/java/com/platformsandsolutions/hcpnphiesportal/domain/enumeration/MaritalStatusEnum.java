@@ -1,5 +1,7 @@
 package com.platformsandsolutions.hcpnphiesportal.domain.enumeration;
 
+import platform.fhir_client.utils.*;
+
 /**
  * The MaritalStatusEnum enumeration.
  */
@@ -19,5 +21,9 @@ public enum MaritalStatusEnum {
 
     public String getValue() {
         return value;
+    }
+
+    public Enums.MaritalStatusEnum convert() {
+        return Enums.MaritalStatusEnum.valueOf(this.name());
     }
 }

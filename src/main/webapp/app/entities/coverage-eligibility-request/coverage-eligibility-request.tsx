@@ -4,10 +4,11 @@ import { Button, Col, Row, Table } from 'reactstrap';
 import { Translate, TextFormat } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { getEntities } from './coverage-eligibility-request.reducer';
+import { getEntities, sendEntity } from './coverage-eligibility-request.reducer';
 import { ICoverageEligibilityRequest } from 'app/shared/model/coverage-eligibility-request.model';
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
+import { getCovTerm, getLocTerm, getOrgTerm, getPatTerm } from 'app/shared/util/autocomplete-utils';
 
 export const CoverageEligibilityRequest = (props: RouteComponentProps<{ url: string }>) => {
   const dispatch = useAppDispatch();
@@ -21,6 +22,10 @@ export const CoverageEligibilityRequest = (props: RouteComponentProps<{ url: str
 
   const handleSyncList = () => {
     dispatch(getEntities({}));
+  };
+
+  const send = entity => {
+    dispatch(sendEntity(entity));
   };
 
   const { match } = props;
@@ -58,6 +63,9 @@ export const CoverageEligibilityRequest = (props: RouteComponentProps<{ url: str
                   <Translate contentKey="hcpNphiesPortalApp.coverageEligibilityRequest.parsed">Parsed</Translate>
                 </th>
                 <th>
+                  <Translate contentKey="hcpNphiesPortalApp.coverageEligibilityRequest.purposes">Purposes</Translate>
+                </th>
+                <th>
                   <Translate contentKey="hcpNphiesPortalApp.coverageEligibilityRequest.priority">Priority</Translate>
                 </th>
                 <th>
@@ -71,9 +79,6 @@ export const CoverageEligibilityRequest = (props: RouteComponentProps<{ url: str
                 </th>
                 <th>
                   <Translate contentKey="hcpNphiesPortalApp.coverageEligibilityRequest.patient">Patient</Translate>
-                </th>
-                <th>
-                  <Translate contentKey="hcpNphiesPortalApp.coverageEligibilityRequest.provider">Provider</Translate>
                 </th>
                 <th>
                   <Translate contentKey="hcpNphiesPortalApp.coverageEligibilityRequest.insurer">Insurer</Translate>
@@ -98,6 +103,16 @@ export const CoverageEligibilityRequest = (props: RouteComponentProps<{ url: str
                   <td>{coverageEligibilityRequest.guid}</td>
                   <td>{coverageEligibilityRequest.parsed}</td>
                   <td>
+                    {coverageEligibilityRequest.purposes
+                      ? coverageEligibilityRequest.purposes.map((val, j) => (
+                          <span key={j}>
+                            {val.erp}
+                            {j === coverageEligibilityRequest.purposes.length - 1 ? '' : ', '}
+                          </span>
+                        ))
+                      : null}
+                  </td>
+                  <td>
                     <Translate contentKey={`hcpNphiesPortalApp.PriorityEnum.${coverageEligibilityRequest.priority}`} />
                   </td>
                   <td>{coverageEligibilityRequest.identifier}</td>
@@ -113,28 +128,25 @@ export const CoverageEligibilityRequest = (props: RouteComponentProps<{ url: str
                   </td>
                   <td>
                     {coverageEligibilityRequest.patient ? (
-                      <Link to={`patient/${coverageEligibilityRequest.patient.id}`}>{coverageEligibilityRequest.patient.id}</Link>
-                    ) : (
-                      ''
-                    )}
-                  </td>
-                  <td>
-                    {coverageEligibilityRequest.provider ? (
-                      <Link to={`organization/${coverageEligibilityRequest.provider.id}`}>{coverageEligibilityRequest.provider.id}</Link>
+                      <Link to={`patient/${coverageEligibilityRequest.patient.id}`}>{getPatTerm(coverageEligibilityRequest.patient)}</Link>
                     ) : (
                       ''
                     )}
                   </td>
                   <td>
                     {coverageEligibilityRequest.insurer ? (
-                      <Link to={`organization/${coverageEligibilityRequest.insurer.id}`}>{coverageEligibilityRequest.insurer.id}</Link>
+                      <Link to={`organization/${coverageEligibilityRequest.insurer.id}`}>
+                        {getOrgTerm(coverageEligibilityRequest.insurer)}
+                      </Link>
                     ) : (
                       ''
                     )}
                   </td>
                   <td>
                     {coverageEligibilityRequest.facility ? (
-                      <Link to={`location/${coverageEligibilityRequest.facility.id}`}>{coverageEligibilityRequest.facility.id}</Link>
+                      <Link to={`location/${coverageEligibilityRequest.facility.id}`}>
+                        {getLocTerm(coverageEligibilityRequest.facility)}
+                      </Link>
                     ) : (
                       ''
                     )}
@@ -143,7 +155,7 @@ export const CoverageEligibilityRequest = (props: RouteComponentProps<{ url: str
                     {coverageEligibilityRequest.coverages
                       ? coverageEligibilityRequest.coverages.map((val, j) => (
                           <span key={j}>
-                            <Link to={`coverage/${val.id}`}>{val.id}</Link>
+                            <Link to={`coverage/${val.id}`}>{getCovTerm(val)}</Link>
                             {j === coverageEligibilityRequest.coverages.length - 1 ? '' : ', '}
                           </span>
                         ))
@@ -161,6 +173,12 @@ export const CoverageEligibilityRequest = (props: RouteComponentProps<{ url: str
                         <FontAwesomeIcon icon="eye" />{' '}
                         <span className="d-none d-md-inline">
                           <Translate contentKey="entity.action.view">View</Translate>
+                        </span>
+                      </Button>
+                      <Button onClick={() => send(coverageEligibilityRequest)} color="warning" size="sm" data-cy="entitySendButton">
+                        <FontAwesomeIcon icon="paper-plane" />{' '}
+                        <span className="d-none d-md-inline">
+                          <Translate contentKey="entity.action.send">Send</Translate>
                         </span>
                       </Button>
                       <Button

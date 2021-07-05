@@ -4,9 +4,9 @@ package com.platformsandsolutions.hcpnphiesportal.domain.enumeration;
  * The PayeeTypeEnum enumeration.
  */
 public enum PayeeTypeEnum {
-    Subscriber,
-    Provider,
-    Other;
+    Subscriber("Subscriber"),
+    Provider("Provider"),
+    Other("Other");
 
     private final String value;
 

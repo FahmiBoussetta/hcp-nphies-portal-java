@@ -5,6 +5,7 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import platform.fhir_client.models.AddressModel;
 
 /**
  * A Address.
@@ -164,5 +165,16 @@ public class Address implements Serializable {
             ", postalCode='" + getPostalCode() + "'" +
             ", country='" + getCountry() + "'" +
             "}";
+    }
+
+    public AddressModel convert() {
+        AddressModel address = new AddressModel();
+        address.setAddressLine(this.getAddressLine());
+        address.setCity(this.getCity());
+        address.setDistrict(this.getDistrict());
+        address.setState(this.getState());
+        address.setPostalCode(this.getPostalCode());
+        address.setCountry(this.getCountry());
+        return address;
     }
 }

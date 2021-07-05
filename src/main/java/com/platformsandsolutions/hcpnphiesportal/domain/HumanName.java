@@ -2,12 +2,15 @@ package com.platformsandsolutions.hcpnphiesportal.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import platform.fhir_client.models.HumanNameModel;
 
 /**
  * A HumanName.
@@ -27,7 +30,7 @@ public class HumanName implements Serializable {
     @Column(name = "family", nullable = false)
     private String family;
 
-    @OneToMany(mappedBy = "human")
+    @OneToMany(mappedBy = "human", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "human" }, allowSetters = true)
     private Set<Givens> givens = new HashSet<>();
@@ -150,5 +153,14 @@ public class HumanName implements Serializable {
             "id=" + getId() +
             ", family='" + getFamily() + "'" +
             "}";
+    }
+
+    public HumanNameModel convert() {
+        HumanNameModel name = new HumanNameModel();
+        name.setFamily(this.getFamily());
+        name.setGiven(this.getGivens().stream().map(i -> i.getGiven()).collect(Collectors.toCollection(ArrayList::new)));
+        name.setPrefix(this.getGivens().stream().map(i -> i.getPrefix()).collect(Collectors.toCollection(ArrayList::new)));
+        name.setSuffix(this.getGivens().stream().map(i -> i.getSuffix()).collect(Collectors.toCollection(ArrayList::new)));
+        return name;
     }
 }

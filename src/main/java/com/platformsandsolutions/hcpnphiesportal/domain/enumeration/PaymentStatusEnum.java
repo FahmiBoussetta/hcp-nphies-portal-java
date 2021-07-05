@@ -4,8 +4,8 @@ package com.platformsandsolutions.hcpnphiesportal.domain.enumeration;
  * The PaymentStatusEnum enumeration.
  */
 public enum PaymentStatusEnum {
-    Paid,
-    Cleared;
+    Paid("Paid"),
+    Cleared("Cleared");
 
     private final String value;
 

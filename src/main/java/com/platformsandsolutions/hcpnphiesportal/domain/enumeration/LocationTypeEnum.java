@@ -1,11 +1,13 @@
 package com.platformsandsolutions.hcpnphiesportal.domain.enumeration;
 
+import platform.fhir_client.utils.Enums;
+
 /**
  * The LocationTypeEnum enumeration.
  */
 public enum LocationTypeEnum {
-    DedicatedServiceDeliveryLocationRoleType,
-    DedicatedClinicalLocationRoleType,
+    DedicatedServiceDeliveryLocationRoleType("DedicatedServiceDeliveryLocationRoleType"),
+    DedicatedClinicalLocationRoleType("DedicatedClinicalLocationRoleType"),
     DX("Diagnostics or therapeutics unit"),
     CVDX("Cardiovascular diagnostics or therapeutics unit"),
     CATH("Cardiac catheterization lab"),
@@ -118,12 +120,12 @@ public enum LocationTypeEnum {
     RTF("Residential treatment facility"),
     PRC("Pain rehabilitation center"),
     SURF("Substance use rehabilitation facility"),
-    DedicatedNonClinicalLocationRoleType,
+    DedicatedNonClinicalLocationRoleType("DedicatedNonClinicalLocationRoleType"),
     DADDR("Delivery Address"),
     MOBL("Mobile Unit"),
     AMB("Ambulance"),
     PHARM("Pharmacy"),
-    IncidentalServiceDeliveryLocationRoleType,
+    IncidentalServiceDeliveryLocationRoleType("IncidentalServiceDeliveryLocationRoleType"),
     ACC("accident site"),
     COMM("Community Location"),
     CSC("community service center"),
@@ -140,5 +142,14 @@ public enum LocationTypeEnum {
 
     public String getValue() {
         return value;
+    }
+
+    public Enums.LocationTypeEnum convert() {
+        for (Enums.LocationTypeEnum e : Enums.LocationTypeEnum.values()) {
+            if (e.getDescription() == this.getValue()) {
+                return e;
+            }
+        }
+        return null;
     }
 }

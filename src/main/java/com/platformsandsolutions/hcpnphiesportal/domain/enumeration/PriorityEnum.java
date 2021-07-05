@@ -1,12 +1,14 @@
 package com.platformsandsolutions.hcpnphiesportal.domain.enumeration;
 
+import platform.fhir_client.utils.*;
+
 /**
  * The PriorityEnum enumeration.
  */
 public enum PriorityEnum {
     Stat("Immediate"),
-    Normal,
-    Deferred;
+    Normal("Normal"),
+    Deferred("Deferred");
 
     private final String value;
 
@@ -16,5 +18,14 @@ public enum PriorityEnum {
 
     public String getValue() {
         return value;
+    }
+
+    public Enums.PriorityEnum convert() {
+        for (Enums.PriorityEnum e : Enums.PriorityEnum.values()) {
+            if (e.getDescription() == this.getValue()) {
+                return e;
+            }
+        }
+        return null;
     }
 }

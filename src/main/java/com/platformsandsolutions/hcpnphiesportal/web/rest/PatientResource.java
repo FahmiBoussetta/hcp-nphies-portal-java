@@ -1,13 +1,18 @@
 package com.platformsandsolutions.hcpnphiesportal.web.rest;
 
+import com.platformsandsolutions.hcpnphiesportal.domain.HumanName;
 import com.platformsandsolutions.hcpnphiesportal.domain.Patient;
 import com.platformsandsolutions.hcpnphiesportal.repository.PatientRepository;
 import com.platformsandsolutions.hcpnphiesportal.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,9 +38,11 @@ public class PatientResource {
     private String applicationName;
 
     private final PatientRepository patientRepository;
+    private final HumanNameResource humanNameResource;
 
-    public PatientResource(PatientRepository patientRepository) {
+    public PatientResource(PatientRepository patientRepository, HumanNameResource humanNameResource) {
         this.patientRepository = patientRepository;
+        this.humanNameResource = humanNameResource;
     }
 
     /**
@@ -51,7 +58,14 @@ public class PatientResource {
         if (patient.getId() != null) {
             throw new BadRequestAlertException("A new patient cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        patient.setGuid(UUID.randomUUID().toString());
         Patient result = patientRepository.save(patient);
+
+        for (HumanName subEntity : patient.getNames()) {
+            log.debug("create name : {}", subEntity.getId());
+            humanNameResource.createHumanName(subEntity);
+        }
+
         return ResponseEntity
             .created(new URI("/api/patients/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
@@ -83,7 +97,33 @@ public class PatientResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
+        if (patient.getGuid() == null || patient.getGuid() == "") {
+            patient.setGuid(UUID.randomUUID().toString());
+        }
+
         Patient result = patientRepository.save(patient);
+
+        Collection<Long> newList = patient.getNames().stream().map(HumanName::getId).collect(Collectors.toCollection(ArrayList::new));
+
+        List<HumanName> oldList = humanNameResource.getAllHumanNames();
+        for (HumanName subEntity : oldList) {
+            if (
+                subEntity.getPatient() != null &&
+                subEntity.getPatient().getId().equals(patient.getId()) &&
+                !newList.contains(subEntity.getId())
+            ) {
+                log.debug("delete name : {}", subEntity.getId());
+                humanNameResource.deleteHumanName(subEntity.getId());
+            }
+        }
+
+        for (HumanName subEntity : patient.getNames()) {
+            if (!oldList.contains(subEntity)) {
+                log.debug("add name : {}", subEntity.getId());
+                humanNameResource.createHumanName(subEntity);
+            }
+        }
+
         return ResponseEntity
             .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, patient.getId().toString()))

@@ -8,6 +8,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -51,6 +52,7 @@ public class OrganizationResource {
         if (organization.getId() != null) {
             throw new BadRequestAlertException("A new organization cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        organization.setGuid(UUID.randomUUID().toString());
         Organization result = organizationRepository.save(organization);
         return ResponseEntity
             .created(new URI("/api/organizations/" + result.getId()))
@@ -83,6 +85,10 @@ public class OrganizationResource {
 
         if (!organizationRepository.existsById(id)) {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+
+        if (organization.getGuid() == null || organization.getGuid() == "") {
+            organization.setGuid(UUID.randomUUID().toString());
         }
 
         Organization result = organizationRepository.save(organization);

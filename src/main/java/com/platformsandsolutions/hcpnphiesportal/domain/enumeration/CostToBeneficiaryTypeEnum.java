@@ -1,5 +1,7 @@
 package com.platformsandsolutions.hcpnphiesportal.domain.enumeration;
 
+import platform.fhir_client.utils.Enums;
+
 /**
  * The CostToBeneficiaryTypeEnum enumeration.
  */
@@ -19,5 +21,14 @@ public enum CostToBeneficiaryTypeEnum {
 
     public String getValue() {
         return value;
+    }
+
+    public Enums.CostToBeneficiaryTypeEnum convert() {
+        for (Enums.CostToBeneficiaryTypeEnum e : Enums.CostToBeneficiaryTypeEnum.values()) {
+            if (e.getDescription() == this.getValue()) {
+                return e;
+            }
+        }
+        return null;
     }
 }

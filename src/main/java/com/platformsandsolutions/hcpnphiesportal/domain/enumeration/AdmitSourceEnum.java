@@ -17,7 +17,7 @@ public enum AdmitSourceEnum {
     EWIS("Elective waiting list admission insurance coverage Scheme"),
     EMBA("Emergency Maternity Birth Admission"),
     PMBA("Planned Maternity Birth Admission"),
-    Others;
+    Others("Others");
 
     private final String value;
 

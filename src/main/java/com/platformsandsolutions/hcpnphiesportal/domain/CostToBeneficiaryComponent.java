@@ -4,12 +4,15 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.CostToBeneficiaryTypeEnum;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import platform.fhir_client.models.CostToBeneficiaryComponentModel;
 
 /**
  * A CostToBeneficiaryComponent.
@@ -36,7 +39,7 @@ public class CostToBeneficiaryComponent implements Serializable {
     @Column(name = "value", precision = 21, scale = 2, nullable = false)
     private BigDecimal value;
 
-    @OneToMany(mappedBy = "costToBeneficiary")
+    @OneToMany(mappedBy = "costToBeneficiary", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "costToBeneficiary" }, allowSetters = true)
     private Set<ExemptionComponent> exceptions = new HashSet<>();
@@ -175,5 +178,14 @@ public class CostToBeneficiaryComponent implements Serializable {
             ", isMoney='" + getIsMoney() + "'" +
             ", value=" + getValue() +
             "}";
+    }
+
+    public CostToBeneficiaryComponentModel convert() {
+        CostToBeneficiaryComponentModel model = new CostToBeneficiaryComponentModel();
+        model.setExceptions(this.getExceptions().stream().map(i -> i.convert()).collect(Collectors.toCollection(ArrayList::new)));
+        model.setIsMoney(this.getIsMoney());
+        model.setType(this.getType().convert());
+        model.setValue(this.getValue());
+        return model;
     }
 }

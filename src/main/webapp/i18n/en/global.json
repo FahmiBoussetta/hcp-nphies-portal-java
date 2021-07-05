@@ -162,12 +162,25 @@
     "action": {
       "addblob": "Add blob",
       "addimage": "Add image",
+      "addgiven": "Add given",
+      "addname": "Add name",
+      "addclass": "Add class",
+      "addcost": "Add cost",
+      "addcoverage": "Add coverage",
+      "addexemption": "Add exception",
       "back": "Back",
       "cancel": "Cancel",
       "delete": "Delete",
+      "deletegiven": "Delete given",
+      "deletename": "Delete name",
+      "deleteclass": "Delete class",
+      "deletecost": "Delete cost",
+      "deleteexemption": "Delete exception",
+      "deletecoverage": "Delete coverage",
       "edit": "Edit",
       "open": "Open",
       "save": "Save",
+      "send": "Send",
       "view": "View"
     },
     "detail": {
@@ -177,7 +190,9 @@
     "delete": {
       "title": "Confirm delete operation"
     },
+    "fieldarray": "Use the following form to fill this array.",
     "validation": {
+      "arrayrequired": "This array must have at least one element.",
       "required": "This field is required.",
       "minlength": "This field is required to be at least {{ min }} characters.",
       "maxlength": "This field cannot be longer than {{ max }} characters.",

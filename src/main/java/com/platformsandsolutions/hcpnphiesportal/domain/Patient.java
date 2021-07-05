@@ -6,11 +6,30 @@ import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.MaritalStatu
 import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.ReligionEnum;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.*;
+import java.util.UUID;
+import java.util.stream.Collectors;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import platform.fhir_client.models.CoreResourceModel;
+import platform.fhir_client.models.CoverageModel;
+import platform.fhir_client.models.PatientModel;
 
 /**
  * A Patient.
@@ -62,16 +81,18 @@ public class Patient implements Serializable {
     @Column(name = "marital_status")
     private MaritalStatusEnum maritalStatus;
 
-    @OneToMany(mappedBy = "patient")
+    @OneToMany(mappedBy = "patient", fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "givens", "patient", "practitioner" }, allowSetters = true)
     private Set<HumanName> names = new HashSet<>();
 
-    @ManyToOne
     @JsonIgnoreProperties(value = { "name", "organization" }, allowSetters = true)
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(unique = true)
     private Contact contacts;
 
-    @ManyToOne
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(unique = true)
     private Address address;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -288,7 +309,8 @@ public class Patient implements Serializable {
         this.address = address;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and
+    // setters here
 
     @Override
     public boolean equals(Object o) {
@@ -303,26 +325,44 @@ public class Patient implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        // see
+        // https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
     }
 
     // prettier-ignore
     @Override
     public String toString() {
-        return "Patient{" +
-            "id=" + getId() +
-            ", guid='" + getGuid() + "'" +
-            ", forceId='" + getForceId() + "'" +
-            ", residentNumber='" + getResidentNumber() + "'" +
-            ", passportNumber='" + getPassportNumber() + "'" +
-            ", nationalHealthId='" + getNationalHealthId() + "'" +
-            ", iqama='" + getIqama() + "'" +
-            ", religion='" + getReligion() + "'" +
-            ", gender='" + getGender() + "'" +
-            ", birthDate='" + getBirthDate() + "'" +
-            ", deceasedDate='" + getDeceasedDate() + "'" +
-            ", maritalStatus='" + getMaritalStatus() + "'" +
-            "}";
+        return "Patient{" + "id=" + getId() + ", guid='" + getGuid() + "'" + ", forceId='" + getForceId() + "'"
+                + ", residentNumber='" + getResidentNumber() + "'" + ", passportNumber='" + getPassportNumber() + "'"
+                + ", nationalHealthId='" + getNationalHealthId() + "'" + ", iqama='" + getIqama() + "'" + ", religion='"
+                + getReligion() + "'" + ", gender='" + getGender() + "'" + ", birthDate='" + getBirthDate() + "'"
+                + ", deceasedDate='" + getDeceasedDate() + "'" + ", maritalStatus='" + getMaritalStatus() + "'" + "}";
+    }
+
+    public PatientModel convert(ArrayList<CoreResourceModel> coreResources) {
+        if (coreResources.stream().anyMatch(x -> x.getId() == UUID.fromString(this.getGuid()))) {
+            return (PatientModel) coreResources.stream().filter(x -> x.getId() == UUID.fromString(this.getGuid())).findFirst().get();
+        }
+        PatientModel pat = new PatientModel();
+        pat.setId(UUID.fromString(this.getGuid()));
+        pat.setResidentNumber(this.getResidentNumber());
+        pat.setNationalHealthId(this.getNationalHealthId());
+        pat.setPassportNumber(this.getPassportNumber());
+        pat.setIqama(this.getIqama());
+        pat.setBirthDate(Date.from(this.getBirthDate()));
+        if (this.getContacts() != null) {
+            pat.setContacts(this.getContacts().convert());
+        }
+        if (this.getAddress() != null) {
+            pat.setAddress(this.getAddress().convert());
+        }
+        pat.setGender(this.gender.convert());
+        if (this.getMaritalStatus() != null) {
+            pat.setMaritalStatus(this.getMaritalStatus().convert());
+        }
+        pat.setNames(this.getNames().stream().map(i -> i.convert()).collect(Collectors.toCollection(ArrayList::new)));
+        coreResources.add(pat);
+        return pat;
     }
 }
