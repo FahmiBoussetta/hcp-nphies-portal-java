@@ -915,16 +915,6 @@ relationship ManyToMany {
   CoverageEligibilityRequest{coverages} to Coverage{coverageEligibilityRequests}
 }
 
-relationship OneToOne {
-  Organization{address} to Address
-  Patient{contacts} to Contact
-  Patient{address} to Address
-  CoverageEligibilityRequest{eligibilityResponse} to CoverageEligibilityResponse
-  Claim{claimResponse} to ClaimResponse
-  Task{taskResponse} to Task
-  PaymentNotice{payment} to PaymentReconciliation{paymentNotice}
-}
-
 relationship ManyToOne {
   Claim{encounter} to Encounter
   Claim{eligibilityResponse} to CoverageEligibilityResponse
@@ -970,6 +960,10 @@ relationship ManyToOne {
   Encounter{serviceProvider} to Organization
   Hospitalization{origin} to Organization
   Location{managingOrganization} to Organization
+  Organization{address} to Address
+  Patient{contacts} to Contact
+  Patient{address} to Address
+  PaymentNotice{payment} to PaymentReconciliation{paymentNotice}
   PaymentReconciliation{paymentIssuer} to Organization
   ReconciliationDetailItem{request} to Claim
   ReconciliationDetailItem{submitter} to Organization
