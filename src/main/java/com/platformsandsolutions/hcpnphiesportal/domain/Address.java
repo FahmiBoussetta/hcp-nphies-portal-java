@@ -1,6 +1,7 @@
 package com.platformsandsolutions.hcpnphiesportal.domain;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
@@ -42,7 +43,6 @@ public class Address implements Serializable {
     @Column(name = "country")
     private String country;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
     }
@@ -134,8 +134,6 @@ public class Address implements Serializable {
         this.country = country;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -149,32 +147,40 @@ public class Address implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        // see
+        // https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
     }
 
     // prettier-ignore
     @Override
     public String toString() {
-        return "Address{" +
-            "id=" + getId() +
-            ", addressLine='" + getAddressLine() + "'" +
-            ", city='" + getCity() + "'" +
-            ", district='" + getDistrict() + "'" +
-            ", state='" + getState() + "'" +
-            ", postalCode='" + getPostalCode() + "'" +
-            ", country='" + getCountry() + "'" +
-            "}";
+        return "Address{" + "id=" + getId() + ", addressLine='" + getAddressLine() + "'" + ", city='" + getCity() + "'"
+                + ", district='" + getDistrict() + "'" + ", state='" + getState() + "'" + ", postalCode='"
+                + getPostalCode() + "'" + ", country='" + getCountry() + "'" + "}";
     }
 
     public AddressModel convert() {
         AddressModel address = new AddressModel();
-        address.setAddressLine(this.getAddressLine());
+        address.setAddressLine(Arrays.asList(this.getAddressLine()));
         address.setCity(this.getCity());
         address.setDistrict(this.getDistrict());
         address.setState(this.getState());
         address.setPostalCode(this.getPostalCode());
         address.setCountry(this.getCountry());
+        return address;
+    }
+
+    public static Address convertFrom(AddressModel model) {
+        Address address = new Address();
+        if (model.getAddressLine() != null) {
+            address.setAddressLine(model.getAddressLine().get(0));
+        }
+        address.setCity(model.getCity());
+        address.setDistrict(model.getDistrict());
+        address.setState(model.getState());
+        address.setPostalCode(model.getPostalCode());
+        address.setCountry(model.getCountry());
         return address;
     }
 }

@@ -8,6 +8,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,7 +19,8 @@ import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.ResponseUtil;
 
 /**
- * REST controller for managing {@link com.platformsandsolutions.hcpnphiesportal.domain.PaymentNotice}.
+ * REST controller for managing
+ * {@link com.platformsandsolutions.hcpnphiesportal.domain.PaymentNotice}.
  */
 @RestController
 @RequestMapping("/api")
@@ -42,7 +44,9 @@ public class PaymentNoticeResource {
      * {@code POST  /payment-notices} : Create a new paymentNotice.
      *
      * @param paymentNotice the paymentNotice to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new paymentNotice, or with status {@code 400 (Bad Request)} if the paymentNotice has already an ID.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with
+     *         body the new paymentNotice, or with status {@code 400 (Bad Request)}
+     *         if the paymentNotice has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/payment-notices")
@@ -51,6 +55,7 @@ public class PaymentNoticeResource {
         if (paymentNotice.getId() != null) {
             throw new BadRequestAlertException("A new paymentNotice cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        paymentNotice.setGuid(UUID.randomUUID().toString());
         PaymentNotice result = paymentNoticeRepository.save(paymentNotice);
         return ResponseEntity
             .created(new URI("/api/payment-notices/" + result.getId()))
@@ -61,11 +66,13 @@ public class PaymentNoticeResource {
     /**
      * {@code PUT  /payment-notices/:id} : Updates an existing paymentNotice.
      *
-     * @param id the id of the paymentNotice to save.
+     * @param id            the id of the paymentNotice to save.
      * @param paymentNotice the paymentNotice to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated paymentNotice,
-     * or with status {@code 400 (Bad Request)} if the paymentNotice is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the paymentNotice couldn't be updated.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
+     *         the updated paymentNotice, or with status {@code 400 (Bad Request)}
+     *         if the paymentNotice is not valid, or with status
+     *         {@code 500 (Internal Server Error)} if the paymentNotice couldn't be
+     *         updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/payment-notices/{id}")
@@ -93,14 +100,17 @@ public class PaymentNoticeResource {
     }
 
     /**
-     * {@code PATCH  /payment-notices/:id} : Partial updates given fields of an existing paymentNotice, field will ignore if it is null
+     * {@code PATCH  /payment-notices/:id} : Partial updates given fields of an
+     * existing paymentNotice, field will ignore if it is null
      *
-     * @param id the id of the paymentNotice to save.
+     * @param id            the id of the paymentNotice to save.
      * @param paymentNotice the paymentNotice to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated paymentNotice,
-     * or with status {@code 400 (Bad Request)} if the paymentNotice is not valid,
-     * or with status {@code 404 (Not Found)} if the paymentNotice is not found,
-     * or with status {@code 500 (Internal Server Error)} if the paymentNotice couldn't be updated.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
+     *         the updated paymentNotice, or with status {@code 400 (Bad Request)}
+     *         if the paymentNotice is not valid, or with status
+     *         {@code 404 (Not Found)} if the paymentNotice is not found, or with
+     *         status {@code 500 (Internal Server Error)} if the paymentNotice
+     *         couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/payment-notices/{id}", consumes = "application/merge-patch+json")
@@ -157,7 +167,8 @@ public class PaymentNoticeResource {
     /**
      * {@code GET  /payment-notices} : get all the paymentNotices.
      *
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of paymentNotices in body.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list
+     *         of paymentNotices in body.
      */
     @GetMapping("/payment-notices")
     public List<PaymentNotice> getAllPaymentNotices() {
@@ -169,7 +180,8 @@ public class PaymentNoticeResource {
      * {@code GET  /payment-notices/:id} : get the "id" paymentNotice.
      *
      * @param id the id of the paymentNotice to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the paymentNotice, or with status {@code 404 (Not Found)}.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
+     *         the paymentNotice, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/payment-notices/{id}")
     public ResponseEntity<PaymentNotice> getPaymentNotice(@PathVariable Long id) {

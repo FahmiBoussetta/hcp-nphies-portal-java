@@ -30,6 +30,7 @@
       "provider": "Provider",
       "insurer": "Insurer",
       "facility": "Facility",
+      "coverageEligibilityResponse": "Coverage Eligibility Response",
       "coverages": "Coverages"
     }
   }

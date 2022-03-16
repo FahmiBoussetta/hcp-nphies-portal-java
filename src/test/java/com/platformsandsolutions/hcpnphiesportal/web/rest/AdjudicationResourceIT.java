@@ -8,6 +8,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.platformsandsolutions.hcpnphiesportal.IntegrationTest;
 import com.platformsandsolutions.hcpnphiesportal.domain.Adjudication;
+import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.AdjudicationEnum;
+import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.AdjudicationReasonEnum;
 import com.platformsandsolutions.hcpnphiesportal.repository.AdjudicationRepository;
 import java.math.BigDecimal;
 import java.util.List;
@@ -31,14 +33,14 @@ import org.springframework.transaction.annotation.Transactional;
 @WithMockUser
 class AdjudicationResourceIT {
 
-    private static final String DEFAULT_CATEGORY = "AAAAAAAAAA";
-    private static final String UPDATED_CATEGORY = "BBBBBBBBBB";
+    private static final AdjudicationEnum DEFAULT_CATEGORY = AdjudicationEnum.benefit;
+    private static final AdjudicationEnum UPDATED_CATEGORY = AdjudicationEnum.copay;
 
-    private static final String DEFAULT_REASON = "AAAAAAAAAA";
-    private static final String UPDATED_REASON = "BBBBBBBBBB";
+    private static final AdjudicationReasonEnum DEFAULT_REASON = AdjudicationReasonEnum.NDC001;
+    private static final AdjudicationReasonEnum UPDATED_REASON = AdjudicationReasonEnum.NDC002;
 
-    private static final Integer DEFAULT_AMOUNT = 1;
-    private static final Integer UPDATED_AMOUNT = 2;
+    private static final BigDecimal DEFAULT_AMOUNT = new BigDecimal(1);
+    private static final BigDecimal UPDATED_AMOUNT = new BigDecimal(2);
 
     private static final BigDecimal DEFAULT_VALUE = new BigDecimal(1);
     private static final BigDecimal UPDATED_VALUE = new BigDecimal(2);
@@ -110,7 +112,7 @@ class AdjudicationResourceIT {
         Adjudication testAdjudication = adjudicationList.get(adjudicationList.size() - 1);
         assertThat(testAdjudication.getCategory()).isEqualTo(DEFAULT_CATEGORY);
         assertThat(testAdjudication.getReason()).isEqualTo(DEFAULT_REASON);
-        assertThat(testAdjudication.getAmount()).isEqualTo(DEFAULT_AMOUNT);
+        assertThat(testAdjudication.getAmount()).isEqualByComparingTo(DEFAULT_AMOUNT);
         assertThat(testAdjudication.getValue()).isEqualByComparingTo(DEFAULT_VALUE);
     }
 
@@ -151,23 +153,6 @@ class AdjudicationResourceIT {
 
     @Test
     @Transactional
-    void checkAmountIsRequired() throws Exception {
-        int databaseSizeBeforeTest = adjudicationRepository.findAll().size();
-        // set the field null
-        adjudication.setAmount(null);
-
-        // Create the Adjudication, which fails.
-
-        restAdjudicationMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(adjudication)))
-            .andExpect(status().isBadRequest());
-
-        List<Adjudication> adjudicationList = adjudicationRepository.findAll();
-        assertThat(adjudicationList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     void getAllAdjudications() throws Exception {
         // Initialize the database
         adjudicationRepository.saveAndFlush(adjudication);
@@ -180,7 +165,7 @@ class AdjudicationResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(adjudication.getId().intValue())))
             .andExpect(jsonPath("$.[*].category").value(hasItem(DEFAULT_CATEGORY)))
             .andExpect(jsonPath("$.[*].reason").value(hasItem(DEFAULT_REASON)))
-            .andExpect(jsonPath("$.[*].amount").value(hasItem(DEFAULT_AMOUNT)))
+            .andExpect(jsonPath("$.[*].amount").value(hasItem(sameNumber(DEFAULT_AMOUNT))))
             .andExpect(jsonPath("$.[*].value").value(hasItem(sameNumber(DEFAULT_VALUE))));
     }
 
@@ -198,7 +183,7 @@ class AdjudicationResourceIT {
             .andExpect(jsonPath("$.id").value(adjudication.getId().intValue()))
             .andExpect(jsonPath("$.category").value(DEFAULT_CATEGORY))
             .andExpect(jsonPath("$.reason").value(DEFAULT_REASON))
-            .andExpect(jsonPath("$.amount").value(DEFAULT_AMOUNT))
+            .andExpect(jsonPath("$.amount").value(sameNumber(DEFAULT_AMOUNT)))
             .andExpect(jsonPath("$.value").value(sameNumber(DEFAULT_VALUE)));
     }
 
@@ -219,7 +204,8 @@ class AdjudicationResourceIT {
 
         // Update the adjudication
         Adjudication updatedAdjudication = adjudicationRepository.findById(adjudication.getId()).get();
-        // Disconnect from session so that the updates on updatedAdjudication are not directly saved in db
+        // Disconnect from session so that the updates on updatedAdjudication are not
+        // directly saved in db
         em.detach(updatedAdjudication);
         updatedAdjudication.category(UPDATED_CATEGORY).reason(UPDATED_REASON).amount(UPDATED_AMOUNT).value(UPDATED_VALUE);
 
@@ -325,7 +311,7 @@ class AdjudicationResourceIT {
         Adjudication testAdjudication = adjudicationList.get(adjudicationList.size() - 1);
         assertThat(testAdjudication.getCategory()).isEqualTo(UPDATED_CATEGORY);
         assertThat(testAdjudication.getReason()).isEqualTo(DEFAULT_REASON);
-        assertThat(testAdjudication.getAmount()).isEqualTo(DEFAULT_AMOUNT);
+        assertThat(testAdjudication.getAmount()).isEqualByComparingTo(DEFAULT_AMOUNT);
         assertThat(testAdjudication.getValue()).isEqualByComparingTo(UPDATED_VALUE);
     }
 
@@ -357,7 +343,7 @@ class AdjudicationResourceIT {
         Adjudication testAdjudication = adjudicationList.get(adjudicationList.size() - 1);
         assertThat(testAdjudication.getCategory()).isEqualTo(UPDATED_CATEGORY);
         assertThat(testAdjudication.getReason()).isEqualTo(UPDATED_REASON);
-        assertThat(testAdjudication.getAmount()).isEqualTo(UPDATED_AMOUNT);
+        assertThat(testAdjudication.getAmount()).isEqualByComparingTo(UPDATED_AMOUNT);
         assertThat(testAdjudication.getValue()).isEqualByComparingTo(UPDATED_VALUE);
     }
 

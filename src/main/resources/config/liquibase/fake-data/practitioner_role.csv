@@ -1,11 +1,2 @@
-id;guid;force_id;start;end
-1;Table enhance;Fresh Frozen;2021-06-29T22:46:46;2021-06-29T11:02:13
-2;Car Monitored;bypass;2021-06-29T15:24:43;2021-06-29T10:30:32
-3;Baby maroon grey;deliver;2021-06-30T06:30:44;2021-06-29T10:35:06
-4;Colon;system;2021-06-29T20:28:53;2021-06-29T11:31:18
-5;vortals;Data;2021-06-29T23:03:41;2021-06-29T14:29:34
-6;Administrator International back-end;digital system Cambridgeshire;2021-06-29T21:39:55;2021-06-29T15:14:19
-7;help-desk policy;Island;2021-06-29T15:17:11;2021-06-29T09:00:02
-8;Ergonomic bus Buckinghamshire;Frozen;2021-06-29T20:26:23;2021-06-29T18:32:04
-9;New Intranet mobile;digital installation Plastic;2021-06-29T13:18:45;2021-06-29T09:19:37
-10;Oregon Agent state;online salmon Unbranded;2021-06-29T17:47:10;2021-06-29T19:13:11
+id;guid;force_id;start;end;practitioner_id;organization_id
+1;b61c8985-da23-4b69-80f2-34855f784dbc;;2021-06-29T22:46:46;2022-06-29T11:02:13;1;1

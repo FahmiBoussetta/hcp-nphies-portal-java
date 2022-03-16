@@ -1,8 +1,12 @@
 package com.platformsandsolutions.hcpnphiesportal.web.rest;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.platformsandsolutions.hcpnphiesportal.domain.CoverageEligibilityRequest;
+import com.platformsandsolutions.hcpnphiesportal.domain.CoverageEligibilityResponse;
 import com.platformsandsolutions.hcpnphiesportal.domain.ListEligibilityPurposeEnum;
 import com.platformsandsolutions.hcpnphiesportal.repository.CoverageEligibilityRequestRepository;
+import com.platformsandsolutions.hcpnphiesportal.repository.CoverageEligibilityResponseRepository;
 import com.platformsandsolutions.hcpnphiesportal.web.rest.errors.BadRequestAlertException;
 import java.io.File;
 import java.net.URI;
@@ -24,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import platform.fhir_client.models.CoreResourceModel;
 import platform.fhir_client.models.CoverageEligibilityRequestModel;
+import platform.fhir_client.models.CoverageEligibilityResponseModel;
 import platform.fhir_client.utils.Constants;
 import platform.fhir_client.utils.FHIRHelper;
 import tech.jhipster.web.util.HeaderUtil;
@@ -47,13 +52,16 @@ public class CoverageEligibilityRequestResource {
 
     private final CoverageEligibilityRequestRepository coverageEligibilityRequestRepository;
     private final ListEligibilityPurposeEnumResource listEligibilityPurposeEnumResource;
+    private final CoverageEligibilityResponseRepository coverageEligibilityResponseRepository;
 
     public CoverageEligibilityRequestResource(
         CoverageEligibilityRequestRepository coverageEligibilityRequestRepository,
-        ListEligibilityPurposeEnumResource listEligibilityPurposeEnumResource
+        ListEligibilityPurposeEnumResource listEligibilityPurposeEnumResource,
+        CoverageEligibilityResponseRepository coverageEligibilityResponseRepository
     ) {
         this.coverageEligibilityRequestRepository = coverageEligibilityRequestRepository;
         this.listEligibilityPurposeEnumResource = listEligibilityPurposeEnumResource;
+        this.coverageEligibilityResponseRepository = coverageEligibilityResponseRepository;
     }
 
     /**
@@ -97,7 +105,7 @@ public class CoverageEligibilityRequestResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/coverage-eligibility-requests/send/{id}")
-    public ResponseEntity<CoverageEligibilityRequest> sendCoverageEligibilityRequest(
+    public ResponseEntity<CoverageEligibilityResponse> sendCoverageEligibilityRequest(
         @PathVariable(value = "id", required = false) final Long id
     ) throws URISyntaxException {
         log.debug("REST request to send CoverageEligibilityRequest : {}", id);
@@ -114,7 +122,7 @@ public class CoverageEligibilityRequestResource {
         String path = System.getProperty("user.dir");
         String fileName = (new File(path, "PR-FHIR.p12")).getPath();
         try {
-            fhirHelper.UseServerWithCertificate(
+            fhirHelper.useServerWithProviderCertificate(
                 Constants.SERVER_URL,
                 Constants.SERVER_VERSION,
                 fileName,
@@ -122,34 +130,66 @@ public class CoverageEligibilityRequestResource {
                 "http://www.pr-fhir.sa"
             );
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
         ArrayList<CoreResourceModel> coreResources1 = new ArrayList<CoreResourceModel>();
-        coreResources1.add(fhirHelper.getProvider());
+        coreResources1.add(fhirHelper.getSender());
         CoverageEligibilityRequestModel covEliReq = coverageEligibilityRequest.convert(coreResources1);
-        covEliReq.setProvider(fhirHelper.getProvider());
+        covEliReq.setProvider(fhirHelper.getSender());
 
-        fhirHelper.InitCoreResources(coreResources1);
+        fhirHelper.initCoreResources(coreResources1);
+        ObjectMapper mapper = new ObjectMapper();
+        String json = "";
+        String json2 = "";
 
-        fhirHelper.SendRequest(covEliReq, false);
-        log.debug(
-            "fhirHelper : {}",
-            fhirHelper.getInternalResources().entrySet().iterator().next().getValue().getParsedRequest() + " i " + fhirHelper.getStep()
-        );
+        fhirHelper.sendMessage(covEliReq, false);
 
-        log.debug(
-            "**********************************************REST request to send fhirHelper : {}",
-            fhirHelper.getExternalResources().entrySet().iterator().next().getValue().getParsedRequest()
-        );
+        try {
+            json = mapper.writeValueAsString(coverageEligibilityRequest);
+            json2 = mapper.writeValueAsString(covEliReq);
+            log.debug("**********************************************REST request to send fhirHelper : {}", json);
+            log.debug("**********************************************REST request to send fhirHelper : {}", json2);
+        } catch (JsonProcessingException e1) {
+            e1.printStackTrace();
+        }
 
-        return ResponseEntity
-            .created(new URI("/api/coverage-eligibility-requests/" + coverageEligibilityRequest.getId()))
-            .headers(
-                HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, coverageEligibilityRequest.getId().toString())
-            )
-            .body(coverageEligibilityRequest);
+        if (fhirHelper.getInputResources().entrySet().iterator().next().getValue().getParsedRequest() != null) {
+            coverageEligibilityRequest.setParsed(fhirHelper.getInputResources().entrySet().iterator().next().getValue().getParsedRequest());
+            coverageEligibilityRequestRepository.save(coverageEligibilityRequest);
+            log.debug(
+                "fhirHelper : {}",
+                fhirHelper.getInputResources().entrySet().iterator().next().getValue().getParsedRequest() + " i " + fhirHelper.getStep()
+            );
+        }
+
+        if (fhirHelper.getOutputResources() != null && fhirHelper.getOutputResources().size() > 0) {
+            try {
+                json = mapper.writeValueAsString(fhirHelper.getOutputResources().entrySet().iterator().next().getValue());
+                log.debug("**********************************************REST request to send fhirHelper : {}", json);
+            } catch (JsonProcessingException e1) {
+                e1.printStackTrace();
+            }
+
+            CoverageEligibilityResponseModel model = (CoverageEligibilityResponseModel) fhirHelper
+                .getOutputResources()
+                .entrySet()
+                .iterator()
+                .next()
+                .getValue();
+            CoverageEligibilityResponse coverageEligibilityResponse = CoverageEligibilityResponse.convertFrom(model);
+            CoverageEligibilityResponse result = coverageEligibilityResponseRepository.save(coverageEligibilityResponse);
+            coverageEligibilityRequest.setCoverageEligibilityResponse(result);
+            coverageEligibilityRequestRepository.save(coverageEligibilityRequest);
+            return ResponseEntity
+                .created(new URI("/api/coverage-eligibility-response/" + result.getId()))
+                .headers(
+                    HeaderUtil.createEntityCreationAlert(applicationName, true, "coverageEligibilityResponse", result.getId().toString())
+                )
+                .body(result);
+        }
+
+        return null;
     }
 
     /**

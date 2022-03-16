@@ -34,11 +34,10 @@ public class Givens implements Serializable {
     @Column(name = "text_name")
     private String textName;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JsonIgnoreProperties(value = { "givens", "patient", "practitioner" }, allowSetters = true)
     private HumanName human;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
     }
@@ -117,8 +116,6 @@ public class Givens implements Serializable {
         this.human = humanName;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -132,19 +129,15 @@ public class Givens implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        // see
+        // https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
     }
 
     // prettier-ignore
     @Override
     public String toString() {
-        return "Givens{" +
-            "id=" + getId() +
-            ", given='" + getGiven() + "'" +
-            ", prefix='" + getPrefix() + "'" +
-            ", suffix='" + getSuffix() + "'" +
-            ", textName='" + getTextName() + "'" +
-            "}";
+        return "Givens{" + "id=" + getId() + ", given='" + getGiven() + "'" + ", prefix='" + getPrefix() + "'"
+                + ", suffix='" + getSuffix() + "'" + ", textName='" + getTextName() + "'" + "}";
     }
 }

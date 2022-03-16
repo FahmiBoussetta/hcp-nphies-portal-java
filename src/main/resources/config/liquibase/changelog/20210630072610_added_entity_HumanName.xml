@@ -44,6 +44,7 @@
                   tableName="human_name">
             <column name="id" type="numeric"/>
             <column name="family" type="string"/>
+            <column name="patient_id" type="numeric"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
     </changeSet>

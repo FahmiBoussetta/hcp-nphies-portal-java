@@ -1,0 +1,1449 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-1">
+        <createTable tableName="accident">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="accidentPK"/>
+            </column>
+            <column name="date" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="location_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-2">
+        <createTable tableName="ack_error_messages">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="ack_error_messagesPK"/>
+            </column>
+            <column name="message" type="VARCHAR(255)"/>
+            <column name="acknowledgement_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-3">
+        <createTable tableName="acknowledgement">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="acknowledgementPK"/>
+            </column>
+            <column name="parsed" type="VARCHAR(255)"/>
+            <column name="jhi_system" type="VARCHAR(255)"/>
+            <column name="value" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-4">
+        <createTable tableName="address">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="addressPK"/>
+            </column>
+            <column name="address_line" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="city" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="country" type="VARCHAR(255)"/>
+            <column name="district" type="VARCHAR(255)"/>
+            <column name="postal_code" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="state" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-5">
+        <createTable tableName="adjudication">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="adjudicationPK"/>
+            </column>
+            <column name="amount" type="DECIMAL(19, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reason" type="VARCHAR(255)"/>
+            <column name="value" type="DECIMAL(21, 2)"/>
+            <column name="adjudication_detail_item_id" type="BIGINT"/>
+            <column name="adjudication_item_id" type="BIGINT"/>
+            <column name="adjudication_sub_detail_item_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-6">
+        <createTable tableName="adjudication_detail_item">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="adjudication_detail_itemPK"/>
+            </column>
+            <column name="sequence" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="adjudication_item_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-7">
+        <createTable tableName="adjudication_detail_notes">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="adjudication_detail_notesPK"/>
+            </column>
+            <column name="note" type="VARCHAR(255)"/>
+            <column name="adjudication_detail_item_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-8">
+        <createTable tableName="adjudication_item">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="adjudication_itemPK"/>
+            </column>
+            <column name="outcome" type="VARCHAR(255)"/>
+            <column name="sequence" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="claim_response_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-9">
+        <createTable tableName="adjudication_notes">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="adjudication_notesPK"/>
+            </column>
+            <column name="note" type="VARCHAR(255)"/>
+            <column name="adjudication_item_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-10">
+        <createTable tableName="adjudication_sub_detail_item">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="adjudication_sub_detail_itemPK"/>
+            </column>
+            <column name="sequence" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="adjudication_detail_item_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-11">
+        <createTable tableName="adjudication_sub_detail_notes">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="adjudication_sub_detail_notesPK"/>
+            </column>
+            <column name="note" type="VARCHAR(255)"/>
+            <column name="adjudication_sub_detail_item_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-12">
+        <createTable tableName="attachment">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="attachmentPK"/>
+            </column>
+            <column name="attachment_size" type="INT"/>
+            <column name="content_type" type="VARCHAR(255)"/>
+            <column name="data_file" type="BLOB"/>
+            <column name="data_file_content_type" type="VARCHAR(255)"/>
+            <column name="hash" type="BLOB"/>
+            <column name="hash_content_type" type="VARCHAR(255)"/>
+            <column name="is_data" type="BOOLEAN"/>
+            <column name="language" type="VARCHAR(255)"/>
+            <column name="title" type="VARCHAR(255)"/>
+            <column name="url" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-13">
+        <createTable tableName="care_team">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="care_teamPK"/>
+            </column>
+            <column name="role" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sequence" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="claim_id" type="BIGINT"/>
+            <column name="provider_id" type="BIGINT"/>
+            <column name="provider_role_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-14">
+        <createTable tableName="care_team_sequence">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="care_team_sequencePK"/>
+            </column>
+            <column name="care_seq" type="INT"/>
+            <column name="item_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-15">
+        <createTable tableName="claim">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="claimPK"/>
+            </column>
+            <column name="authorization_offline_date" type="TIMESTAMP"/>
+            <column name="billable_end" type="TIMESTAMP"/>
+            <column name="billable_start" type="TIMESTAMP"/>
+            <column name="eligibility_offline" type="VARCHAR(255)"/>
+            <column name="eligibility_offline_date" type="TIMESTAMP"/>
+            <column name="funds_reserve" type="VARCHAR(255)"/>
+            <column name="guid" type="VARCHAR(255)"/>
+            <column name="identifier" type="VARCHAR(255)"/>
+            <column name="is_queued" type="BOOLEAN"/>
+            <column name="parsed" type="VARCHAR(255)"/>
+            <column name="priority" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sub_type" type="VARCHAR(255)"/>
+            <column name="type" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="jhi_use" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="accident_id" type="BIGINT"/>
+            <column name="claim_response_id" type="BIGINT"/>
+            <column name="eligibility_response_id" type="BIGINT"/>
+            <column name="encounter_id" type="BIGINT"/>
+            <column name="facility_id" type="BIGINT"/>
+            <column name="insurer_id" type="BIGINT"/>
+            <column name="original_prescription_id" type="BIGINT"/>
+            <column name="patient_id" type="BIGINT"/>
+            <column name="payee_id" type="BIGINT"/>
+            <column name="prescription_id" type="BIGINT"/>
+            <column name="provider_id" type="BIGINT"/>
+            <column name="referral_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-16">
+        <createTable tableName="claim_error_messages">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="claim_error_messagesPK"/>
+            </column>
+            <column name="message" type="VARCHAR(255)"/>
+            <column name="claim_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-17">
+        <createTable tableName="claim_response">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="claim_responsePK"/>
+            </column>
+            <column name="outcome" type="VARCHAR(255)"/>
+            <column name="parsed" type="VARCHAR(255)"/>
+            <column name="jhi_system" type="VARCHAR(255)"/>
+            <column name="value" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-18">
+        <createTable tableName="class_component">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="class_componentPK"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="type" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="value" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="coverage_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-19">
+        <createTable tableName="com_error_messages">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="com_error_messagesPK"/>
+            </column>
+            <column name="message" type="VARCHAR(255)"/>
+            <column name="communication_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-20">
+        <createTable tableName="communication">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="communicationPK"/>
+            </column>
+            <column name="guid" type="VARCHAR(255)"/>
+            <column name="identifier" type="VARCHAR(255)"/>
+            <column name="is_queued" type="BOOLEAN"/>
+            <column name="parsed" type="VARCHAR(255)"/>
+            <column name="priority" type="VARCHAR(255)"/>
+            <column name="about_id" type="BIGINT"/>
+            <column name="recipient_id" type="BIGINT"/>
+            <column name="sender_id" type="BIGINT"/>
+            <column name="subject_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-21">
+        <createTable tableName="communication_request">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="communication_requestPK"/>
+            </column>
+            <column name="limit_date" type="TIMESTAMP"/>
+            <column name="parsed" type="VARCHAR(255)"/>
+            <column name="jhi_system" type="VARCHAR(255)"/>
+            <column name="value" type="VARCHAR(255)"/>
+            <column name="about_id" type="BIGINT"/>
+            <column name="communication_id" type="BIGINT"/>
+            <column name="sender_id" type="BIGINT"/>
+            <column name="subject_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-22">
+        <createTable tableName="contact">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="contactPK"/>
+            </column>
+            <column name="email" type="VARCHAR(255)"/>
+            <column name="mobile" type="VARCHAR(255)"/>
+            <column name="phone" type="VARCHAR(255)"/>
+            <column name="url" type="VARCHAR(255)"/>
+            <column name="name_id" type="BIGINT"/>
+            <column name="organization_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-23">
+        <createTable tableName="cost_to_beneficiary_component">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="cost_to_beneficiary_componentPK"/>
+            </column>
+            <column name="is_money" type="BOOLEAN"/>
+            <column name="type" type="VARCHAR(255)"/>
+            <column name="value" type="DECIMAL(21, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="coverage_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-24">
+        <createTable tableName="cov_eli_error_messages">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="cov_eli_error_messagesPK"/>
+            </column>
+            <column name="message" type="VARCHAR(255)"/>
+            <column name="coverage_eligibility_request_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-25">
+        <createTable tableName="cov_eli_resp_error_messages">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="cov_eli_resp_error_messagesPK"/>
+            </column>
+            <column name="message" type="VARCHAR(255)"/>
+            <column name="coverage_eligibility_response_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-26">
+        <createTable tableName="coverage">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="coveragePK"/>
+            </column>
+            <column name="coverage_type" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dependent" type="VARCHAR(255)"/>
+            <column name="force_id" type="VARCHAR(255)"/>
+            <column name="guid" type="VARCHAR(255)"/>
+            <column name="network" type="VARCHAR(255)"/>
+            <column name="relation_ship" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="subrogation" type="BOOLEAN"/>
+            <column name="subscriber_id" type="VARCHAR(255)"/>
+            <column name="beneficiary_id" type="BIGINT"/>
+            <column name="payor_id" type="BIGINT"/>
+            <column name="subscriber_patient_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-27">
+        <createTable tableName="coverage_eligibility_request">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="coverage_eligibility_requestPK"/>
+            </column>
+            <column name="guid" type="VARCHAR(255)"/>
+            <column name="identifier" type="VARCHAR(255)"/>
+            <column name="parsed" type="VARCHAR(255)"/>
+            <column name="priority" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="serviced_date" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="serviced_date_end" type="TIMESTAMP"/>
+            <column name="coverage_eligibility_response_id" type="BIGINT"/>
+            <column name="facility_id" type="BIGINT"/>
+            <column name="insurer_id" type="BIGINT"/>
+            <column name="patient_id" type="BIGINT"/>
+            <column name="provider_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-28">
+        <createTable tableName="coverage_eligibility_response">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="coverage_eligibility_responsePK"/>
+            </column>
+            <column name="disposition" type="VARCHAR(255)"/>
+            <column name="not_inforce_reason" type="VARCHAR(255)"/>
+            <column name="outcome" type="VARCHAR(255)"/>
+            <column name="parsed" type="VARCHAR(255)"/>
+            <column name="serviced" type="TIMESTAMP"/>
+            <column name="serviced_end" type="TIMESTAMP"/>
+            <column name="jhi_system" type="VARCHAR(255)"/>
+            <column name="value" type="VARCHAR(255)"/>
+            <column name="insurer_id" type="BIGINT"/>
+            <column name="patient_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-29">
+        <createTable tableName="cr_error_messages">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="cr_error_messagesPK"/>
+            </column>
+            <column name="message" type="VARCHAR(255)"/>
+            <column name="claim_response_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-30">
+        <createTable tableName="detail_item">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="detail_itemPK"/>
+            </column>
+            <column name="imaging" type="VARCHAR(255)"/>
+            <column name="laboratory" type="VARCHAR(255)"/>
+            <column name="medical_device" type="VARCHAR(255)"/>
+            <column name="medication_code" type="VARCHAR(255)"/>
+            <column name="oral_health_ip" type="VARCHAR(255)"/>
+            <column name="oral_health_op" type="VARCHAR(255)"/>
+            <column name="jhi_procedure" type="VARCHAR(255)"/>
+            <column name="quantity" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sequence" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="services" type="VARCHAR(255)"/>
+            <column name="tax" type="DECIMAL(21, 2)"/>
+            <column name="transportation_srca" type="VARCHAR(255)"/>
+            <column name="unit_price" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="item_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-31">
+        <createTable tableName="diagnosis">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="diagnosisPK"/>
+            </column>
+            <column name="diagnosis" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="on_admission" type="VARCHAR(255)"/>
+            <column name="sequence" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="claim_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-32">
+        <createTable tableName="diagnosis_sequence">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="diagnosis_sequencePK"/>
+            </column>
+            <column name="diag_seq" type="INT"/>
+            <column name="item_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-33">
+        <createTable tableName="encounter">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="encounterPK"/>
+            </column>
+            <column name="encounter_class" type="VARCHAR(255)"/>
+            <column name="end" type="TIMESTAMP"/>
+            <column name="force_id" type="VARCHAR(255)"/>
+            <column name="guid" type="VARCHAR(255)"/>
+            <column name="identifier" type="VARCHAR(255)"/>
+            <column name="priority" type="VARCHAR(255)"/>
+            <column name="service_type" type="VARCHAR(255)"/>
+            <column name="start" type="TIMESTAMP"/>
+            <column name="hospitalization_id" type="BIGINT"/>
+            <column name="service_provider_id" type="BIGINT"/>
+            <column name="subject_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-34">
+        <createTable tableName="exemption_component">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="exemption_componentPK"/>
+            </column>
+            <column name="end" type="TIMESTAMP"/>
+            <column name="start" type="TIMESTAMP"/>
+            <column name="type" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cost_to_beneficiary_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-35">
+        <createTable tableName="givens">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="givensPK"/>
+            </column>
+            <column name="given" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="prefix" type="VARCHAR(255)"/>
+            <column name="suffix" type="VARCHAR(255)"/>
+            <column name="text_name" type="VARCHAR(255)"/>
+            <column name="human_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-36">
+        <createTable tableName="hospitalization">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="hospitalizationPK"/>
+            </column>
+            <column name="admit_source" type="VARCHAR(255)"/>
+            <column name="discharge_disposition" type="VARCHAR(255)"/>
+            <column name="re_admission" type="VARCHAR(255)"/>
+            <column name="origin_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-37">
+        <createTable tableName="human_name">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="human_namePK"/>
+            </column>
+            <column name="family" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="patient_id" type="BIGINT"/>
+            <column name="practitioner_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-38">
+        <createTable tableName="information_sequence">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="information_sequencePK"/>
+            </column>
+            <column name="inf_seq" type="INT"/>
+            <column name="item_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-39">
+        <createTable tableName="insurance">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="insurancePK"/>
+            </column>
+            <column name="focal" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="pre_auth_ref" type="VARCHAR(255)"/>
+            <column name="sequence" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="claim_id" type="BIGINT"/>
+            <column name="claim_response_id" type="BIGINT"/>
+            <column name="coverage_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-40">
+        <createTable tableName="insurance_benefit">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="insurance_benefitPK"/>
+            </column>
+            <column name="allowed" type="VARCHAR(255)"/>
+            <column name="used" type="VARCHAR(255)"/>
+            <column name="response_insurance_item_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-41">
+        <createTable tableName="item">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="itemPK"/>
+            </column>
+            <column name="body_site" type="VARCHAR(255)"/>
+            <column name="factor" type="DECIMAL(21, 2)"/>
+            <column name="imaging" type="VARCHAR(255)"/>
+            <column name="is_package" type="BOOLEAN"/>
+            <column name="laboratory" type="VARCHAR(255)"/>
+            <column name="medical_device" type="VARCHAR(255)"/>
+            <column name="medication_code" type="VARCHAR(255)"/>
+            <column name="oral_health_ip" type="VARCHAR(255)"/>
+            <column name="oral_health_op" type="VARCHAR(255)"/>
+            <column name="patient_share" type="DECIMAL(21, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="payer_share" type="DECIMAL(21, 2)"/>
+            <column name="jhi_procedure" type="VARCHAR(255)"/>
+            <column name="quantity" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sequence" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="serviced_date" type="TIMESTAMP"/>
+            <column name="serviced_date_end" type="TIMESTAMP"/>
+            <column name="serviced_date_start" type="TIMESTAMP"/>
+            <column name="services" type="VARCHAR(255)"/>
+            <column name="sub_site" type="VARCHAR(255)"/>
+            <column name="tax" type="DECIMAL(21, 2)"/>
+            <column name="transportation_srca" type="VARCHAR(255)"/>
+            <column name="unit_price" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="claim_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-42">
+        <createTable tableName="jhi_authority">
+            <column name="name" type="VARCHAR(50)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="jhi_authorityPK"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-43">
+        <createTable tableName="jhi_user">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="jhi_userPK"/>
+            </column>
+            <column name="created_by" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="TIMESTAMP"/>
+            <column name="last_modified_by" type="VARCHAR(50)"/>
+            <column name="last_modified_date" type="TIMESTAMP"/>
+            <column name="activated" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="activation_key" type="VARCHAR(20)"/>
+            <column name="email" type="VARCHAR(254)"/>
+            <column name="first_name" type="VARCHAR(50)"/>
+            <column name="image_url" type="VARCHAR(256)"/>
+            <column name="lang_key" type="VARCHAR(10)"/>
+            <column name="last_name" type="VARCHAR(50)"/>
+            <column name="login" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password_hash" type="VARCHAR(60)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reset_date" type="TIMESTAMP"/>
+            <column name="reset_key" type="VARCHAR(20)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-44">
+        <createTable tableName="jhi_user_authority">
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="authority_name" type="VARCHAR(50)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-45">
+        <createTable tableName="list_communication_medium_enum">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="list_communication_medium_enumPK"/>
+            </column>
+            <column name="cm" type="VARCHAR(255)"/>
+            <column name="communication_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-46">
+        <createTable tableName="list_communication_reason_enum">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="list_communication_reason_enumPK"/>
+            </column>
+            <column name="cr" type="VARCHAR(255)"/>
+            <column name="communication_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-47">
+        <createTable tableName="list_eligibility_purpose_enum">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="list_eligibility_purpose_enumPK"/>
+            </column>
+            <column name="erp" type="VARCHAR(255)"/>
+            <column name="coverage_eligibility_request_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-48">
+        <createTable tableName="list_role_code_enum">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="list_role_code_enumPK"/>
+            </column>
+            <column name="r" type="VARCHAR(255)"/>
+            <column name="practitioner_role_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-49">
+        <createTable tableName="list_specialty_enum">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="list_specialty_enumPK"/>
+            </column>
+            <column name="s" type="VARCHAR(255)"/>
+            <column name="practitioner_role_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-50">
+        <createTable tableName="location">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="locationPK"/>
+            </column>
+            <column name="guid" type="VARCHAR(255)"/>
+            <column name="identifier" type="VARCHAR(255)"/>
+            <column name="type" type="VARCHAR(255)"/>
+            <column name="managing_organization_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-51">
+        <createTable tableName="note">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="notePK"/>
+            </column>
+            <column name="author" type="VARCHAR(255)"/>
+            <column name="text" type="VARCHAR(255)"/>
+            <column name="time" type="TIMESTAMP"/>
+            <column name="communication_id" type="BIGINT"/>
+            <column name="communication_request_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-52">
+        <createTable tableName="ope_out_error_messages">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="ope_out_error_messagesPK"/>
+            </column>
+            <column name="message" type="VARCHAR(255)"/>
+            <column name="operation_outcome_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-53">
+        <createTable tableName="operation_outcome">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="operation_outcomePK"/>
+            </column>
+            <column name="parsed" type="VARCHAR(255)"/>
+            <column name="jhi_system" type="VARCHAR(255)"/>
+            <column name="value" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-54">
+        <createTable tableName="organization">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="organizationPK"/>
+            </column>
+            <column name="base_url" type="VARCHAR(255)"/>
+            <column name="force_id" type="VARCHAR(255)"/>
+            <column name="guid" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="organization_license" type="VARCHAR(255)"/>
+            <column name="organization_type" type="VARCHAR(255)"/>
+            <column name="address_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-55">
+        <createTable tableName="patient">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="patientPK"/>
+            </column>
+            <column name="birth_date" type="TIMESTAMP"/>
+            <column name="deceased_date" type="TIMESTAMP"/>
+            <column name="force_id" type="VARCHAR(255)"/>
+            <column name="gender" type="VARCHAR(255)"/>
+            <column name="guid" type="VARCHAR(255)"/>
+            <column name="iqama" type="VARCHAR(255)"/>
+            <column name="marital_status" type="VARCHAR(255)"/>
+            <column name="national_health_id" type="VARCHAR(255)"/>
+            <column name="passport_number" type="VARCHAR(255)"/>
+            <column name="religion" type="VARCHAR(255)"/>
+            <column name="resident_number" type="VARCHAR(255)"/>
+            <column name="address_id" type="BIGINT"/>
+            <column name="contacts_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-56">
+        <createTable tableName="pay_not_error_messages">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pay_not_error_messagesPK"/>
+            </column>
+            <column name="message" type="VARCHAR(255)"/>
+            <column name="payment_notice_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-57">
+        <createTable tableName="payee">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="payeePK"/>
+            </column>
+            <column name="type" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="party_organization_id" type="BIGINT"/>
+            <column name="party_patient_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-58">
+        <createTable tableName="payload">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="payloadPK"/>
+            </column>
+            <column name="content_string" type="VARCHAR(255)"/>
+            <column name="communication_id" type="BIGINT"/>
+            <column name="communication_request_id" type="BIGINT"/>
+            <column name="content_attachment_id" type="BIGINT"/>
+            <column name="content_reference_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-59">
+        <createTable tableName="payment_notice">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="payment_noticePK"/>
+            </column>
+            <column name="amount" type="DECIMAL(21, 2)"/>
+            <column name="guid" type="VARCHAR(255)"/>
+            <column name="identifier" type="VARCHAR(255)"/>
+            <column name="parsed" type="VARCHAR(255)"/>
+            <column name="payment_date" type="TIMESTAMP"/>
+            <column name="payment_status" type="VARCHAR(255)"/>
+            <column name="payment_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-60">
+        <createTable tableName="payment_reconciliation">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="payment_reconciliationPK"/>
+            </column>
+            <column name="disposition" type="VARCHAR(255)"/>
+            <column name="outcome" type="VARCHAR(255)"/>
+            <column name="parsed" type="VARCHAR(255)"/>
+            <column name="payment_amount" type="DECIMAL(21, 2)"/>
+            <column name="payment_identifier" type="VARCHAR(255)"/>
+            <column name="period_end" type="TIMESTAMP"/>
+            <column name="period_start" type="TIMESTAMP"/>
+            <column name="jhi_system" type="VARCHAR(255)"/>
+            <column name="value" type="VARCHAR(255)"/>
+            <column name="payment_issuer_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-61">
+        <createTable tableName="practitioner">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="practitionerPK"/>
+            </column>
+            <column name="force_id" type="VARCHAR(255)"/>
+            <column name="gender" type="VARCHAR(255)"/>
+            <column name="guid" type="VARCHAR(255)"/>
+            <column name="practitioner_license" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-62">
+        <createTable tableName="practitioner_role">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="practitioner_rolePK"/>
+            </column>
+            <column name="end" type="TIMESTAMP"/>
+            <column name="force_id" type="VARCHAR(255)"/>
+            <column name="guid" type="VARCHAR(255)"/>
+            <column name="start" type="TIMESTAMP"/>
+            <column name="organization_id" type="BIGINT"/>
+            <column name="practitioner_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-63">
+        <createTable tableName="quantity">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="quantityPK"/>
+            </column>
+            <column name="unit" type="VARCHAR(255)"/>
+            <column name="value" type="DECIMAL(21, 2)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-64">
+        <createTable tableName="reconciliation_detail_item">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="reconciliation_detail_itemPK"/>
+            </column>
+            <column name="amount" type="DECIMAL(21, 2)"/>
+            <column name="date" type="TIMESTAMP"/>
+            <column name="identifier" type="VARCHAR(255)"/>
+            <column name="predecessor" type="VARCHAR(255)"/>
+            <column name="type" type="VARCHAR(255)"/>
+            <column name="payee_id" type="BIGINT"/>
+            <column name="payment_reconciliation_id" type="BIGINT"/>
+            <column name="request_id" type="BIGINT"/>
+            <column name="response_id" type="BIGINT"/>
+            <column name="submitter_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-65">
+        <createTable tableName="reference_identifier">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="reference_identifierPK"/>
+            </column>
+            <column name="display" type="VARCHAR(255)"/>
+            <column name="id_value" type="VARCHAR(255)"/>
+            <column name="identifier" type="VARCHAR(255)"/>
+            <column name="ref" type="VARCHAR(255)"/>
+            <column name="detail_item_id" type="BIGINT"/>
+            <column name="item_id" type="BIGINT"/>
+            <column name="sub_detail_item_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-66">
+        <createTable tableName="rel_coverage_eligibility_request__coverages">
+            <column name="coverage_eligibility_request_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="coverages_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-67">
+        <createTable tableName="related">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="relatedPK"/>
+            </column>
+            <column name="relation_ship" type="VARCHAR(255)"/>
+            <column name="claim_id" type="BIGINT"/>
+            <column name="claim_reference_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-68">
+        <createTable tableName="response_insurance">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="response_insurancePK"/>
+            </column>
+            <column name="benefit_end" type="TIMESTAMP"/>
+            <column name="benefit_start" type="TIMESTAMP"/>
+            <column name="inforce" type="BOOLEAN"/>
+            <column name="not_inforce_reason" type="VARCHAR(255)"/>
+            <column name="coverage_id" type="BIGINT"/>
+            <column name="coverage_eligibility_response_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-69">
+        <createTable tableName="response_insurance_item">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="response_insurance_itemPK"/>
+            </column>
+            <column name="category" type="VARCHAR(255)"/>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="excluded" type="BOOLEAN"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="network" type="VARCHAR(255)"/>
+            <column name="term" type="VARCHAR(255)"/>
+            <column name="unit" type="VARCHAR(255)"/>
+            <column name="response_insurance_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-70">
+        <createTable tableName="sub_detail_item">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="sub_detail_itemPK"/>
+            </column>
+            <column name="imaging" type="VARCHAR(255)"/>
+            <column name="laboratory" type="VARCHAR(255)"/>
+            <column name="medical_device" type="VARCHAR(255)"/>
+            <column name="medication_code" type="VARCHAR(255)"/>
+            <column name="oral_health_ip" type="VARCHAR(255)"/>
+            <column name="oral_health_op" type="VARCHAR(255)"/>
+            <column name="jhi_procedure" type="VARCHAR(255)"/>
+            <column name="quantity" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sequence" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="services" type="VARCHAR(255)"/>
+            <column name="tax" type="DECIMAL(21, 2)"/>
+            <column name="transportation_srca" type="VARCHAR(255)"/>
+            <column name="unit_price" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="detail_item_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-71">
+        <createTable tableName="supporting_info">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="supporting_infoPK"/>
+            </column>
+            <column name="category" type="VARCHAR(255)"/>
+            <column name="code_fdi_oral" type="VARCHAR(255)"/>
+            <column name="code_icd" type="VARCHAR(255)"/>
+            <column name="code_loinc" type="VARCHAR(255)"/>
+            <column name="code_visit" type="VARCHAR(255)"/>
+            <column name="reason" type="VARCHAR(255)"/>
+            <column name="reason_missing_tooth" type="VARCHAR(255)"/>
+            <column name="sequence" type="INT"/>
+            <column name="timing" type="TIMESTAMP"/>
+            <column name="timing_end" type="TIMESTAMP"/>
+            <column name="value_boolean" type="BOOLEAN"/>
+            <column name="value_string" type="VARCHAR(255)"/>
+            <column name="claim_id" type="BIGINT"/>
+            <column name="value_attachment_id" type="BIGINT"/>
+            <column name="value_quantity_id" type="BIGINT"/>
+            <column name="value_reference_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-72">
+        <createTable tableName="task">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="taskPK"/>
+            </column>
+            <column name="code" type="VARCHAR(255)"/>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="focus" type="VARCHAR(255)"/>
+            <column name="guid" type="VARCHAR(255)"/>
+            <column name="identifier" type="VARCHAR(255)"/>
+            <column name="is_queued" type="BOOLEAN"/>
+            <column name="parsed" type="VARCHAR(255)"/>
+            <column name="reason_code" type="VARCHAR(255)"/>
+            <column name="owner_id" type="BIGINT"/>
+            <column name="requester_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-73">
+        <createTable tableName="task_input">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="task_inputPK"/>
+            </column>
+            <column name="input_count" type="INT"/>
+            <column name="input_end" type="TIMESTAMP"/>
+            <column name="input_exclude" type="VARCHAR(255)"/>
+            <column name="input_exclude_message" type="VARCHAR(255)"/>
+            <column name="input_include" type="VARCHAR(255)"/>
+            <column name="input_include_message" type="VARCHAR(255)"/>
+            <column name="input_line_item" type="INT"/>
+            <column name="input_start" type="TIMESTAMP"/>
+            <column name="input_orig_response_id" type="BIGINT"/>
+            <column name="task_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-74">
+        <createTable tableName="task_output">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="task_outputPK"/>
+            </column>
+            <column name="error_output" type="VARCHAR(255)"/>
+            <column name="status" type="VARCHAR(255)"/>
+            <column name="response_id" type="BIGINT"/>
+            <column name="task_response_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-75">
+        <createTable tableName="task_response">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="task_responsePK"/>
+            </column>
+            <column name="parsed" type="VARCHAR(255)"/>
+            <column name="status" type="VARCHAR(255)"/>
+            <column name="jhi_system" type="VARCHAR(255)"/>
+            <column name="value" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-76">
+        <createTable tableName="total">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="totalPK"/>
+            </column>
+            <column name="amount" type="DECIMAL(19, 2)"/>
+            <column name="category" type="VARCHAR(255)"/>
+            <column name="claim_response_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-77">
+        <addUniqueConstraint columnNames="claim_response_id" constraintName="UC_CLAIMCLAIM_RESPONSE_ID_COL" tableName="claim"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-78">
+        <addUniqueConstraint columnNames="coverage_eligibility_response_id" constraintName="UC_COVERAGE_ELIGIBILITY_REQUESTCOVERAGE_ELIGIBILITY_RESPONSE_ID" tableName="coverage_eligibility_request"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-79">
+        <addUniqueConstraint columnNames="email" constraintName="UC_JHI_USEREMAIL_COL" tableName="jhi_user"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-80">
+        <addUniqueConstraint columnNames="login" constraintName="UC_JHI_USERLOGIN_COL" tableName="jhi_user"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-81">
+        <addUniqueConstraint columnNames="address_id" constraintName="UC_PATIENTADDRESS_ID_COL" tableName="patient"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-82">
+        <addUniqueConstraint columnNames="contacts_id" constraintName="UC_PATIENTCONTACTS_ID_COL" tableName="patient"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-83">
+        <addForeignKeyConstraint baseColumnNames="service_provider_id" baseTableName="encounter" constraintName="FK12mjtett3hrjrx0loqv66x05p" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="organization" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-84">
+        <addForeignKeyConstraint baseColumnNames="patient_id" baseTableName="human_name" constraintName="FK1eph81ckl8axjroq1t6pu00p3" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="patient" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-85">
+        <addForeignKeyConstraint baseColumnNames="organization_id" baseTableName="contact" constraintName="FK1krf34n4ihu4xj6ayg9yh78l9" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="organization" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-86">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="jhi_user_authority" constraintName="FK290okww5jujghp4el5i7mgwu0" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="jhi_user" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-87">
+        <addForeignKeyConstraint baseColumnNames="coverage_eligibility_response_id" baseTableName="response_insurance" constraintName="FK2dbfi59s0mce81rvukobxuky" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="coverage_eligibility_response" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-88">
+        <addForeignKeyConstraint baseColumnNames="coverage_eligibility_response_id" baseTableName="coverage_eligibility_request" constraintName="FK2itnt8l00wk29yyc3srfoiak6" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="coverage_eligibility_response" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-89">
+        <addForeignKeyConstraint baseColumnNames="human_id" baseTableName="givens" constraintName="FK2xqxhe30j4jqtkg4m5quxce0m" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="human_name" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-90">
+        <addForeignKeyConstraint baseColumnNames="practitioner_id" baseTableName="practitioner_role" constraintName="FK3atacl024ioehsxyxbdfs89as" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="practitioner" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-91">
+        <addForeignKeyConstraint baseColumnNames="response_insurance_item_id" baseTableName="insurance_benefit" constraintName="FK3ck58iel3k99erpemiryhbc75" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="response_insurance_item" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-92">
+        <addForeignKeyConstraint baseColumnNames="coverage_eligibility_response_id" baseTableName="cov_eli_resp_error_messages" constraintName="FK3giieix8ya9u1yvrtw8vq4f06" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="coverage_eligibility_response" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-93">
+        <addForeignKeyConstraint baseColumnNames="request_id" baseTableName="reconciliation_detail_item" constraintName="FK3khx78g5bscoaq3ud5wld2r62" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="claim" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-94">
+        <addForeignKeyConstraint baseColumnNames="adjudication_item_id" baseTableName="adjudication_detail_item" constraintName="FK4aavi10evmh8cwtpm6mmosstn" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="adjudication_item" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-95">
+        <addForeignKeyConstraint baseColumnNames="claim_reference_id" baseTableName="related" constraintName="FK4lwqh2eq1cwtufch7ap1d67ey" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="reference_identifier" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-96">
+        <addForeignKeyConstraint baseColumnNames="authority_name" baseTableName="jhi_user_authority" constraintName="FK4psxl0jtx6nr7rhqbynr6itoc" deferrable="false" initiallyDeferred="false" referencedColumnNames="name" referencedTableName="jhi_authority" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-97">
+        <addForeignKeyConstraint baseColumnNames="task_id" baseTableName="task_input" constraintName="FK4ylkefi8fral3w6lro6xg7209" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="task" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-98">
+        <addForeignKeyConstraint baseColumnNames="item_id" baseTableName="diagnosis_sequence" constraintName="FK52cdmg5orsgtfmk7xfolpxdgx" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="item" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-99">
+        <addForeignKeyConstraint baseColumnNames="communication_id" baseTableName="list_communication_medium_enum" constraintName="FK5bsdqm7obh988bj01lnu2vq1f" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="communication" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-100">
+        <addForeignKeyConstraint baseColumnNames="content_reference_id" baseTableName="payload" constraintName="FK5dy7cuqdpcar0sea8nmahpc35" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="reference_identifier" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-101">
+        <addForeignKeyConstraint baseColumnNames="about_id" baseTableName="communication_request" constraintName="FK5hem6omumtpg8nu5g480j2mus" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="claim" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-102">
+        <addForeignKeyConstraint baseColumnNames="subject_id" baseTableName="encounter" constraintName="FK5ku85tomwn5on7ylqewfxq8mc" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="patient" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-103">
+        <addForeignKeyConstraint baseColumnNames="insurer_id" baseTableName="coverage_eligibility_response" constraintName="FK5li3nb1iymkd1634vrp9fyj5e" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="organization" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-104">
+        <addForeignKeyConstraint baseColumnNames="communication_request_id" baseTableName="note" constraintName="FK5qhsuvbkljj749rtm5ep71sin" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="communication_request" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-105">
+        <addForeignKeyConstraint baseColumnNames="practitioner_id" baseTableName="human_name" constraintName="FK5t5msss4ni8ghgk8foqsjbpat" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="practitioner" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-106">
+        <addForeignKeyConstraint baseColumnNames="claim_id" baseTableName="supporting_info" constraintName="FK5x977o8ussmn5p6rd2o48occu" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="claim" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-107">
+        <addForeignKeyConstraint baseColumnNames="payment_id" baseTableName="payment_notice" constraintName="FK618t4c8gnpm16nfw6qliratr8" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="payment_reconciliation" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-108">
+        <addForeignKeyConstraint baseColumnNames="subscriber_patient_id" baseTableName="coverage" constraintName="FK6wupubc2jplh251lgmn42q0e2" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="patient" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-109">
+        <addForeignKeyConstraint baseColumnNames="adjudication_item_id" baseTableName="adjudication" constraintName="FK7c53sgx8py33cuvge5uevvib8" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="adjudication_item" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-110">
+        <addForeignKeyConstraint baseColumnNames="payor_id" baseTableName="coverage" constraintName="FK7gdde2fscgs41obt2ihli3k2d" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="organization" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-111">
+        <addForeignKeyConstraint baseColumnNames="beneficiary_id" baseTableName="coverage" constraintName="FK7k1qwg83ke0jht05ho0hvau73" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="patient" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-112">
+        <addForeignKeyConstraint baseColumnNames="provider_role_id" baseTableName="care_team" constraintName="FK7o9uhk08w0ub930dn1wva3jx6" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="practitioner_role" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-113">
+        <addForeignKeyConstraint baseColumnNames="coverage_eligibility_request_id" baseTableName="list_eligibility_purpose_enum" constraintName="FK7pxvt1ogwv1sgrlpgqumacpa5" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="coverage_eligibility_request" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-114">
+        <addForeignKeyConstraint baseColumnNames="response_id" baseTableName="reconciliation_detail_item" constraintName="FK7t59vlhoi2xp5sbugo6w7p49i" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="claim_response" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-115">
+        <addForeignKeyConstraint baseColumnNames="party_patient_id" baseTableName="payee" constraintName="FK8kf2edwb4w9cph0hvelhydrr9" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="patient" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-116">
+        <addForeignKeyConstraint baseColumnNames="party_organization_id" baseTableName="payee" constraintName="FK8npaltp4vadq3gbll8hq47onl" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="organization" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-117">
+        <addForeignKeyConstraint baseColumnNames="address_id" baseTableName="organization" constraintName="FK97eigsvq2tsrd2bge4ox651wh" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="address" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-118">
+        <addForeignKeyConstraint baseColumnNames="facility_id" baseTableName="coverage_eligibility_request" constraintName="FK9j9w8panupo8b91sa5yga8oqm" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="location" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-119">
+        <addForeignKeyConstraint baseColumnNames="submitter_id" baseTableName="reconciliation_detail_item" constraintName="FK9luaq9secm4vo6ifjqje6ycq3" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="organization" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-120">
+        <addForeignKeyConstraint baseColumnNames="patient_id" baseTableName="coverage_eligibility_response" constraintName="FKabish1s0c2hin5hdwv4qvsq8n" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="patient" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-121">
+        <addForeignKeyConstraint baseColumnNames="communication_request_id" baseTableName="payload" constraintName="FKar3mlqbi6gxo2cr35q535dq6d" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="communication_request" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-122">
+        <addForeignKeyConstraint baseColumnNames="claim_id" baseTableName="care_team" constraintName="FKavld8aihi70queeji2fu51jhv" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="claim" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-123">
+        <addForeignKeyConstraint baseColumnNames="practitioner_role_id" baseTableName="list_specialty_enum" constraintName="FKb22m37ovhl9cpyabiwksp5yuq" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="practitioner_role" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-124">
+        <addForeignKeyConstraint baseColumnNames="subject_id" baseTableName="communication" constraintName="FKbc4jwmo9jpp8hqsfk1nauwr1x" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="patient" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-125">
+        <addForeignKeyConstraint baseColumnNames="payment_reconciliation_id" baseTableName="reconciliation_detail_item" constraintName="FKbeeicuqdsidm2lq8e8lhges3p" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="payment_reconciliation" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-126">
+        <addForeignKeyConstraint baseColumnNames="communication_id" baseTableName="payload" constraintName="FKbq1wjtcs7ax980pr8sgotcda4" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="communication" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-127">
+        <addForeignKeyConstraint baseColumnNames="insurer_id" baseTableName="claim" constraintName="FKc36go03vc75r2b1huv2piewl9" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="organization" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-128">
+        <addForeignKeyConstraint baseColumnNames="accident_id" baseTableName="claim" constraintName="FKcji7vft5go5xrv8dvimld1qju" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="accident" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-129">
+        <addForeignKeyConstraint baseColumnNames="adjudication_detail_item_id" baseTableName="adjudication_sub_detail_item" constraintName="FKcpl4wjxumsm6k653nh2ah26lb" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="adjudication_detail_item" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-130">
+        <addForeignKeyConstraint baseColumnNames="coverage_eligibility_request_id" baseTableName="rel_coverage_eligibility_request__coverages" constraintName="FKcst3n7pn4brlwnh8gh10hysgf" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="coverage_eligibility_request" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-131">
+        <addForeignKeyConstraint baseColumnNames="adjudication_sub_detail_item_id" baseTableName="adjudication" constraintName="FKctmugbiuco10s4gc8l0kkragt" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="adjudication_sub_detail_item" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-132">
+        <addForeignKeyConstraint baseColumnNames="coverage_id" baseTableName="class_component" constraintName="FKdi2ymm6a3kjl1ah95ruiwtuga" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="coverage" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-133">
+        <addForeignKeyConstraint baseColumnNames="item_id" baseTableName="reference_identifier" constraintName="FKdknbev55cfjoh5cwl4mq7muf3" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="item" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-134">
+        <addForeignKeyConstraint baseColumnNames="patient_id" baseTableName="coverage_eligibility_request" constraintName="FKdxlu0r7wdeasqkri5gxbnv6jj" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="patient" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-135">
+        <addForeignKeyConstraint baseColumnNames="organization_id" baseTableName="practitioner_role" constraintName="FKeb9x0wl5maq0v8w6vtp3ms5ls" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="organization" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-136">
+        <addForeignKeyConstraint baseColumnNames="claim_id" baseTableName="claim_error_messages" constraintName="FKehcrjirqst73x7159undei4mn" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="claim" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-137">
+        <addForeignKeyConstraint baseColumnNames="managing_organization_id" baseTableName="location" constraintName="FKew6i98t73d88aeronr2irox3g" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="organization" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-138">
+        <addForeignKeyConstraint baseColumnNames="payee_id" baseTableName="reconciliation_detail_item" constraintName="FKff74uar39rt1lta3jj0l8fqjg" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="organization" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-139">
+        <addForeignKeyConstraint baseColumnNames="claim_response_id" baseTableName="cr_error_messages" constraintName="FKfvxnqg562aeukp2rjyv5aphvl" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="claim_response" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-140">
+        <addForeignKeyConstraint baseColumnNames="claim_response_id" baseTableName="insurance" constraintName="FKg03reuhlwvg9q1q6ppo6br7oy" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="claim_response" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-141">
+        <addForeignKeyConstraint baseColumnNames="patient_id" baseTableName="claim" constraintName="FKgj89dyx4wf51seua8u63nfh92" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="patient" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-142">
+        <addForeignKeyConstraint baseColumnNames="communication_id" baseTableName="list_communication_reason_enum" constraintName="FKgpl6loi5ke42bair2iswdtkue" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="communication" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-143">
+        <addForeignKeyConstraint baseColumnNames="item_id" baseTableName="information_sequence" constraintName="FKhl98wu0lqng9risxhtb839qet" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="item" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-144">
+        <addForeignKeyConstraint baseColumnNames="adjudication_detail_item_id" baseTableName="adjudication_detail_notes" constraintName="FKhnjeqwby7uund7ap3pyqv0y36" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="adjudication_detail_item" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-145">
+        <addForeignKeyConstraint baseColumnNames="value_quantity_id" baseTableName="supporting_info" constraintName="FKhs5o3h4m1vl5jkldceshy4ruc" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="quantity" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-146">
+        <addForeignKeyConstraint baseColumnNames="cost_to_beneficiary_id" baseTableName="exemption_component" constraintName="FKi8m3qceapfbndgkjqivr3oxb9" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="cost_to_beneficiary_component" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-147">
+        <addForeignKeyConstraint baseColumnNames="value_reference_id" baseTableName="supporting_info" constraintName="FKil4blgy85x353j4cu8t1w4dv1" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="reference_identifier" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-148">
+        <addForeignKeyConstraint baseColumnNames="adjudication_item_id" baseTableName="adjudication_notes" constraintName="FKiqr3ecpvtr7ywc8830qelxja4" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="adjudication_item" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-149">
+        <addForeignKeyConstraint baseColumnNames="coverages_id" baseTableName="rel_coverage_eligibility_request__coverages" constraintName="FKishyoxdn6byadnvufe51lrxgi" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="coverage" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-150">
+        <addForeignKeyConstraint baseColumnNames="prescription_id" baseTableName="claim" constraintName="FKj031qtcx8332vbo1hvv019fja" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="reference_identifier" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-151">
+        <addForeignKeyConstraint baseColumnNames="origin_id" baseTableName="hospitalization" constraintName="FKjewc86temg30ro91gbb0y60iw" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="organization" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-152">
+        <addForeignKeyConstraint baseColumnNames="sender_id" baseTableName="communication" constraintName="FKjfgu2y9qc5os6omnbl5eccukm" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="organization" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-153">
+        <addForeignKeyConstraint baseColumnNames="detail_item_id" baseTableName="sub_detail_item" constraintName="FKk17u85g0qyvj5gd0lbckrm6sm" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="detail_item" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-154">
+        <addForeignKeyConstraint baseColumnNames="claim_id" baseTableName="diagnosis" constraintName="FKk50tkto8itj0qoxpk2vwxkgth" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="claim" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-155">
+        <addForeignKeyConstraint baseColumnNames="communication_id" baseTableName="note" constraintName="FKkef6sieyi36s87oc126e38qgt" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="communication" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-156">
+        <addForeignKeyConstraint baseColumnNames="communication_id" baseTableName="communication_request" constraintName="FKkgjxoh4bjmq9dp6mwx3ffjlme" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="communication" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-157">
+        <addForeignKeyConstraint baseColumnNames="provider_id" baseTableName="claim" constraintName="FKl3is5jj2h08e1pxc2hlialam8" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="organization" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-158">
+        <addForeignKeyConstraint baseColumnNames="provider_id" baseTableName="coverage_eligibility_request" constraintName="FKl54bo6uq85djvxklhtkds0qbp" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="organization" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-159">
+        <addForeignKeyConstraint baseColumnNames="detail_item_id" baseTableName="reference_identifier" constraintName="FKl5ie4a7uyg564c6h2hbmehqd0" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="detail_item" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-160">
+        <addForeignKeyConstraint baseColumnNames="communication_id" baseTableName="com_error_messages" constraintName="FKl7bjk9cy0enpn5spx1y3gsmce" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="communication" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-161">
+        <addForeignKeyConstraint baseColumnNames="encounter_id" baseTableName="claim" constraintName="FKla5vr1ortfws6bkydovn144xk" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="encounter" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-162">
+        <addForeignKeyConstraint baseColumnNames="value_attachment_id" baseTableName="supporting_info" constraintName="FKlc0h7sjcm3wpqh44a32yk96nl" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="attachment" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-163">
+        <addForeignKeyConstraint baseColumnNames="response_id" baseTableName="task_output" constraintName="FKleletegsiplqafd2yssboi2dq" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="reference_identifier" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-164">
+        <addForeignKeyConstraint baseColumnNames="provider_id" baseTableName="care_team" constraintName="FKlfw6k9lsj7m7twe8goyt51c7s" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="practitioner" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-165">
+        <addForeignKeyConstraint baseColumnNames="claim_id" baseTableName="related" constraintName="FKljyuu34nva35hu08kibc8xtiy" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="claim" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-166">
+        <addForeignKeyConstraint baseColumnNames="coverage_id" baseTableName="response_insurance" constraintName="FKlkye2x5rgbdgeyevg36fofsph" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="coverage" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-167">
+        <addForeignKeyConstraint baseColumnNames="address_id" baseTableName="patient" constraintName="FKlpwpmtdbdvnxm8fxlxpq2fugh" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="address" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-168">
+        <addForeignKeyConstraint baseColumnNames="item_id" baseTableName="care_team_sequence" constraintName="FKlsrey7gcohl9vye8m17en2vkj" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="item" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-169">
+        <addForeignKeyConstraint baseColumnNames="content_attachment_id" baseTableName="payload" constraintName="FKlths9fm1fyw3jyd4c1qrmrjv7" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="attachment" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-170">
+        <addForeignKeyConstraint baseColumnNames="adjudication_detail_item_id" baseTableName="adjudication" constraintName="FKm4dhl9l3qctdi8b2kvvhq82kl" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="adjudication_detail_item" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-171">
+        <addForeignKeyConstraint baseColumnNames="claim_response_id" baseTableName="claim" constraintName="FKm5abf1dg783jrn6c5sojjo8hu" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="claim_response" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-172">
+        <addForeignKeyConstraint baseColumnNames="location_id" baseTableName="accident" constraintName="FKmj56ngjpolxml4is2p9aejph2" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="address" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-173">
+        <addForeignKeyConstraint baseColumnNames="requester_id" baseTableName="task" constraintName="FKmkheyjnl6atbo9uycmr5lvwcc" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="organization" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-174">
+        <addForeignKeyConstraint baseColumnNames="payee_id" baseTableName="claim" constraintName="FKml5p82hl77m248er0dpbp4hn7" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="payee" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-175">
+        <addForeignKeyConstraint baseColumnNames="practitioner_role_id" baseTableName="list_role_code_enum" constraintName="FKmo8giduric233xw03817dt01c" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="practitioner_role" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-176">
+        <addForeignKeyConstraint baseColumnNames="coverage_id" baseTableName="cost_to_beneficiary_component" constraintName="FKmreio0niiwjli732l2dy80vrb" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="coverage" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-177">
+        <addForeignKeyConstraint baseColumnNames="claim_response_id" baseTableName="adjudication_item" constraintName="FKn0ovd1ovcxygpgkkx1o32croi" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="claim_response" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-178">
+        <addForeignKeyConstraint baseColumnNames="operation_outcome_id" baseTableName="ope_out_error_messages" constraintName="FKn5su6uu6d9f5aje2swoua6ujn" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="operation_outcome" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-179">
+        <addForeignKeyConstraint baseColumnNames="coverage_id" baseTableName="insurance" constraintName="FKn70bx06vgsvahwn0bxa68kfh0" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="coverage" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-180">
+        <addForeignKeyConstraint baseColumnNames="owner_id" baseTableName="task" constraintName="FKnbakfho1fugves57klwlejahv" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="organization" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-181">
+        <addForeignKeyConstraint baseColumnNames="input_orig_response_id" baseTableName="task_input" constraintName="FKnkjtwfysakjrr50gvrd5artay" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="reference_identifier" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-182">
+        <addForeignKeyConstraint baseColumnNames="original_prescription_id" baseTableName="claim" constraintName="FKnmstuub3wc8t320tnyhxf5bdh" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="reference_identifier" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-183">
+        <addForeignKeyConstraint baseColumnNames="eligibility_response_id" baseTableName="claim" constraintName="FKntp1mnsaopi61ka5j4ie9svqu" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="coverage_eligibility_response" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-184">
+        <addForeignKeyConstraint baseColumnNames="contacts_id" baseTableName="patient" constraintName="FKo38bepfkt7rrt8fekc3sov959" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="contact" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-185">
+        <addForeignKeyConstraint baseColumnNames="insurer_id" baseTableName="coverage_eligibility_request" constraintName="FKo719gy1ibowht65w30pfwqlsi" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="organization" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-186">
+        <addForeignKeyConstraint baseColumnNames="task_response_id" baseTableName="task_output" constraintName="FKo8vsu15j27wx7o17ssjqtlvhl" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="task_response" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-187">
+        <addForeignKeyConstraint baseColumnNames="claim_id" baseTableName="insurance" constraintName="FKodneeljhv5i5fg8h5m16jrki3" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="claim" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-188">
+        <addForeignKeyConstraint baseColumnNames="facility_id" baseTableName="claim" constraintName="FKok0g364ju785hwat75gqat1w6" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="location" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-189">
+        <addForeignKeyConstraint baseColumnNames="sender_id" baseTableName="communication_request" constraintName="FKoxrcvas9t72ykudyjaf55jhqd" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="organization" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-190">
+        <addForeignKeyConstraint baseColumnNames="response_insurance_id" baseTableName="response_insurance_item" constraintName="FKp2es3ihqx8tv7aw0b71ndlqcb" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="response_insurance" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-191">
+        <addForeignKeyConstraint baseColumnNames="acknowledgement_id" baseTableName="ack_error_messages" constraintName="FKp3nsvsdyhqh77v4vivx0wy3af" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="acknowledgement" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-192">
+        <addForeignKeyConstraint baseColumnNames="subject_id" baseTableName="communication_request" constraintName="FKpf8bbnrengejef2geh1c98ben" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="patient" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-193">
+        <addForeignKeyConstraint baseColumnNames="hospitalization_id" baseTableName="encounter" constraintName="FKpm0lp3ooloegojrqut1qh7083" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="hospitalization" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-194">
+        <addForeignKeyConstraint baseColumnNames="referral_id" baseTableName="claim" constraintName="FKppphhi1j5pamb1m8dkbataeyt" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="reference_identifier" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-195">
+        <addForeignKeyConstraint baseColumnNames="name_id" baseTableName="contact" constraintName="FKpucagd1rcxu1t90isao9ndf4u" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="human_name" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-196">
+        <addForeignKeyConstraint baseColumnNames="adjudication_sub_detail_item_id" baseTableName="adjudication_sub_detail_notes" constraintName="FKpw4cf281sppcao2vwx3j73jxv" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="adjudication_sub_detail_item" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-197">
+        <addForeignKeyConstraint baseColumnNames="payment_issuer_id" baseTableName="payment_reconciliation" constraintName="FKqnbh11ucm3aegfutupfyepdwj" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="organization" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-198">
+        <addForeignKeyConstraint baseColumnNames="about_id" baseTableName="communication" constraintName="FKqsd30xch2ms7xjbho0xm47j75" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="claim" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-199">
+        <addForeignKeyConstraint baseColumnNames="coverage_eligibility_request_id" baseTableName="cov_eli_error_messages" constraintName="FKqy1srb71b46ubnmbv8j69jaf9" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="coverage_eligibility_request" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-200">
+        <addForeignKeyConstraint baseColumnNames="claim_response_id" baseTableName="total" constraintName="FKrg4tdii0wx37jnf6nhloocrah" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="claim_response" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-201">
+        <addForeignKeyConstraint baseColumnNames="item_id" baseTableName="detail_item" constraintName="FKru8qrj6g3c6jx3tgd2wiimtql" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="item" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-202">
+        <addForeignKeyConstraint baseColumnNames="claim_id" baseTableName="item" constraintName="FKrvy2fnpmhjckfju14bxecpsxv" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="claim" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-203">
+        <addForeignKeyConstraint baseColumnNames="sub_detail_item_id" baseTableName="reference_identifier" constraintName="FKsssvtmlbwum1iosd1fw7t9vmv" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="sub_detail_item" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-204">
+        <addForeignKeyConstraint baseColumnNames="recipient_id" baseTableName="communication" constraintName="FKt3ij4fxcywgx94a5hqiccykg8" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="organization" validate="true"/>
+    </changeSet>
+    <changeSet author="fahmiboussetta (generated)" id="1636969859573-205">
+        <addForeignKeyConstraint baseColumnNames="payment_notice_id" baseTableName="pay_not_error_messages" constraintName="FKua5c5xot4fu3ipeqwrd6m3s9" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="payment_notice" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

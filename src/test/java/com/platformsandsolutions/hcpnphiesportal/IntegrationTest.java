@@ -1,6 +1,5 @@
 package com.platformsandsolutions.hcpnphiesportal;
 
-import com.platformsandsolutions.hcpnphiesportal.HcpNphiesPortalApp;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

@@ -17,7 +17,7 @@
             <column name="category" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
-            <column name="amount" type="integer">
+            <column name="amount" type="decimal(21,2)">
                 <constraints nullable="true" />
             </column>
             <column name="claim_response_id" type="bigint">

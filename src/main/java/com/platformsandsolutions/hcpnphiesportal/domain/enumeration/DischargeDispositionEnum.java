@@ -1,5 +1,7 @@
 package com.platformsandsolutions.hcpnphiesportal.domain.enumeration;
 
+import platform.fhir_client.utils.Enums;
+
 /**
  * The DischargeDispositionEnum enumeration.
  */
@@ -24,5 +26,14 @@ public enum DischargeDispositionEnum {
 
     public String getValue() {
         return value;
+    }
+
+    public Enums.DischargeDispositionEnum convert() {
+        for (Enums.DischargeDispositionEnum e : Enums.DischargeDispositionEnum.values()) {
+            if (e.getDescription() == this.getValue()) {
+                return e;
+            }
+        }
+        return null;
     }
 }

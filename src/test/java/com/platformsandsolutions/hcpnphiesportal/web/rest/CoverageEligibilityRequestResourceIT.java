@@ -2,9 +2,18 @@ package com.platformsandsolutions.hcpnphiesportal.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.platformsandsolutions.hcpnphiesportal.IntegrationTest;
 import com.platformsandsolutions.hcpnphiesportal.domain.CoverageEligibilityRequest;
@@ -25,14 +34,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Integration tests for the {@link CoverageEligibilityRequestResource} REST controller.
+ * Integration tests for the {@link CoverageEligibilityRequestResource} REST
+ * controller.
  */
 @IntegrationTest
 @ExtendWith(MockitoExtension.class)
@@ -228,18 +237,16 @@ class CoverageEligibilityRequestResourceIT {
             .andExpect(jsonPath("$.[*].servicedDateEnd").value(hasItem(DEFAULT_SERVICED_DATE_END.toString())));
     }
 
-    @SuppressWarnings({ "unchecked" })
     void getAllCoverageEligibilityRequestsWithEagerRelationshipsIsEnabled() throws Exception {
-        when(coverageEligibilityRequestRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+        when(coverageEligibilityRequestRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl<>(new ArrayList<>()));
 
         restCoverageEligibilityRequestMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
 
         verify(coverageEligibilityRequestRepositoryMock, times(1)).findAllWithEagerRelationships(any());
     }
 
-    @SuppressWarnings({ "unchecked" })
     void getAllCoverageEligibilityRequestsWithEagerRelationshipsIsNotEnabled() throws Exception {
-        when(coverageEligibilityRequestRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+        when(coverageEligibilityRequestRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl<>(new ArrayList<>()));
 
         restCoverageEligibilityRequestMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
 
@@ -285,7 +292,8 @@ class CoverageEligibilityRequestResourceIT {
         CoverageEligibilityRequest updatedCoverageEligibilityRequest = coverageEligibilityRequestRepository
             .findById(coverageEligibilityRequest.getId())
             .get();
-        // Disconnect from session so that the updates on updatedCoverageEligibilityRequest are not directly saved in db
+        // Disconnect from session so that the updates on
+        // updatedCoverageEligibilityRequest are not directly saved in db
         em.detach(updatedCoverageEligibilityRequest);
         updatedCoverageEligibilityRequest
             .guid(UPDATED_GUID)

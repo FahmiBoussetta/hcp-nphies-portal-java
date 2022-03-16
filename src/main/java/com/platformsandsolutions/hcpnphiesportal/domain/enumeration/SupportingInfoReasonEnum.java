@@ -1,5 +1,7 @@
 package com.platformsandsolutions.hcpnphiesportal.domain.enumeration;
 
+import platform.fhir_client.utils.Enums;
+
 /**
  * The SupportingInfoReasonEnum enumeration.
  */
@@ -16,5 +18,14 @@ public enum SupportingInfoReasonEnum {
 
     public String getValue() {
         return value;
+    }
+
+    public Enums.SupportingInfoReasonEnum convert() {
+        for (Enums.SupportingInfoReasonEnum e : Enums.SupportingInfoReasonEnum.values()) {
+            if (e.getDescription() == this.getValue()) {
+                return e;
+            }
+        }
+        return null;
     }
 }

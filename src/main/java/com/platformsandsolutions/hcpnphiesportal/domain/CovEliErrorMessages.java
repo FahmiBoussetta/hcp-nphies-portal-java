@@ -24,7 +24,10 @@ public class CovEliErrorMessages implements Serializable {
     private String message;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = { "errors", "purposes", "patient", "provider", "insurer", "facility", "coverages" }, allowSetters = true)
+    @JsonIgnoreProperties(
+        value = { "errors", "purposes", "patient", "provider", "insurer", "facility", "coverageEligibilityResponse", "coverages" },
+        allowSetters = true
+    )
     private CoverageEligibilityRequest coverageEligibilityRequest;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -67,7 +70,8 @@ public class CovEliErrorMessages implements Serializable {
         this.coverageEligibilityRequest = coverageEligibilityRequest;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and
+    // setters here
 
     @Override
     public boolean equals(Object o) {
@@ -82,7 +86,8 @@ public class CovEliErrorMessages implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        // see
+        // https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
     }
 
@@ -90,8 +95,8 @@ public class CovEliErrorMessages implements Serializable {
     @Override
     public String toString() {
         return "CovEliErrorMessages{" +
-            "id=" + getId() +
-            ", message='" + getMessage() + "'" +
-            "}";
+                "id=" + getId() +
+                ", message='" + getMessage() + "'" +
+                "}";
     }
 }

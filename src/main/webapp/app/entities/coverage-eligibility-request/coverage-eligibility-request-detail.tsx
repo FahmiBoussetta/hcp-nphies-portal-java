@@ -90,6 +90,16 @@ export const CoverageEligibilityRequestDetail = (props: RouteComponentProps<{ id
           </dt>
           <dd>{coverageEligibilityRequestEntity.facility ? coverageEligibilityRequestEntity.facility.id : ''}</dd>
           <dt>
+            <Translate contentKey="hcpNphiesPortalApp.coverageEligibilityRequest.coverageEligibilityResponse">
+              Coverage Eligibility Response
+            </Translate>
+          </dt>
+          <dd>
+            {coverageEligibilityRequestEntity.coverageEligibilityResponse
+              ? coverageEligibilityRequestEntity.coverageEligibilityResponse.id
+              : ''}
+          </dd>
+          <dt>
             <Translate contentKey="hcpNphiesPortalApp.coverageEligibilityRequest.coverages">Coverages</Translate>
           </dt>
           <dd>

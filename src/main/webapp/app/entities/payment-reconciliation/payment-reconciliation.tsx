@@ -92,7 +92,7 @@ export const PaymentReconciliation = (props: RouteComponentProps<{ url: string }
                   </td>
                   <td>{paymentReconciliation.value}</td>
                   <td>{paymentReconciliation.system}</td>
-                  <td>{paymentReconciliation.parsed}</td>
+                  <td>{paymentReconciliation.parsed?.substring(0, 80)}...</td>
                   <td>
                     {paymentReconciliation.periodStart ? (
                       <TextFormat type="date" value={paymentReconciliation.periodStart} format={APP_DATE_FORMAT} />

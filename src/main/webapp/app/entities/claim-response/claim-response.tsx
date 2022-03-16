@@ -74,7 +74,7 @@ export const ClaimResponse = (props: RouteComponentProps<{ url: string }>) => {
                   </td>
                   <td>{claimResponse.value}</td>
                   <td>{claimResponse.system}</td>
-                  <td>{claimResponse.parsed}</td>
+                  <td>{claimResponse.parsed?.substring(0, 80)}...</td>
                   <td>{claimResponse.outcome}</td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">

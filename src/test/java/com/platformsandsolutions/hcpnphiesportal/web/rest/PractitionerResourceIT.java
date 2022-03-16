@@ -39,8 +39,8 @@ class PractitionerResourceIT {
     private static final String DEFAULT_PRACTITIONER_LICENSE = "AAAAAAAAAA";
     private static final String UPDATED_PRACTITIONER_LICENSE = "BBBBBBBBBB";
 
-    private static final AdministrativeGenderEnum DEFAULT_GENDER = AdministrativeGenderEnum.Male;
-    private static final AdministrativeGenderEnum UPDATED_GENDER = AdministrativeGenderEnum.Female;
+    private static final AdministrativeGenderEnum DEFAULT_GENDER = AdministrativeGenderEnum.male;
+    private static final AdministrativeGenderEnum UPDATED_GENDER = AdministrativeGenderEnum.female;
 
     private static final String ENTITY_API_URL = "/api/practitioners";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
@@ -201,7 +201,8 @@ class PractitionerResourceIT {
 
         // Update the practitioner
         Practitioner updatedPractitioner = practitionerRepository.findById(practitioner.getId()).get();
-        // Disconnect from session so that the updates on updatedPractitioner are not directly saved in db
+        // Disconnect from session so that the updates on updatedPractitioner are not
+        // directly saved in db
         em.detach(updatedPractitioner);
         updatedPractitioner
             .guid(UPDATED_GUID)

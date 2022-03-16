@@ -42,8 +42,8 @@ class OrganizationResourceIT {
     private static final String DEFAULT_BASE_URL = "AAAAAAAAAA";
     private static final String UPDATED_BASE_URL = "BBBBBBBBBB";
 
-    private static final OrganizationTypeEnum DEFAULT_ORGANIZATION_TYPE = OrganizationTypeEnum.Prov;
-    private static final OrganizationTypeEnum UPDATED_ORGANIZATION_TYPE = OrganizationTypeEnum.Dept;
+    private static final OrganizationTypeEnum DEFAULT_ORGANIZATION_TYPE = OrganizationTypeEnum.prov;
+    private static final OrganizationTypeEnum UPDATED_ORGANIZATION_TYPE = OrganizationTypeEnum.dept;
 
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
@@ -200,7 +200,8 @@ class OrganizationResourceIT {
 
         // Update the organization
         Organization updatedOrganization = organizationRepository.findById(organization.getId()).get();
-        // Disconnect from session so that the updates on updatedOrganization are not directly saved in db
+        // Disconnect from session so that the updates on updatedOrganization are not
+        // directly saved in db
         em.detach(updatedOrganization);
         updatedOrganization
             .guid(UPDATED_GUID)

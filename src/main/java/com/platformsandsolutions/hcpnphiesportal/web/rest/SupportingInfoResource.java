@@ -130,6 +130,9 @@ public class SupportingInfoResource {
                     if (supportingInfo.getCodeLOINC() != null) {
                         existingSupportingInfo.setCodeLOINC(supportingInfo.getCodeLOINC());
                     }
+                    if (supportingInfo.getCodeIcd() != null) {
+                        existingSupportingInfo.setCodeIcd(supportingInfo.getCodeIcd());
+                    }
                     if (supportingInfo.getCategory() != null) {
                         existingSupportingInfo.setCategory(supportingInfo.getCategory());
                     }

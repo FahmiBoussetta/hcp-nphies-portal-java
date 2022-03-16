@@ -17,4 +17,16 @@ public enum Use {
     public String getValue() {
         return value;
     }
+
+    public org.hl7.fhir.r4.model.Claim.Use convert() {
+        switch (this.getValue()) {
+            case "predetermination":
+                return org.hl7.fhir.r4.model.Claim.Use.PREDETERMINATION;
+            case "preauthorization":
+                return org.hl7.fhir.r4.model.Claim.Use.PREAUTHORIZATION;
+            case "claim":
+                return org.hl7.fhir.r4.model.Claim.Use.CLAIM;
+        }
+        return null;
+    }
 }

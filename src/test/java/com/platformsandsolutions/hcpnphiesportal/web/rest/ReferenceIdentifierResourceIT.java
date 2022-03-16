@@ -22,26 +22,27 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Integration tests for the {@link ReferenceIdentifierResource} REST controller.
+ * Integration tests for the {@link ReferenceIdentifierResource} REST
+ * controller.
  */
 @IntegrationTest
 @AutoConfigureMockMvc
 @WithMockUser
 class ReferenceIdentifierResourceIT {
 
-    private static final String DEFAULT_REF = "AAAAAAAAAA";
-    private static final String UPDATED_REF = "BBBBBBBBBB";
+    private static final String DEFAULT_REFERENCE = "AAAAAAAAAA";
+    private static final String UPDATED_REFERENCE = "BBBBBBBBBB";
 
-    private static final String DEFAULT_ID_VALUE = "AAAAAAAAAA";
-    private static final String UPDATED_ID_VALUE = "BBBBBBBBBB";
+    private static final String DEFAULT_VALUE = "AAAAAAAAAA";
+    private static final String UPDATED_VALUE = "BBBBBBBBBB";
 
-    private static final String DEFAULT_IDENTIFIER = "AAAAAAAAAA";
-    private static final String UPDATED_IDENTIFIER = "BBBBBBBBBB";
+    private static final String DEFAULT_SYSTEM = "AAAAAAAAAA";
+    private static final String UPDATED_SYSTEM = "BBBBBBBBBB";
 
     private static final String DEFAULT_DISPLAY = "AAAAAAAAAA";
     private static final String UPDATED_DISPLAY = "BBBBBBBBBB";
 
-    private static final String ENTITY_API_URL = "/api/reference-identifiers";
+    private static final String ENTITY_API_URL = "/api/reference-systems";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
     private static Random random = new Random();
@@ -66,9 +67,9 @@ class ReferenceIdentifierResourceIT {
      */
     public static ReferenceIdentifier createEntity(EntityManager em) {
         ReferenceIdentifier referenceIdentifier = new ReferenceIdentifier()
-            .ref(DEFAULT_REF)
-            .idValue(DEFAULT_ID_VALUE)
-            .identifier(DEFAULT_IDENTIFIER)
+            .reference(DEFAULT_REFERENCE)
+            .value(DEFAULT_VALUE)
+            .system(DEFAULT_SYSTEM)
             .display(DEFAULT_DISPLAY);
         return referenceIdentifier;
     }
@@ -81,9 +82,9 @@ class ReferenceIdentifierResourceIT {
      */
     public static ReferenceIdentifier createUpdatedEntity(EntityManager em) {
         ReferenceIdentifier referenceIdentifier = new ReferenceIdentifier()
-            .ref(UPDATED_REF)
-            .idValue(UPDATED_ID_VALUE)
-            .identifier(UPDATED_IDENTIFIER)
+            .reference(UPDATED_REFERENCE)
+            .value(UPDATED_VALUE)
+            .system(UPDATED_SYSTEM)
             .display(UPDATED_DISPLAY);
         return referenceIdentifier;
     }
@@ -108,9 +109,9 @@ class ReferenceIdentifierResourceIT {
         List<ReferenceIdentifier> referenceIdentifierList = referenceIdentifierRepository.findAll();
         assertThat(referenceIdentifierList).hasSize(databaseSizeBeforeCreate + 1);
         ReferenceIdentifier testReferenceIdentifier = referenceIdentifierList.get(referenceIdentifierList.size() - 1);
-        assertThat(testReferenceIdentifier.getRef()).isEqualTo(DEFAULT_REF);
-        assertThat(testReferenceIdentifier.getIdValue()).isEqualTo(DEFAULT_ID_VALUE);
-        assertThat(testReferenceIdentifier.getIdentifier()).isEqualTo(DEFAULT_IDENTIFIER);
+        assertThat(testReferenceIdentifier.getReference()).isEqualTo(DEFAULT_REFERENCE);
+        assertThat(testReferenceIdentifier.getValue()).isEqualTo(DEFAULT_VALUE);
+        assertThat(testReferenceIdentifier.getSystem()).isEqualTo(DEFAULT_SYSTEM);
         assertThat(testReferenceIdentifier.getDisplay()).isEqualTo(DEFAULT_DISPLAY);
     }
 
@@ -146,9 +147,9 @@ class ReferenceIdentifierResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(referenceIdentifier.getId().intValue())))
-            .andExpect(jsonPath("$.[*].ref").value(hasItem(DEFAULT_REF)))
-            .andExpect(jsonPath("$.[*].idValue").value(hasItem(DEFAULT_ID_VALUE)))
-            .andExpect(jsonPath("$.[*].identifier").value(hasItem(DEFAULT_IDENTIFIER)))
+            .andExpect(jsonPath("$.[*].reference").value(hasItem(DEFAULT_REFERENCE)))
+            .andExpect(jsonPath("$.[*].value").value(hasItem(DEFAULT_VALUE)))
+            .andExpect(jsonPath("$.[*].system").value(hasItem(DEFAULT_SYSTEM)))
             .andExpect(jsonPath("$.[*].display").value(hasItem(DEFAULT_DISPLAY)));
     }
 
@@ -164,9 +165,9 @@ class ReferenceIdentifierResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(referenceIdentifier.getId().intValue()))
-            .andExpect(jsonPath("$.ref").value(DEFAULT_REF))
-            .andExpect(jsonPath("$.idValue").value(DEFAULT_ID_VALUE))
-            .andExpect(jsonPath("$.identifier").value(DEFAULT_IDENTIFIER))
+            .andExpect(jsonPath("$.reference").value(DEFAULT_REFERENCE))
+            .andExpect(jsonPath("$.value").value(DEFAULT_VALUE))
+            .andExpect(jsonPath("$.system").value(DEFAULT_SYSTEM))
             .andExpect(jsonPath("$.display").value(DEFAULT_DISPLAY));
     }
 
@@ -187,9 +188,10 @@ class ReferenceIdentifierResourceIT {
 
         // Update the referenceIdentifier
         ReferenceIdentifier updatedReferenceIdentifier = referenceIdentifierRepository.findById(referenceIdentifier.getId()).get();
-        // Disconnect from session so that the updates on updatedReferenceIdentifier are not directly saved in db
+        // Disconnect from session so that the updates on updatedReferenceIdentifier are
+        // not directly saved in db
         em.detach(updatedReferenceIdentifier);
-        updatedReferenceIdentifier.ref(UPDATED_REF).idValue(UPDATED_ID_VALUE).identifier(UPDATED_IDENTIFIER).display(UPDATED_DISPLAY);
+        updatedReferenceIdentifier.reference(UPDATED_REFERENCE).value(UPDATED_VALUE).system(UPDATED_SYSTEM).display(UPDATED_DISPLAY);
 
         restReferenceIdentifierMockMvc
             .perform(
@@ -203,9 +205,9 @@ class ReferenceIdentifierResourceIT {
         List<ReferenceIdentifier> referenceIdentifierList = referenceIdentifierRepository.findAll();
         assertThat(referenceIdentifierList).hasSize(databaseSizeBeforeUpdate);
         ReferenceIdentifier testReferenceIdentifier = referenceIdentifierList.get(referenceIdentifierList.size() - 1);
-        assertThat(testReferenceIdentifier.getRef()).isEqualTo(UPDATED_REF);
-        assertThat(testReferenceIdentifier.getIdValue()).isEqualTo(UPDATED_ID_VALUE);
-        assertThat(testReferenceIdentifier.getIdentifier()).isEqualTo(UPDATED_IDENTIFIER);
+        assertThat(testReferenceIdentifier.getReference()).isEqualTo(UPDATED_REFERENCE);
+        assertThat(testReferenceIdentifier.getValue()).isEqualTo(UPDATED_VALUE);
+        assertThat(testReferenceIdentifier.getSystem()).isEqualTo(UPDATED_SYSTEM);
         assertThat(testReferenceIdentifier.getDisplay()).isEqualTo(UPDATED_DISPLAY);
     }
 
@@ -279,7 +281,7 @@ class ReferenceIdentifierResourceIT {
         ReferenceIdentifier partialUpdatedReferenceIdentifier = new ReferenceIdentifier();
         partialUpdatedReferenceIdentifier.setId(referenceIdentifier.getId());
 
-        partialUpdatedReferenceIdentifier.ref(UPDATED_REF).display(UPDATED_DISPLAY);
+        partialUpdatedReferenceIdentifier.reference(UPDATED_REFERENCE).display(UPDATED_DISPLAY);
 
         restReferenceIdentifierMockMvc
             .perform(
@@ -293,9 +295,9 @@ class ReferenceIdentifierResourceIT {
         List<ReferenceIdentifier> referenceIdentifierList = referenceIdentifierRepository.findAll();
         assertThat(referenceIdentifierList).hasSize(databaseSizeBeforeUpdate);
         ReferenceIdentifier testReferenceIdentifier = referenceIdentifierList.get(referenceIdentifierList.size() - 1);
-        assertThat(testReferenceIdentifier.getRef()).isEqualTo(UPDATED_REF);
-        assertThat(testReferenceIdentifier.getIdValue()).isEqualTo(DEFAULT_ID_VALUE);
-        assertThat(testReferenceIdentifier.getIdentifier()).isEqualTo(DEFAULT_IDENTIFIER);
+        assertThat(testReferenceIdentifier.getReference()).isEqualTo(UPDATED_REFERENCE);
+        assertThat(testReferenceIdentifier.getValue()).isEqualTo(DEFAULT_VALUE);
+        assertThat(testReferenceIdentifier.getSystem()).isEqualTo(DEFAULT_SYSTEM);
         assertThat(testReferenceIdentifier.getDisplay()).isEqualTo(UPDATED_DISPLAY);
     }
 
@@ -311,11 +313,7 @@ class ReferenceIdentifierResourceIT {
         ReferenceIdentifier partialUpdatedReferenceIdentifier = new ReferenceIdentifier();
         partialUpdatedReferenceIdentifier.setId(referenceIdentifier.getId());
 
-        partialUpdatedReferenceIdentifier
-            .ref(UPDATED_REF)
-            .idValue(UPDATED_ID_VALUE)
-            .identifier(UPDATED_IDENTIFIER)
-            .display(UPDATED_DISPLAY);
+        partialUpdatedReferenceIdentifier.reference(UPDATED_REFERENCE).value(UPDATED_VALUE).system(UPDATED_SYSTEM).display(UPDATED_DISPLAY);
 
         restReferenceIdentifierMockMvc
             .perform(
@@ -329,9 +327,9 @@ class ReferenceIdentifierResourceIT {
         List<ReferenceIdentifier> referenceIdentifierList = referenceIdentifierRepository.findAll();
         assertThat(referenceIdentifierList).hasSize(databaseSizeBeforeUpdate);
         ReferenceIdentifier testReferenceIdentifier = referenceIdentifierList.get(referenceIdentifierList.size() - 1);
-        assertThat(testReferenceIdentifier.getRef()).isEqualTo(UPDATED_REF);
-        assertThat(testReferenceIdentifier.getIdValue()).isEqualTo(UPDATED_ID_VALUE);
-        assertThat(testReferenceIdentifier.getIdentifier()).isEqualTo(UPDATED_IDENTIFIER);
+        assertThat(testReferenceIdentifier.getReference()).isEqualTo(UPDATED_REFERENCE);
+        assertThat(testReferenceIdentifier.getValue()).isEqualTo(UPDATED_VALUE);
+        assertThat(testReferenceIdentifier.getSystem()).isEqualTo(UPDATED_SYSTEM);
         assertThat(testReferenceIdentifier.getDisplay()).isEqualTo(UPDATED_DISPLAY);
     }
 

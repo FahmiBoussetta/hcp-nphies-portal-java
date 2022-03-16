@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.platformsandsolutions.hcpnphiesportal.IntegrationTest;
 import com.platformsandsolutions.hcpnphiesportal.domain.AdjudicationItem;
+import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.AdjudicationOutcomeEnum;
 import com.platformsandsolutions.hcpnphiesportal.repository.AdjudicationItemRepository;
 import java.util.List;
 import java.util.Random;
@@ -29,8 +30,8 @@ import org.springframework.transaction.annotation.Transactional;
 @WithMockUser
 class AdjudicationItemResourceIT {
 
-    private static final String DEFAULT_OUTCOME = "AAAAAAAAAA";
-    private static final String UPDATED_OUTCOME = "BBBBBBBBBB";
+    private static final AdjudicationOutcomeEnum DEFAULT_OUTCOME = AdjudicationOutcomeEnum.approved;
+    private static final AdjudicationOutcomeEnum UPDATED_OUTCOME = AdjudicationOutcomeEnum.rejected;
 
     private static final Integer DEFAULT_SEQUENCE = 1;
     private static final Integer UPDATED_SEQUENCE = 2;
@@ -186,7 +187,8 @@ class AdjudicationItemResourceIT {
 
         // Update the adjudicationItem
         AdjudicationItem updatedAdjudicationItem = adjudicationItemRepository.findById(adjudicationItem.getId()).get();
-        // Disconnect from session so that the updates on updatedAdjudicationItem are not directly saved in db
+        // Disconnect from session so that the updates on updatedAdjudicationItem are
+        // not directly saved in db
         em.detach(updatedAdjudicationItem);
         updatedAdjudicationItem.outcome(UPDATED_OUTCOME).sequence(UPDATED_SEQUENCE);
 

@@ -20,7 +20,7 @@
             <column name="is_queued" type="boolean">
                 <constraints nullable="true" />
             </column>
-            <column name="parsed" type="varchar(255)">
+            <column name="parsed" type="varchar(max)">
                 <constraints nullable="true" />
             </column>
             <column name="identifier" type="varchar(255)">

@@ -1,12 +1,15 @@
 package com.platformsandsolutions.hcpnphiesportal.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.AdjudicationEnum;
+import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.AdjudicationReasonEnum;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import platform.fhir_client.models.AdjudicationModel;
 
 /**
  * A Adjudication.
@@ -24,27 +27,26 @@ public class Adjudication implements Serializable {
 
     @NotNull
     @Column(name = "category", nullable = false)
-    private String category;
+    private AdjudicationEnum category;
 
     @Column(name = "reason")
-    private String reason;
+    private AdjudicationReasonEnum reason;
 
-    @NotNull
-    @Column(name = "amount", nullable = false)
-    private Integer amount;
+    @Column(name = "amount", precision = 21, scale = 2)
+    private BigDecimal amount;
 
     @Column(name = "value", precision = 21, scale = 2)
     private BigDecimal value;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JsonIgnoreProperties(value = { "notes", "adjudications", "details", "claimResponse" }, allowSetters = true)
     private AdjudicationItem adjudicationItem;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JsonIgnoreProperties(value = { "notes", "adjudications", "subDetails", "adjudicationItem" }, allowSetters = true)
     private AdjudicationDetailItem adjudicationDetailItem;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JsonIgnoreProperties(value = { "notes", "adjudications", "adjudicationDetailItem" }, allowSetters = true)
     private AdjudicationSubDetailItem adjudicationSubDetailItem;
 
@@ -62,42 +64,42 @@ public class Adjudication implements Serializable {
         return this;
     }
 
-    public String getCategory() {
+    public AdjudicationEnum getCategory() {
         return this.category;
     }
 
-    public Adjudication category(String category) {
-        this.category = category;
+    public Adjudication category(AdjudicationEnum updatedCategory) {
+        this.category = updatedCategory;
         return this;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(AdjudicationEnum category) {
         this.category = category;
     }
 
-    public String getReason() {
+    public AdjudicationReasonEnum getReason() {
         return this.reason;
     }
 
-    public Adjudication reason(String reason) {
+    public Adjudication reason(AdjudicationReasonEnum reason) {
         this.reason = reason;
         return this;
     }
 
-    public void setReason(String reason) {
+    public void setReason(AdjudicationReasonEnum reason) {
         this.reason = reason;
     }
 
-    public Integer getAmount() {
+    public BigDecimal getAmount() {
         return this.amount;
     }
 
-    public Adjudication amount(Integer amount) {
+    public Adjudication amount(BigDecimal amount) {
         this.amount = amount;
         return this;
     }
 
-    public void setAmount(Integer amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
@@ -153,7 +155,8 @@ public class Adjudication implements Serializable {
         this.adjudicationSubDetailItem = adjudicationSubDetailItem;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and
+    // setters here
 
     @Override
     public boolean equals(Object o) {
@@ -168,7 +171,8 @@ public class Adjudication implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        // see
+        // https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
     }
 
@@ -176,11 +180,24 @@ public class Adjudication implements Serializable {
     @Override
     public String toString() {
         return "Adjudication{" +
-            "id=" + getId() +
-            ", category='" + getCategory() + "'" +
-            ", reason='" + getReason() + "'" +
-            ", amount=" + getAmount() +
-            ", value=" + getValue() +
-            "}";
+                "id=" + getId() +
+                ", category='" + getCategory() + "'" +
+                ", reason='" + getReason() + "'" +
+                ", amount=" + getAmount() +
+                ", value=" + getValue() +
+                "}";
+    }
+
+    public static Adjudication convertFrom(AdjudicationModel y) {
+        Adjudication adj = new Adjudication();
+        if (y.getCategory() != null) {
+            adj.setCategory(AdjudicationEnum.valueOf(y.getCategory().name()));
+        }
+        if (y.getReason() != null) {
+            adj.setReason(AdjudicationReasonEnum.valueOf(y.getReason().name()));
+        }
+        adj.setAmount(y.getAmount());
+        adj.setValue(y.getValue());
+        return adj;
     }
 }

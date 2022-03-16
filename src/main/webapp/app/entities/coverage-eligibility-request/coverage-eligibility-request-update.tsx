@@ -224,20 +224,6 @@ export const CoverageEligibilityRequestUpdate = (props: RouteComponentProps<{ id
                   validate={{ required: true }}
                 />
               ) : null}
-              <ValidatedField
-                label={translate('hcpNphiesPortalApp.coverageEligibilityRequest.guid')}
-                id="coverage-eligibility-request-guid"
-                name="guid"
-                data-cy="guid"
-                type="text"
-              />
-              <ValidatedField
-                label={translate('hcpNphiesPortalApp.coverageEligibilityRequest.parsed')}
-                id="coverage-eligibility-request-parsed"
-                name="parsed"
-                data-cy="parsed"
-                type="text"
-              />
               <Form>
                 <FormGroup>
                   <Label check>

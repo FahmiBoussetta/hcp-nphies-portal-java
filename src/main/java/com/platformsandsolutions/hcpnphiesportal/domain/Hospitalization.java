@@ -5,9 +5,12 @@ import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.AdmitSourceE
 import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.DischargeDispositionEnum;
 import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.ReAdmissionEnum;
 import java.io.Serializable;
+import java.util.ArrayList;
 import javax.persistence.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import platform.fhir_client.models.CoreResourceModel;
+import platform.fhir_client.models.HospitalizationModel;
 
 /**
  * A Hospitalization.
@@ -39,7 +42,6 @@ public class Hospitalization implements Serializable {
     @JsonIgnoreProperties(value = { "contacts", "address" }, allowSetters = true)
     private Organization origin;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
     }
@@ -105,8 +107,6 @@ public class Hospitalization implements Serializable {
         this.origin = organization;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -120,18 +120,49 @@ public class Hospitalization implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        // see
+        // https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
     }
 
     // prettier-ignore
     @Override
     public String toString() {
-        return "Hospitalization{" +
-            "id=" + getId() +
-            ", admitSource='" + getAdmitSource() + "'" +
-            ", reAdmission='" + getReAdmission() + "'" +
-            ", dischargeDisposition='" + getDischargeDisposition() + "'" +
-            "}";
+        return "Hospitalization{" + "id=" + getId() + ", admitSource='" + getAdmitSource() + "'" + ", reAdmission='"
+                + getReAdmission() + "'" + ", dischargeDisposition='" + getDischargeDisposition() + "'" + "}";
+    }
+
+    public HospitalizationModel convert(ArrayList<CoreResourceModel> coreResources) {
+        HospitalizationModel h = new HospitalizationModel();
+        if (this.getAdmitSource() != null) {
+            h.setAdmitSource(this.getAdmitSource().convert());
+        }
+        if (this.getDischargeDisposition() != null) {
+            h.setDischargeDisposition(this.getDischargeDisposition().convert());
+        }
+        if (this.getOrigin() != null) {
+            h.setOrigin(this.getOrigin().convert(coreResources));
+        }
+        if (this.getReAdmission() != null) {
+            h.setReAdmission(this.getReAdmission().convert());
+        }
+        return h;
+    }
+
+    public static Hospitalization convertFrom(HospitalizationModel model) {
+        Hospitalization h = new Hospitalization();
+        if (model.getAdmitSource() != null) {
+            h.setAdmitSource(AdmitSourceEnum.valueOf(model.getAdmitSource().name()));
+        }
+        if (model.getDischargeDisposition() != null) {
+            h.setDischargeDisposition(DischargeDispositionEnum.valueOf(model.getDischargeDisposition().name()));
+        }
+        if (model.getOrigin() != null) {
+            h.setOrigin(Organization.convertFrom(model.getOrigin()));
+        }
+        if (model.getReAdmission() != null) {
+            h.setReAdmission(ReAdmissionEnum.valueOf(model.getReAdmission().name()));
+        }
+        return h;
     }
 }

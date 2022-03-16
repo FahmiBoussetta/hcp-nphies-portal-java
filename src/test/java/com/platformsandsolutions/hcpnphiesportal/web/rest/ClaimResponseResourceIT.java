@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.platformsandsolutions.hcpnphiesportal.IntegrationTest;
 import com.platformsandsolutions.hcpnphiesportal.domain.ClaimResponse;
+import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.RemittanceOutcomeEnum;
 import com.platformsandsolutions.hcpnphiesportal.repository.ClaimResponseRepository;
 import java.util.List;
 import java.util.Random;
@@ -38,8 +39,8 @@ class ClaimResponseResourceIT {
     private static final String DEFAULT_PARSED = "AAAAAAAAAA";
     private static final String UPDATED_PARSED = "BBBBBBBBBB";
 
-    private static final String DEFAULT_OUTCOME = "AAAAAAAAAA";
-    private static final String UPDATED_OUTCOME = "BBBBBBBBBB";
+    private static final RemittanceOutcomeEnum DEFAULT_OUTCOME = RemittanceOutcomeEnum.complete;
+    private static final RemittanceOutcomeEnum UPDATED_OUTCOME = RemittanceOutcomeEnum.error;
 
     private static final String ENTITY_API_URL = "/api/claim-responses";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
@@ -183,7 +184,8 @@ class ClaimResponseResourceIT {
 
         // Update the claimResponse
         ClaimResponse updatedClaimResponse = claimResponseRepository.findById(claimResponse.getId()).get();
-        // Disconnect from session so that the updates on updatedClaimResponse are not directly saved in db
+        // Disconnect from session so that the updates on updatedClaimResponse are not
+        // directly saved in db
         em.detach(updatedClaimResponse);
         updatedClaimResponse.value(UPDATED_VALUE).system(UPDATED_SYSTEM).parsed(UPDATED_PARSED).outcome(UPDATED_OUTCOME);
 

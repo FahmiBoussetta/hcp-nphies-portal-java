@@ -44,4 +44,6 @@ export enum SupportingInfoCategoryEnum {
   Ventilation_hours = 'Ventilation Hours',
 
   Vital_Sign_Height = 'Vital Sign Height',
+
+  Chief_complaint = 'Chief complaint',
 }

@@ -43,6 +43,10 @@ entity PayNotErrorMessages {
 	message String
 }
 
+entity CareTeamSequence {
+    careSeq Integer
+}
+
 entity DiagnosisSequence {
     diagSeq Integer
 }
@@ -468,6 +472,7 @@ entity ReferenceIdentifier {
 entity SupportingInfo {
 	sequence Integer,
 	codeLOINC String,
+	codeIcd String,
     category SupportingInfoCategoryEnum,
     codeVisit SupportingInfoCodeVisitEnum,
     codeFdiOral SupportingInfoCodeFdiEnum,
@@ -838,7 +843,7 @@ enum SupportingInfoCategoryEnum {
 		Patient_Reason_for_Visit("Patient Reason for Visit"), Lab_test("lab-test"),
 		Reason_for_Visit("Reason for visit"), Days_Supply("Days supply"), Vital_Sign_Weight("Vital Sign Weight"),
 		Vital_Sign_Systolic("Vital Sign Systolic"), Vital_Sign_Diastolic("Vital Sign Diastolic"),
-		Icu_hours("ICU Hours"), Ventilation_hours("Ventilation Hours"), Vital_Sign_Height("Vital Sign Height")
+		Icu_hours("ICU Hours"), Ventilation_hours("Ventilation Hours"), Vital_Sign_Height("Vital Sign Height"), Chief_complaint (Chief complaint)
 }
 
 enum SupportingInfoCodeVisitEnum {
@@ -913,6 +918,7 @@ enum EventCodingEnum {
 
 relationship ManyToMany {
   CoverageEligibilityRequest{coverages} to Coverage{coverageEligibilityRequests}
+  Communication{basedOn} to CommunicationRequest{communications}
 }
 
 relationship OneToOne {
@@ -995,6 +1001,7 @@ relationship OneToMany {
   Claim{diagnoses} to Diagnosis{claim}
   Claim{insurances} to Insurance{claim}
   Claim{items} to Item{claim}
+  Item{careTeamSequence} to CareTeamSequence{item} 
   Item{diagnosisSequence} to DiagnosisSequence{item} 
   Item{informationSequence} to InformationSequence{item}
   Item{udi} to ReferenceIdentifier{item}
@@ -1013,7 +1020,6 @@ relationship OneToMany {
   AdjudicationDetailItem{subDetails} to AdjudicationSubDetailItem{adjudicationDetailItem}
   AdjudicationSubDetailItem{notes} to AdjudicationSubDetailNotes{adjudicationSubDetailItem}
   AdjudicationSubDetailItem{adjudications} to Adjudication{adjudicationSubDetailItem}
-  Communication{basedOn} to CommunicationRequest{communication}
   Communication{medium} to ListCommunicationMediumEnum{communication}
   Communication{reasonCode} to ListCommunicationReasonEnum{communication}
   Communication{payload} to Payload{communication}

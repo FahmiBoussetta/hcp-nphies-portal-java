@@ -125,10 +125,6 @@ export const AdjudicationUpdate = (props: RouteComponentProps<{ id: string }>) =
                 name="amount"
                 data-cy="amount"
                 type="text"
-                validate={{
-                  required: { value: true, message: translate('entity.validation.required') },
-                  validate: v => isNumber(v) || translate('entity.validation.number'),
-                }}
               />
               <ValidatedField
                 label={translate('hcpNphiesPortalApp.adjudication.value')}

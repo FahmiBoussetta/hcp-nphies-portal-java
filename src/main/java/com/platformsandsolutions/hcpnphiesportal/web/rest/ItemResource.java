@@ -3,11 +3,18 @@ package com.platformsandsolutions.hcpnphiesportal.web.rest;
 import com.platformsandsolutions.hcpnphiesportal.domain.Item;
 import com.platformsandsolutions.hcpnphiesportal.repository.ItemRepository;
 import com.platformsandsolutions.hcpnphiesportal.web.rest.errors.BadRequestAlertException;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
@@ -16,11 +23,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import platform.fhir_client.utils.FHIRHelper;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.ResponseUtil;
 
 /**
- * REST controller for managing {@link com.platformsandsolutions.hcpnphiesportal.domain.Item}.
+ * REST controller for managing
+ * {@link com.platformsandsolutions.hcpnphiesportal.domain.Item}.
  */
 @RestController
 @RequestMapping("/api")
@@ -44,7 +53,9 @@ public class ItemResource {
      * {@code POST  /items} : Create a new item.
      *
      * @param item the item to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new item, or with status {@code 400 (Bad Request)} if the item has already an ID.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with
+     *         body the new item, or with status {@code 400 (Bad Request)} if the
+     *         item has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/items")
@@ -63,11 +74,12 @@ public class ItemResource {
     /**
      * {@code PUT  /items/:id} : Updates an existing item.
      *
-     * @param id the id of the item to save.
+     * @param id   the id of the item to save.
      * @param item the item to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated item,
-     * or with status {@code 400 (Bad Request)} if the item is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the item couldn't be updated.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
+     *         the updated item, or with status {@code 400 (Bad Request)} if the
+     *         item is not valid, or with status {@code 500 (Internal Server Error)}
+     *         if the item couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/items/{id}")
@@ -93,14 +105,51 @@ public class ItemResource {
     }
 
     /**
-     * {@code PATCH  /items/:id} : Partial updates given fields of an existing item, field will ignore if it is null
+     * {@code GET  /items} : get all the items.
      *
-     * @param id the id of the item to save.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list
+     *         of items in body.
+     */
+    @GetMapping("/items/products")
+    public List<String> getAllProducts() {
+        log.debug("REST request to get all product lists");
+        List<String> l = new ArrayList<String>();
+
+        try {
+            // String path = System.getProperty("user.dir");
+            JarFile jarFile = new JarFile(FHIRHelper.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath());
+            Enumeration<JarEntry> enumOfJar = jarFile.entries();
+            while (enumOfJar.hasMoreElements()) {
+                final JarEntry entry = (JarEntry) enumOfJar.nextElement();
+                if (entry.getName().contains(".txt") && entry.getName().contains("/utils/")) {
+                    System.out.println("File : " + entry.getName());
+                    JarEntry fileEntry = jarFile.getJarEntry(entry.getName());
+                    InputStream input = jarFile.getInputStream(fileEntry);
+                    try (BufferedReader r = new BufferedReader(new InputStreamReader(input))) {
+                        String line;
+                        while ((line = r.readLine()) != null) {
+                            l.add(String.format("%1$s|%2$s", entry.getName().substring(entry.getName().lastIndexOf('/') + 1), line));
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return l;
+    }
+
+    /**
+     * {@code PATCH  /items/:id} : Partial updates given fields of an existing item,
+     * field will ignore if it is null
+     *
+     * @param id   the id of the item to save.
      * @param item the item to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated item,
-     * or with status {@code 400 (Bad Request)} if the item is not valid,
-     * or with status {@code 404 (Not Found)} if the item is not found,
-     * or with status {@code 500 (Internal Server Error)} if the item couldn't be updated.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
+     *         the updated item, or with status {@code 400 (Bad Request)} if the
+     *         item is not valid, or with status {@code 404 (Not Found)} if the item
+     *         is not found, or with status {@code 500 (Internal Server Error)} if
+     *         the item couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/items/{id}", consumes = "application/merge-patch+json")
@@ -138,9 +187,6 @@ public class ItemResource {
                     }
                     if (item.getPatientShare() != null) {
                         existingItem.setPatientShare(item.getPatientShare());
-                    }
-                    if (item.getCareTeamSequence() != null) {
-                        existingItem.setCareTeamSequence(item.getCareTeamSequence());
                     }
                     if (item.getTransportationSRCA() != null) {
                         existingItem.setTransportationSRCA(item.getTransportationSRCA());
@@ -208,7 +254,8 @@ public class ItemResource {
     /**
      * {@code GET  /items} : get all the items.
      *
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of items in body.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list
+     *         of items in body.
      */
     @GetMapping("/items")
     public List<Item> getAllItems() {
@@ -220,7 +267,8 @@ public class ItemResource {
      * {@code GET  /items/:id} : get the "id" item.
      *
      * @param id the id of the item to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the item, or with status {@code 404 (Not Found)}.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
+     *         the item, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/items/{id}")
     public ResponseEntity<Item> getItem(@PathVariable Long id) {

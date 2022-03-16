@@ -1,8 +1,12 @@
 package com.platformsandsolutions.hcpnphiesportaljava.service;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
 
 import com.platformsandsolutions.hcpnphiesportaljava.IntegrationTest;
 import com.platformsandsolutions.hcpnphiesportaljava.config.Constants;
@@ -41,7 +45,8 @@ import tech.jhipster.config.JHipsterProperties;
 class MailServiceIT {
 
     private static final String[] languages = {
-        // jhipster-needle-i18n-language-constant - JHipster will add/remove languages in this array
+        // jhipster-needle-i18n-language-constant - JHipster will add/remove languages
+        // in this array
     };
     private static final Pattern PATTERN_LOCALE_3 = Pattern.compile("([a-z]{2})-([a-zA-Z]{4})-([a-z]{2})");
     private static final Pattern PATTERN_LOCALE_2 = Pattern.compile("([a-z]{2})-([a-z]{2})");
@@ -65,7 +70,7 @@ class MailServiceIT {
 
     @BeforeEach
     public void setup() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         doNothing().when(javaMailSender).send(any(MimeMessage.class));
         mailService = new MailService(jHipsterProperties, javaMailSender, messageSource, templateEngine);
     }

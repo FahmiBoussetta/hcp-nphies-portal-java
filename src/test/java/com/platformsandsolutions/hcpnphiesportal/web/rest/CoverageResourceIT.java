@@ -46,8 +46,8 @@ class CoverageResourceIT {
     private static final String DEFAULT_DEPENDENT = "AAAAAAAAAA";
     private static final String UPDATED_DEPENDENT = "BBBBBBBBBB";
 
-    private static final RelationShipEnum DEFAULT_RELATION_SHIP = RelationShipEnum.Child;
-    private static final RelationShipEnum UPDATED_RELATION_SHIP = RelationShipEnum.Parent;
+    private static final RelationShipEnum DEFAULT_RELATION_SHIP = RelationShipEnum.child;
+    private static final RelationShipEnum UPDATED_RELATION_SHIP = RelationShipEnum.parent;
 
     private static final String DEFAULT_NETWORK = "AAAAAAAAAA";
     private static final String UPDATED_NETWORK = "BBBBBBBBBB";
@@ -251,7 +251,8 @@ class CoverageResourceIT {
 
         // Update the coverage
         Coverage updatedCoverage = coverageRepository.findById(coverage.getId()).get();
-        // Disconnect from session so that the updates on updatedCoverage are not directly saved in db
+        // Disconnect from session so that the updates on updatedCoverage are not
+        // directly saved in db
         em.detach(updatedCoverage);
         updatedCoverage
             .guid(UPDATED_GUID)

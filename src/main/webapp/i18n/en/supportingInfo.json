@@ -20,6 +20,7 @@
       "id": "ID",
       "sequence": "Sequence",
       "codeLOINC": "Code LOINC",
+      "codeIcd": "Code Icd",
       "category": "Category",
       "codeVisit": "Code Visit",
       "codeFdiOral": "Code Fdi Oral",

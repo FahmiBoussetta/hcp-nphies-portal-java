@@ -31,12 +31,11 @@ public class Acknowledgement implements Serializable {
     @Column(name = "parsed")
     private String parsed;
 
-    @OneToMany(mappedBy = "acknowledgement")
+    @OneToMany(mappedBy = "acknowledgement", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "acknowledgement" }, allowSetters = true)
     private Set<AckErrorMessages> errors = new HashSet<>();
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
     }
@@ -120,8 +119,6 @@ public class Acknowledgement implements Serializable {
         this.errors = ackErrorMessages;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -135,18 +132,15 @@ public class Acknowledgement implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        // see
+        // https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
     }
 
     // prettier-ignore
     @Override
     public String toString() {
-        return "Acknowledgement{" +
-            "id=" + getId() +
-            ", value='" + getValue() + "'" +
-            ", system='" + getSystem() + "'" +
-            ", parsed='" + getParsed() + "'" +
-            "}";
+        return "Acknowledgement{" + "id=" + getId() + ", value='" + getValue() + "'" + ", system='" + getSystem() + "'"
+                + ", parsed='" + getParsed() + "'" + "}";
     }
 }

@@ -4,8 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.LocationTypeEnum;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -13,11 +16,13 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import platform.fhir_client.models.CoreResourceModel;
+import platform.fhir_client.models.IdentifierModel;
 import platform.fhir_client.models.LocationModel;
 
 /**
@@ -48,7 +53,18 @@ public class Location implements Serializable {
     @JsonIgnoreProperties(value = { "contacts", "address" }, allowSetters = true)
     private Organization managingOrganization;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here
+    @ManyToMany(mappedBy = "locationIdentifiers")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    private Set<ReferenceIdentifier> identifiers = new HashSet<>();
+
+    public Set<ReferenceIdentifier> getIdentifiers() {
+        return identifiers;
+    }
+
+    public void setIdentifiers(Set<ReferenceIdentifier> identifiers) {
+        this.identifiers = identifiers;
+    }
+
     public Long getId() {
         return id;
     }
@@ -114,9 +130,6 @@ public class Location implements Serializable {
         this.managingOrganization = organization;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and
-    // setters here
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -147,13 +160,41 @@ public class Location implements Serializable {
             return (LocationModel) coreResources.stream().filter(x -> x.getId() == UUID.fromString(this.getGuid())).findFirst().get();
         }
         LocationModel loc = new LocationModel();
-        loc.setId(UUID.fromString(this.getGuid()));
-        loc.setIdentifier(this.getIdentifier());
+        if (this.getGuid() != null) {
+            loc.setId(UUID.fromString(this.getGuid()));
+        }
+        if (this.getIdentifier() != null) {
+            IdentifierModel i = new IdentifierModel();
+            i.setValue("loc-" + this.getIdentifier());
+            loc.addIdentifier(i);
+        }
         if (this.getManagingOrganization() != null) {
             loc.setManagingOrganization(this.getManagingOrganization().convert(coreResources));
         }
-        loc.setType(this.getType().convert());
+        if (this.getType() != null) {
+            loc.setType(this.getType().convert());
+        }
         coreResources.add(loc);
+        return loc;
+    }
+
+    public static Location convertFrom(LocationModel model) {
+        Location loc = new Location();
+        if (model.getIdentifiers() != null) {
+            loc.setIdentifiers(model.getIdentifiers().stream().map(i -> ReferenceIdentifier.convertFrom(i)).collect(Collectors.toSet()));
+        }
+        if (model.getId() != null) {
+            loc.setGuid(model.getId().toString());
+        }
+        if (model.getIdentifiers() != null) {
+            loc.setIdentifier(model.getIdentifiers().get(0).getValue());
+        }
+        if (model.getManagingOrganization() != null) {
+            loc.setManagingOrganization(Organization.convertFrom(model.getManagingOrganization()));
+        }
+        if (model.getType() != null) {
+            loc.setType(LocationTypeEnum.valueOf(model.getType().name()));
+        }
         return loc;
     }
 }

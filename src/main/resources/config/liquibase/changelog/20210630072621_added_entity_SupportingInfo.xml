@@ -20,6 +20,9 @@
             <column name="code_loinc" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
+            <column name="code_icd" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
             <column name="category" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
@@ -83,6 +86,7 @@
             <column name="id" type="numeric"/>
             <column name="sequence" type="numeric"/>
             <column name="code_loinc" type="string"/>
+            <column name="code_icd" type="string"/>
             <column name="category" type="string"/>
             <column name="code_visit" type="string"/>
             <column name="code_fdi_oral" type="string"/>

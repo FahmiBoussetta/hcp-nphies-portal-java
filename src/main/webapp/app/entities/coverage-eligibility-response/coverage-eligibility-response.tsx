@@ -94,7 +94,7 @@ export const CoverageEligibilityResponse = (props: RouteComponentProps<{ url: st
                   </td>
                   <td>{coverageEligibilityResponse.value}</td>
                   <td>{coverageEligibilityResponse.system}</td>
-                  <td>{coverageEligibilityResponse.parsed}</td>
+                  <td>{coverageEligibilityResponse.parsed?.substring(0, 80)}...</td>
                   <td>{coverageEligibilityResponse.outcome}</td>
                   <td>
                     {coverageEligibilityResponse.serviced ? (

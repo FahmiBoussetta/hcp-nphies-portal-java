@@ -2,13 +2,13 @@
   "hcpNphiesPortalApp": {
     "RelationShipEnum": {
       "null": "",
-      "Child": "Child",
-      "Parent": "Parent",
-      "Spouse": "Spouse",
-      "Common": "Common Law Spouse",
-      "Other": "Other",
-      "Self": "Self",
-      "Injured": "Injured"
+      "child": "Child",
+      "parent": "Parent",
+      "spouse": "Spouse",
+      "common": "Common Law Spouse",
+      "other": "Other",
+      "self": "Self",
+      "injured": "Injured"
     }
   }
 }

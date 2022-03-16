@@ -1,5 +1,7 @@
 package com.platformsandsolutions.hcpnphiesportal.domain.enumeration;
 
+import platform.fhir_client.utils.Enums;
+
 /**
  * The AdmitSourceEnum enumeration.
  */
@@ -27,5 +29,14 @@ public enum AdmitSourceEnum {
 
     public String getValue() {
         return value;
+    }
+
+    public Enums.AdmitSourceEnum convert() {
+        for (Enums.AdmitSourceEnum e : Enums.AdmitSourceEnum.values()) {
+            if (e.getDescription() == this.getValue()) {
+                return e;
+            }
+        }
+        return null;
     }
 }

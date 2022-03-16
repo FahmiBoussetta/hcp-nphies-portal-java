@@ -3,12 +3,16 @@ package com.platformsandsolutions.hcpnphiesportal.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import platform.fhir_client.models.CoreResourceModel;
+import platform.fhir_client.models.SubDetailItemModel;
 
 /**
  * A SubDetailItem.
@@ -66,16 +70,15 @@ public class SubDetailItem implements Serializable {
     @Column(name = "unit_price", nullable = false)
     private Integer unitPrice;
 
-    @OneToMany(mappedBy = "subDetailItem")
+    @OneToMany(mappedBy = "subDetailItem", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "item", "detailItem", "subDetailItem" }, allowSetters = true)
     private Set<ReferenceIdentifier> udis = new HashSet<>();
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JsonIgnoreProperties(value = { "udis", "subDetails", "item" }, allowSetters = true)
     private DetailItem detailItem;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
     }
@@ -302,8 +305,6 @@ public class SubDetailItem implements Serializable {
         this.detailItem = detailItem;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -317,28 +318,113 @@ public class SubDetailItem implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        // see
+        // https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
     }
 
     // prettier-ignore
     @Override
     public String toString() {
-        return "SubDetailItem{" +
-            "id=" + getId() +
-            ", sequence=" + getSequence() +
-            ", tax=" + getTax() +
-            ", transportationSRCA='" + getTransportationSRCA() + "'" +
-            ", imaging='" + getImaging() + "'" +
-            ", laboratory='" + getLaboratory() + "'" +
-            ", medicalDevice='" + getMedicalDevice() + "'" +
-            ", oralHealthIP='" + getOralHealthIP() + "'" +
-            ", oralHealthOP='" + getOralHealthOP() + "'" +
-            ", procedure='" + getProcedure() + "'" +
-            ", services='" + getServices() + "'" +
-            ", medicationCode='" + getMedicationCode() + "'" +
-            ", quantity=" + getQuantity() +
-            ", unitPrice=" + getUnitPrice() +
-            "}";
+        return "SubDetailItem{" + "id=" + getId() + ", sequence=" + getSequence() + ", tax=" + getTax()
+                + ", transportationSRCA='" + getTransportationSRCA() + "'" + ", imaging='" + getImaging() + "'"
+                + ", laboratory='" + getLaboratory() + "'" + ", medicalDevice='" + getMedicalDevice() + "'"
+                + ", oralHealthIP='" + getOralHealthIP() + "'" + ", oralHealthOP='" + getOralHealthOP() + "'"
+                + ", procedure='" + getProcedure() + "'" + ", services='" + getServices() + "'" + ", medicationCode='"
+                + getMedicationCode() + "'" + ", quantity=" + getQuantity() + ", unitPrice=" + getUnitPrice() + "}";
+    }
+
+    public SubDetailItemModel convert(ArrayList<CoreResourceModel> coreResources) {
+        SubDetailItemModel subdetailItem = new SubDetailItemModel();
+        if (this.getImaging() != null) {
+            subdetailItem.setImaging(this.getImaging());
+        }
+        if (this.getLaboratory() != null) {
+            subdetailItem.setLaboratory(this.getLaboratory());
+        }
+        if (this.getMedicalDevice() != null) {
+            subdetailItem.setMedicalDevice(this.getMedicalDevice());
+        }
+        if (this.getMedicationCode() != null) {
+            subdetailItem.setMedicationCode(this.getMedicationCode());
+        }
+        if (this.getOralHealthIP() != null) {
+            subdetailItem.setOralHealthIP(this.getOralHealthIP());
+        }
+        if (this.getOralHealthOP() != null) {
+            subdetailItem.setOralHealthOP(this.getOralHealthOP());
+        }
+        if (this.getProcedure() != null) {
+            subdetailItem.setProcedure(this.getProcedure());
+        }
+        if (this.getQuantity() != null) {
+            subdetailItem.setQuantity(this.getQuantity());
+        }
+        if (this.getSequence() != null) {
+            subdetailItem.setSequence(this.getSequence());
+        }
+        if (this.getServices() != null) {
+            subdetailItem.setService(this.getServices());
+        }
+        if (this.getTax() != null) {
+            subdetailItem.setTax(this.getTax());
+        }
+        if (this.getTransportationSRCA() != null) {
+            subdetailItem.setTransportationSRCA(this.getTransportationSRCA());
+        }
+        if (this.getUdis() != null) {
+            subdetailItem.setUdi(this.getUdis().stream().map(i -> i.convert()).collect(Collectors.toList()));
+        }
+        if (this.getUnitPrice() != null) {
+            subdetailItem.setUnitPrice(this.getUnitPrice());
+        }
+        return subdetailItem;
+    }
+
+    public static SubDetailItem convertFrom(SubDetailItemModel model) {
+        SubDetailItem subdetailItem = new SubDetailItem();
+        if (model.getImaging() != null) {
+            subdetailItem.setImaging(model.getImaging());
+        }
+        if (model.getLaboratory() != null) {
+            subdetailItem.setLaboratory(model.getLaboratory());
+        }
+        if (model.getMedicalDevice() != null) {
+            subdetailItem.setMedicalDevice(model.getMedicalDevice());
+        }
+        if (model.getMedicationCode() != null) {
+            subdetailItem.setMedicationCode(model.getMedicationCode());
+        }
+        if (model.getOralHealthIP() != null) {
+            subdetailItem.setOralHealthIP(model.getOralHealthIP());
+        }
+        if (model.getOralHealthOP() != null) {
+            subdetailItem.setOralHealthOP(model.getOralHealthOP());
+        }
+        if (model.getProcedure() != null) {
+            subdetailItem.setProcedure(model.getProcedure());
+        }
+        if (model.getQuantity() > -1) {
+            subdetailItem.setQuantity(model.getQuantity());
+        }
+        if (model.getSequence() > -1) {
+            subdetailItem.setSequence(model.getSequence());
+        }
+        if (model.getService() != null) {
+            subdetailItem.setServices(model.getService());
+        }
+        if (model.getTax() != null) {
+            subdetailItem.setTax(model.getTax());
+        }
+        if (model.getTransportationSRCA() != null) {
+            subdetailItem.setTransportationSRCA(model.getTransportationSRCA());
+        }
+        if (model.getUdi() != null) {
+            subdetailItem.setUdis(model.getUdi().stream().map(i -> ReferenceIdentifier.convertFrom(i)).collect(Collectors.toSet()));
+        }
+        if (model.getUnitPrice() > -1) {
+            subdetailItem.setUnitPrice(model.getUnitPrice());
+        }
+        return subdetailItem;
     }
 }

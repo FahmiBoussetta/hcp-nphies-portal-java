@@ -15,6 +15,13 @@
     <property name="datetimeType" value="datetime" dbms="oracle, mssql, postgresql, h2"/>
 
     <include file="config/liquibase/changelog/00000000000000_initial_schema.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210630072613_added_entity_Organization.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210630072614_added_entity_Patient.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210630072618_added_entity_Practitioner.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210630072619_added_entity_PractitionerRole.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210630072610_added_entity_HumanName.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210630072529_added_entity_Givens.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210630072559_added_entity_Coverage.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210630072516_added_entity_AckErrorMessages.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210630072517_added_entity_ClaimErrorMessages.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210630072518_added_entity_CRErrorMessages.xml" relativeToChangelogFile="false"/>
@@ -28,7 +35,6 @@
     <include file="config/liquibase/changelog/20210630072526_added_entity_AdjudicationNotes.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210630072527_added_entity_AdjudicationDetailNotes.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210630072528_added_entity_AdjudicationSubDetailNotes.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20210630072529_added_entity_Givens.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210630072530_added_entity_ListCommunicationMediumEnum.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210630072531_added_entity_ListCommunicationReasonEnum.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210630072532_added_entity_ListEligibilityPurposeEnum.xml" relativeToChangelogFile="false"/>
@@ -43,7 +49,6 @@
     <include file="config/liquibase/changelog/20210630072541_added_entity_Diagnosis.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210630072542_added_entity_Insurance.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210630072543_added_entity_Accident.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20210630072544_added_entity_Item.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210630072545_added_entity_DetailItem.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210630072546_added_entity_SubDetailItem.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210630072547_added_entity_ClaimResponse.xml" relativeToChangelogFile="false"/>
@@ -58,7 +63,6 @@
     <include file="config/liquibase/changelog/20210630072556_added_entity_Note.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210630072557_added_entity_CommunicationRequest.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210630072558_added_entity_Contact.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20210630072559_added_entity_Coverage.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210630072600_added_entity_ClassComponent.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210630072601_added_entity_CostToBeneficiaryComponent.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210630072602_added_entity_ExemptionComponent.xml" relativeToChangelogFile="false"/>
@@ -69,24 +73,20 @@
     <include file="config/liquibase/changelog/20210630072607_added_entity_InsuranceBenefit.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210630072608_added_entity_Encounter.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210630072609_added_entity_Hospitalization.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20210630072610_added_entity_HumanName.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210630072611_added_entity_Location.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210630072612_added_entity_OperationOutcome.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20210630072613_added_entity_Organization.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20210630072614_added_entity_Patient.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210630072615_added_entity_PaymentNotice.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210630072616_added_entity_PaymentReconciliation.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210630072617_added_entity_ReconciliationDetailItem.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20210630072618_added_entity_Practitioner.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20210630072619_added_entity_PractitionerRole.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210630072620_added_entity_ReferenceIdentifier.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20210630072621_added_entity_SupportingInfo.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210630072622_added_entity_Quantity.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210630072623_added_entity_Task.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210630072624_added_entity_TaskInput.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210630072625_added_entity_TaskResponse.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210630072626_added_entity_TaskOutput.xml" relativeToChangelogFile="false"/>
-    <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
+    <include file="config/liquibase/changelog/20210923070913_added_entity_CareTeamSequence.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210923070914_added_entity_Item.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20211007072621_added_entity_SupportingInfo.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210630072516_added_entity_constraints_AckErrorMessages.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210630072517_added_entity_constraints_ClaimErrorMessages.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210630072518_added_entity_constraints_CRErrorMessages.xml" relativeToChangelogFile="false"/>
@@ -109,11 +109,11 @@
     <include file="config/liquibase/changelog/20210630072537_added_entity_constraints_Claim.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210630072538_added_entity_constraints_Related.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210630072539_added_entity_constraints_Payee.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210630072619_added_entity_constraints_PractitionerRole.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210630072540_added_entity_constraints_CareTeam.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210630072541_added_entity_constraints_Diagnosis.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210630072542_added_entity_constraints_Insurance.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210630072543_added_entity_constraints_Accident.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20210630072544_added_entity_constraints_Item.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210630072545_added_entity_constraints_DetailItem.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210630072546_added_entity_constraints_SubDetailItem.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210630072548_added_entity_constraints_AdjudicationItem.xml" relativeToChangelogFile="false"/>
@@ -144,12 +144,12 @@
     <include file="config/liquibase/changelog/20210630072615_added_entity_constraints_PaymentNotice.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210630072616_added_entity_constraints_PaymentReconciliation.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210630072617_added_entity_constraints_ReconciliationDetailItem.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20210630072619_added_entity_constraints_PractitionerRole.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210630072620_added_entity_constraints_ReferenceIdentifier.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20210630072621_added_entity_constraints_SupportingInfo.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210630072623_added_entity_constraints_Task.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210630072624_added_entity_constraints_TaskInput.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210630072626_added_entity_constraints_TaskOutput.xml" relativeToChangelogFile="false"/>
-    <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
-    <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->
+    <include file="config/liquibase/changelog/20210923070913_added_entity_constraints_CareTeamSequence.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210923070914_added_entity_constraints_Item.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20211007072621_added_entity_constraints_SupportingInfo.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20220114085932_changelog.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>

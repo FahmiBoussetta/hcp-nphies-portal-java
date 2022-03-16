@@ -15,6 +15,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import platform.fhir_client.models.CoreResourceModel;
 import platform.fhir_client.models.CoverageModel;
+import platform.fhir_client.models.IdentifierModel;
 
 /**
  * A Coverage.
@@ -58,12 +59,12 @@ public class Coverage implements Serializable {
     @Column(name = "subrogation")
     private Boolean subrogation;
 
-    @OneToMany(mappedBy = "coverage", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "coverage", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "coverage" }, allowSetters = true)
     private Set<ClassComponent> classComponents = new HashSet<>();
 
-    @OneToMany(mappedBy = "coverage", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "coverage", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "exceptions", "coverage" }, allowSetters = true)
     private Set<CostToBeneficiaryComponent> costToBeneficiaryComponents = new HashSet<>();
@@ -85,7 +86,10 @@ public class Coverage implements Serializable {
     @JsonIgnoreProperties(value = { "errors", "purposes", "patient", "provider", "insurer", "facility", "coverages" }, allowSetters = true)
     private Set<CoverageEligibilityRequest> coverageEligibilityRequests = new HashSet<>();
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here
+    @ManyToMany(mappedBy = "coverageIdentifiers")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    private Set<ReferenceIdentifier> identifiers = new HashSet<>();
+
     public Long getId() {
         return id;
     }
@@ -97,6 +101,14 @@ public class Coverage implements Serializable {
     public Coverage id(Long id) {
         this.id = id;
         return this;
+    }
+
+    public Set<ReferenceIdentifier> getIdentifiers() {
+        return identifiers;
+    }
+
+    public void setIdentifiers(Set<ReferenceIdentifier> identifiers) {
+        this.identifiers = identifiers;
     }
 
     public String getGuid() {
@@ -335,9 +347,6 @@ public class Coverage implements Serializable {
         this.coverageEligibilityRequests = coverageEligibilityRequests;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and
-    // setters here
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -370,25 +379,104 @@ public class Coverage implements Serializable {
             return (CoverageModel) coreResources.stream().filter(x -> x.getId() == UUID.fromString(this.getGuid())).findFirst().get();
         }
         CoverageModel cov = new CoverageModel();
-        cov.setId(UUID.fromString(this.getGuid()));
-        cov.setIdentifier("cov-" + this.getId());
-        cov.setCoverageType(this.getCoverageType().convert());
-        cov.setSubscriberId(this.getSubscriberId());
-        cov.setDependent(this.getDependent());
-        cov.setRelationship(this.getRelationShip().convert());
-        cov.setNetwork(this.getNetwork());
-        cov.setSubrogation(this.getSubrogation());
-        cov.setBeneficiary(this.getBeneficiary().convert(coreResources));
-        cov.setClassComponents(this.getClassComponents().stream().map(i -> i.convert()).collect(Collectors.toCollection(ArrayList::new)));
-        cov.setCostToBeneficiaryComponents(
-            this.getCostToBeneficiaryComponents().stream().map(i -> i.convert()).collect(Collectors.toCollection(ArrayList::new))
-        );
-        cov.setPayor(this.getPayor().convert(coreResources));
+        if (this.getGuid() != null) {
+            cov.setId(UUID.fromString(this.getGuid()));
+        }
+        if (this.getId() != null) {
+            IdentifierModel i = new IdentifierModel();
+            i.setValue("cov-" + this.getId());
+            cov.addIdentifier(i);
+        }
+        if (this.getCoverageType() != null) {
+            cov.setCoverageType(this.getCoverageType().convert());
+        }
+        if (this.getSubscriberId() != null) {
+            cov.setSubscriberId(this.getSubscriberId());
+        }
+        if (this.getDependent() != null) {
+            cov.setDependent(this.getDependent());
+        }
+        if (this.getRelationShip() != null) {
+            cov.setRelationship(this.getRelationShip().convert());
+        }
+        if (this.getNetwork() != null) {
+            cov.setNetwork(this.getNetwork());
+        }
+        if (this.getSubrogation() != null) {
+            cov.setSubrogation(this.getSubrogation());
+        }
+        if (this.getBeneficiary() != null) {
+            cov.setBeneficiary(this.getBeneficiary().convert(coreResources));
+        }
+        if (this.getClassComponents() != null) {
+            cov.setClassComponents(
+                this.getClassComponents().stream().map(i -> i.convert()).collect(Collectors.toCollection(ArrayList::new))
+            );
+        }
+        if (this.getCostToBeneficiaryComponents() != null) {
+            cov.setCostToBeneficiaryComponents(
+                this.getCostToBeneficiaryComponents().stream().map(i -> i.convert()).collect(Collectors.toCollection(ArrayList::new))
+            );
+        }
+        if (this.getPayor() != null) {
+            cov.setPayor(this.getPayor().convert(coreResources));
+        }
         if (this.getSubscriberPatient() != null) {
             cov.setSubscriber(this.getSubscriberPatient().convert(coreResources));
         }
 
         coreResources.add(cov);
+        return cov;
+    }
+
+    public static Coverage convertFrom(CoverageModel model) {
+        Coverage cov = new Coverage();
+        if (model.getId() != null) {
+            cov.setGuid(model.getId().toString());
+        }
+        if (model.getIdentifiers() != null) {
+            cov.setIdentifiers(model.getIdentifiers().stream().map(i -> ReferenceIdentifier.convertFrom(i)).collect(Collectors.toSet()));
+        }
+        if (model.getCoverageType() != null) {
+            cov.setCoverageType(CoverageTypeEnum.valueOf(model.getCoverageType().name()));
+        }
+        if (model.getSubscriberId() != null) {
+            cov.setSubscriberId(model.getSubscriberId());
+        }
+        if (model.getDependent() != null) {
+            cov.setDependent(model.getDependent());
+        }
+        if (model.getRelationship() != null) {
+            cov.setRelationShip(RelationShipEnum.valueOf(model.getRelationship().name()));
+        }
+        if (model.getNetwork() != null) {
+            cov.setNetwork(model.getNetwork());
+        }
+        if (model.getSubrogation() != null) {
+            cov.setSubrogation(model.getSubrogation());
+        }
+        if (model.getBeneficiary() != null) {
+            cov.setBeneficiary(Patient.convertFrom(model.getBeneficiary()));
+        }
+        if (model.getClassComponents() != null) {
+            cov.setClassComponents(model.getClassComponents().stream().map(i -> ClassComponent.convertFrom(i)).collect(Collectors.toSet()));
+        }
+        if (model.getCostToBeneficiaryComponents() != null) {
+            cov.setCostToBeneficiaryComponents(
+                model
+                    .getCostToBeneficiaryComponents()
+                    .stream()
+                    .map(i -> CostToBeneficiaryComponent.convertFrom(i))
+                    .collect(Collectors.toSet())
+            );
+        }
+        if (model.getPayor() != null) {
+            cov.setPayor(Organization.convertFrom(model.getPayor()));
+        }
+        if (model.getSubscriber() != null) {
+            cov.setSubscriberPatient(Patient.convertFrom(model.getSubscriber()));
+        }
+
         return cov;
     }
 }

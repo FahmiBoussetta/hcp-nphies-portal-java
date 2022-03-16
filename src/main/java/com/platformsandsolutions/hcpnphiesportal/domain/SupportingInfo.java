@@ -8,9 +8,13 @@ import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.SupportingIn
 import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.SupportingInfoReasonMissingToothEnum;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Date;
 import javax.persistence.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import platform.fhir_client.models.CoreResourceModel;
+import platform.fhir_client.models.SupportingInfoModel;
 
 /**
  * A SupportingInfo.
@@ -31,6 +35,9 @@ public class SupportingInfo implements Serializable {
 
     @Column(name = "code_loinc")
     private String codeLOINC;
+
+    @Column(name = "code_icd")
+    private String codeIcd;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "category")
@@ -64,17 +71,17 @@ public class SupportingInfo implements Serializable {
     @Column(name = "reason_missing_tooth")
     private SupportingInfoReasonMissingToothEnum reasonMissingTooth;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private Quantity valueQuantity;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private Attachment valueAttachment;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JsonIgnoreProperties(value = { "item", "detailItem", "subDetailItem" }, allowSetters = true)
     private ReferenceIdentifier valueReference;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JsonIgnoreProperties(
         value = {
             "errors",
@@ -138,6 +145,19 @@ public class SupportingInfo implements Serializable {
 
     public void setCodeLOINC(String codeLOINC) {
         this.codeLOINC = codeLOINC;
+    }
+
+    public String getCodeIcd() {
+        return this.codeIcd;
+    }
+
+    public SupportingInfo codeIcd(String codeIcd) {
+        this.codeIcd = codeIcd;
+        return this;
+    }
+
+    public void setCodeIcd(String codeIcd) {
+        this.codeIcd = codeIcd;
     }
 
     public SupportingInfoCategoryEnum getCategory() {
@@ -309,7 +329,8 @@ public class SupportingInfo implements Serializable {
         this.claim = claim;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and
+    // setters here
 
     @Override
     public boolean equals(Object o) {
@@ -324,26 +345,97 @@ public class SupportingInfo implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        // see
+        // https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
     }
 
     // prettier-ignore
     @Override
     public String toString() {
-        return "SupportingInfo{" +
-            "id=" + getId() +
-            ", sequence=" + getSequence() +
-            ", codeLOINC='" + getCodeLOINC() + "'" +
-            ", category='" + getCategory() + "'" +
-            ", codeVisit='" + getCodeVisit() + "'" +
-            ", codeFdiOral='" + getCodeFdiOral() + "'" +
-            ", timing='" + getTiming() + "'" +
-            ", timingEnd='" + getTimingEnd() + "'" +
-            ", valueBoolean='" + getValueBoolean() + "'" +
-            ", valueString='" + getValueString() + "'" +
-            ", reason='" + getReason() + "'" +
-            ", reasonMissingTooth='" + getReasonMissingTooth() + "'" +
-            "}";
+        return "SupportingInfo{" + "id=" + getId() + ", sequence=" + getSequence() + ", codeLOINC='" + getCodeLOINC()
+                + "'" + ", codeIcd='" + getCodeIcd() + "'" + ", category='" + getCategory() + "'" + ", codeVisit='"
+                + getCodeVisit() + "'" + ", codeFdiOral='" + getCodeFdiOral() + "'" + ", timing='" + getTiming() + "'"
+                + ", timingEnd='" + getTimingEnd() + "'" + ", valueBoolean='" + getValueBoolean() + "'"
+                + ", valueString='" + getValueString() + "'" + ", reason='" + getReason() + "'"
+                + ", reasonMissingTooth='" + getReasonMissingTooth() + "'" + "}";
+    }
+
+    public SupportingInfoModel convert(ArrayList<CoreResourceModel> coreResources) {
+        SupportingInfoModel s = new SupportingInfoModel();
+        if (this.getCategory() != null) {
+            s.setCategory(this.getCategory().convert());
+        }
+        if (this.getCodeFdiOral() != null) {
+            s.setCodeFdiOral(this.getCodeFdiOral().convert());
+        }
+        if (this.getCodeLOINC() != null) {
+            s.setCodeLOINC(this.getCodeLOINC());
+        }
+        if (this.getCodeVisit() != null) {
+            s.setCodeVisit(this.getCodeVisit().convert());
+        }
+        if (this.getReason() != null) {
+            s.setReason(this.getReason().convert());
+        }
+        if (this.getReasonMissingTooth() != null) {
+            s.setReasonMissingTooth(this.getReasonMissingTooth().convert());
+        }
+        if (this.getSequence() != null) {
+            s.setSequence(this.getSequence());
+        }
+        if (this.getTiming() != null) {
+            s.setTiming(Date.from(this.getTiming()));
+        }
+        if (this.getTimingEnd() != null) {
+            s.setTimingEnd(Date.from(this.getTimingEnd()));
+        }
+        if (this.getValueBoolean() != null) {
+            s.setValueBoolean(this.getValueBoolean());
+        } else if (this.getValueAttachment() != null) {
+            s.setValueAttachment(this.getValueAttachment().convert());
+        } else if (this.getValueString() != null) {
+            s.setValueString(this.getValueString());
+        }
+        return s;
+    }
+
+    public static SupportingInfo convertFrom(SupportingInfoModel model) {
+        SupportingInfo s = new SupportingInfo();
+        if (model.getCategory() != null) {
+            s.setCategory(SupportingInfoCategoryEnum.valueOf(model.getCategory().name()));
+        }
+        if (model.getCodeFdiOral() != null) {
+            s.setCodeFdiOral(SupportingInfoCodeFdiEnum.valueOf(model.getCodeFdiOral().name()));
+        }
+        if (model.getCodeLOINC() != null) {
+            s.setCodeLOINC(model.getCodeLOINC());
+        }
+        if (model.getCodeVisit() != null) {
+            s.setCodeVisit(SupportingInfoCodeVisitEnum.valueOf(model.getCodeVisit().name()));
+        }
+        if (model.getReason() != null) {
+            s.setReason(SupportingInfoReasonEnum.valueOf(model.getReason().name()));
+        }
+        if (model.getReasonMissingTooth() != null) {
+            s.setReasonMissingTooth(SupportingInfoReasonMissingToothEnum.valueOf(model.getReasonMissingTooth().name()));
+        }
+        if (model.getSequence() > -1) {
+            s.setSequence(model.getSequence());
+        }
+        if (model.getTiming() != null) {
+            s.setTiming(model.getTiming().toInstant());
+        }
+        if (model.getTimingEnd() != null) {
+            s.setTimingEnd(model.getTimingEnd().toInstant());
+        }
+        if (model.getValueBoolean() != null) {
+            s.setValueBoolean(model.getValueBoolean());
+        } else if (model.getValueAttachment() != null) {
+            s.setValueAttachment(Attachment.convertFrom(model.getValueAttachment()));
+        } else if (model.getValueString() != null) {
+            s.setValueString(model.getValueString());
+        }
+        return s;
     }
 }

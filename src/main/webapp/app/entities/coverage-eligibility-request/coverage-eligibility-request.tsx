@@ -89,6 +89,9 @@ export const CoverageEligibilityRequest = (props: RouteComponentProps<{ url: str
                 <th>
                   <Translate contentKey="hcpNphiesPortalApp.coverageEligibilityRequest.coverages">Coverages</Translate>
                 </th>
+                <th>
+                  <Translate contentKey="hcpNphiesPortalApp.coverageEligibilityRequest.coverageEligibilityResponse">Response</Translate>
+                </th>
                 <th />
               </tr>
             </thead>
@@ -101,7 +104,7 @@ export const CoverageEligibilityRequest = (props: RouteComponentProps<{ url: str
                     </Button>
                   </td>
                   <td>{coverageEligibilityRequest.guid}</td>
-                  <td>{coverageEligibilityRequest.parsed}</td>
+                  <td>{coverageEligibilityRequest.parsed?.substring(0, 80)}...</td>
                   <td>
                     {coverageEligibilityRequest.purposes
                       ? coverageEligibilityRequest.purposes.map((val, j) => (
@@ -160,6 +163,15 @@ export const CoverageEligibilityRequest = (props: RouteComponentProps<{ url: str
                           </span>
                         ))
                       : null}
+                  </td>
+                  <td>
+                    {coverageEligibilityRequest.coverageEligibilityResponse ? (
+                      <Link to={`coverage-eligibility-response/${coverageEligibilityRequest.coverageEligibilityResponse.id}`}>
+                        {coverageEligibilityRequest.coverageEligibilityResponse.value}
+                      </Link>
+                    ) : (
+                      ''
+                    )}
                   </td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">

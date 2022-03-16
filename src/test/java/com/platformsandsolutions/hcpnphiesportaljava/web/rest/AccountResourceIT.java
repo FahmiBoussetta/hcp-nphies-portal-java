@@ -2,8 +2,11 @@ package com.platformsandsolutions.hcpnphiesportaljava.web.rest;
 
 import static com.platformsandsolutions.hcpnphiesportaljava.web.rest.AccountResourceIT.TEST_USER_LOGIN;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.platformsandsolutions.hcpnphiesportaljava.IntegrationTest;
 import com.platformsandsolutions.hcpnphiesportaljava.config.Constants;
@@ -14,11 +17,13 @@ import com.platformsandsolutions.hcpnphiesportaljava.security.AuthoritiesConstan
 import com.platformsandsolutions.hcpnphiesportaljava.service.UserService;
 import com.platformsandsolutions.hcpnphiesportaljava.service.dto.AdminUserDTO;
 import com.platformsandsolutions.hcpnphiesportaljava.service.dto.PasswordChangeDTO;
-import com.platformsandsolutions.hcpnphiesportaljava.service.dto.UserDTO;
 import com.platformsandsolutions.hcpnphiesportaljava.web.rest.vm.KeyAndPasswordVM;
 import com.platformsandsolutions.hcpnphiesportaljava.web.rest.vm.ManagedUserVM;
 import java.time.Instant;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

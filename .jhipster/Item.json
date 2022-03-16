@@ -24,11 +24,6 @@
       "fieldValidateRules": ["required"]
     },
     {
-      "fieldName": "careTeamSequence",
-      "fieldType": "Integer",
-      "fieldValidateRules": ["required"]
-    },
-    {
       "fieldName": "transportationSRCA",
       "fieldType": "String"
     },
@@ -110,6 +105,12 @@
     },
     {
       "relationshipType": "one-to-many",
+      "otherEntityName": "careTeamSequence",
+      "otherEntityRelationshipName": "item",
+      "relationshipName": "careTeamSequence"
+    },
+    {
+      "relationshipType": "one-to-many",
       "otherEntityName": "informationSequence",
       "otherEntityRelationshipName": "item",
       "relationshipName": "informationSequence"
@@ -142,5 +143,5 @@
   "readOnly": false,
   "embedded": false,
   "applications": ["hcpNphiesPortal"],
-  "changelogDate": "20210630072544"
+  "changelogDate": "20210923070914"
 }

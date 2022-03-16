@@ -1,5 +1,7 @@
 package com.platformsandsolutions.hcpnphiesportal.domain.enumeration;
 
+import platform.fhir_client.utils.Enums;
+
 /**
  * The SupportingInfoCodeFdiEnum enumeration.
  */
@@ -65,5 +67,14 @@ public enum SupportingInfoCodeFdiEnum {
 
     public String getValue() {
         return value;
+    }
+
+    public Enums.SupportingInfoCodeFdiEnum convert() {
+        for (Enums.SupportingInfoCodeFdiEnum e : Enums.SupportingInfoCodeFdiEnum.values()) {
+            if (e.getDescription() == this.getValue()) {
+                return e;
+            }
+        }
+        return null;
     }
 }

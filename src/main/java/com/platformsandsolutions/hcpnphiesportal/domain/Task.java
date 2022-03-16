@@ -50,20 +50,31 @@ public class Task implements Serializable {
     @Column(name = "reason_code")
     private TaskReasonCodeEnum reasonCode;
 
-    @OneToMany(mappedBy = "task")
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "inputOrigResponse", "task" }, allowSetters = true)
     private Set<TaskInput> inputs = new HashSet<>();
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JsonIgnoreProperties(value = { "contacts", "address" }, allowSetters = true)
     private Organization requester;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JsonIgnoreProperties(value = { "contacts", "address" }, allowSetters = true)
     private Organization owner;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here
+    @ManyToMany(mappedBy = "taskIdentifiers")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    private Set<ReferenceIdentifier> identifiers = new HashSet<>();
+
+    public Set<ReferenceIdentifier> getIdentifiers() {
+        return identifiers;
+    }
+
+    public void setIdentifiers(Set<ReferenceIdentifier> identifiers) {
+        this.identifiers = identifiers;
+    }
+
     public Long getId() {
         return id;
     }
@@ -238,8 +249,6 @@ public class Task implements Serializable {
         this.owner = organization;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -253,23 +262,17 @@ public class Task implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        // see
+        // https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
     }
 
     // prettier-ignore
     @Override
     public String toString() {
-        return "Task{" +
-            "id=" + getId() +
-            ", guid='" + getGuid() + "'" +
-            ", isQueued='" + getIsQueued() + "'" +
-            ", parsed='" + getParsed() + "'" +
-            ", identifier='" + getIdentifier() + "'" +
-            ", code='" + getCode() + "'" +
-            ", description='" + getDescription() + "'" +
-            ", focus='" + getFocus() + "'" +
-            ", reasonCode='" + getReasonCode() + "'" +
-            "}";
+        return "Task{" + "id=" + getId() + ", guid='" + getGuid() + "'" + ", isQueued='" + getIsQueued() + "'"
+                + ", parsed='" + getParsed() + "'" + ", identifier='" + getIdentifier() + "'" + ", code='" + getCode()
+                + "'" + ", description='" + getDescription() + "'" + ", focus='" + getFocus() + "'" + ", reasonCode='"
+                + getReasonCode() + "'" + "}";
     }
 }

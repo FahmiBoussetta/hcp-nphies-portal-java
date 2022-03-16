@@ -6,9 +6,9 @@ import platform.fhir_client.utils.*;
  * The AdministrativeGenderEnum enumeration.
  */
 public enum AdministrativeGenderEnum {
-    Male("Male"),
-    Female("Female"),
-    Unknown("Unknown"),
+    male("Male"),
+    female("Female"),
+    unknown("Unknown"),
     U("Undetermined"),
     N("Undifferentiated"),
     A("Sex changed to Male"),

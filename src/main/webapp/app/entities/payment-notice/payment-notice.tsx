@@ -82,7 +82,7 @@ export const PaymentNotice = (props: RouteComponentProps<{ url: string }>) => {
                     </Button>
                   </td>
                   <td>{paymentNotice.guid}</td>
-                  <td>{paymentNotice.parsed}</td>
+                  <td>{paymentNotice.parsed?.substring(0, 80)}...</td>
                   <td>{paymentNotice.identifier}</td>
                   <td>
                     {paymentNotice.paymentDate ? (

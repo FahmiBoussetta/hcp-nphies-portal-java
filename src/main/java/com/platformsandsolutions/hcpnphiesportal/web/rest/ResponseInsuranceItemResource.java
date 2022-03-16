@@ -18,7 +18,8 @@ import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.ResponseUtil;
 
 /**
- * REST controller for managing {@link com.platformsandsolutions.hcpnphiesportal.domain.ResponseInsuranceItem}.
+ * REST controller for managing
+ * {@link com.platformsandsolutions.hcpnphiesportal.domain.ResponseInsuranceItem}.
  */
 @RestController
 @RequestMapping("/api")
@@ -42,7 +43,10 @@ public class ResponseInsuranceItemResource {
      * {@code POST  /response-insurance-items} : Create a new responseInsuranceItem.
      *
      * @param responseInsuranceItem the responseInsuranceItem to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new responseInsuranceItem, or with status {@code 400 (Bad Request)} if the responseInsuranceItem has already an ID.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with
+     *         body the new responseInsuranceItem, or with status
+     *         {@code 400 (Bad Request)} if the responseInsuranceItem has already an
+     *         ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/response-insurance-items")
@@ -60,13 +64,17 @@ public class ResponseInsuranceItemResource {
     }
 
     /**
-     * {@code PUT  /response-insurance-items/:id} : Updates an existing responseInsuranceItem.
+     * {@code PUT  /response-insurance-items/:id} : Updates an existing
+     * responseInsuranceItem.
      *
-     * @param id the id of the responseInsuranceItem to save.
+     * @param id                    the id of the responseInsuranceItem to save.
      * @param responseInsuranceItem the responseInsuranceItem to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated responseInsuranceItem,
-     * or with status {@code 400 (Bad Request)} if the responseInsuranceItem is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the responseInsuranceItem couldn't be updated.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
+     *         the updated responseInsuranceItem,
+     *         or with status {@code 400 (Bad Request)} if the responseInsuranceItem
+     *         is not valid,
+     *         or with status {@code 500 (Internal Server Error)} if the
+     *         responseInsuranceItem couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/response-insurance-items/{id}")
@@ -94,14 +102,19 @@ public class ResponseInsuranceItemResource {
     }
 
     /**
-     * {@code PATCH  /response-insurance-items/:id} : Partial updates given fields of an existing responseInsuranceItem, field will ignore if it is null
+     * {@code PATCH  /response-insurance-items/:id} : Partial updates given fields
+     * of an existing responseInsuranceItem, field will ignore if it is null
      *
-     * @param id the id of the responseInsuranceItem to save.
+     * @param id                    the id of the responseInsuranceItem to save.
      * @param responseInsuranceItem the responseInsuranceItem to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated responseInsuranceItem,
-     * or with status {@code 400 (Bad Request)} if the responseInsuranceItem is not valid,
-     * or with status {@code 404 (Not Found)} if the responseInsuranceItem is not found,
-     * or with status {@code 500 (Internal Server Error)} if the responseInsuranceItem couldn't be updated.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
+     *         the updated responseInsuranceItem,
+     *         or with status {@code 400 (Bad Request)} if the responseInsuranceItem
+     *         is not valid,
+     *         or with status {@code 404 (Not Found)} if the responseInsuranceItem
+     *         is not found,
+     *         or with status {@code 500 (Internal Server Error)} if the
+     *         responseInsuranceItem couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/response-insurance-items/{id}", consumes = "application/merge-patch+json")
@@ -161,7 +174,8 @@ public class ResponseInsuranceItemResource {
     /**
      * {@code GET  /response-insurance-items} : get all the responseInsuranceItems.
      *
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of responseInsuranceItems in body.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list
+     *         of responseInsuranceItems in body.
      */
     @GetMapping("/response-insurance-items")
     public List<ResponseInsuranceItem> getAllResponseInsuranceItems() {
@@ -170,10 +184,12 @@ public class ResponseInsuranceItemResource {
     }
 
     /**
-     * {@code GET  /response-insurance-items/:id} : get the "id" responseInsuranceItem.
+     * {@code GET  /response-insurance-items/:id} : get the "id"
+     * responseInsuranceItem.
      *
      * @param id the id of the responseInsuranceItem to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the responseInsuranceItem, or with status {@code 404 (Not Found)}.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
+     *         the responseInsuranceItem, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/response-insurance-items/{id}")
     public ResponseEntity<ResponseInsuranceItem> getResponseInsuranceItem(@PathVariable Long id) {
@@ -183,7 +199,8 @@ public class ResponseInsuranceItemResource {
     }
 
     /**
-     * {@code DELETE  /response-insurance-items/:id} : delete the "id" responseInsuranceItem.
+     * {@code DELETE  /response-insurance-items/:id} : delete the "id"
+     * responseInsuranceItem.
      *
      * @param id the id of the responseInsuranceItem to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.

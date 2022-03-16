@@ -89,7 +89,7 @@ export const Communication = (props: RouteComponentProps<{ url: string }>) => {
                   </td>
                   <td>{communication.guid}</td>
                   <td>{communication.isQueued ? 'true' : 'false'}</td>
-                  <td>{communication.parsed}</td>
+                  <td>{communication.parsed?.substring(0, 80)}...</td>
                   <td>{communication.identifier}</td>
                   <td>
                     <Translate contentKey={`hcpNphiesPortalApp.CommunicationPriorityEnum.${communication.priority}`} />

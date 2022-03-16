@@ -17,7 +17,7 @@
             <column name="guid" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
-            <column name="parsed" type="varchar(255)">
+            <column name="parsed" type="varchar(max)">
                 <constraints nullable="true" />
             </column>
             <column name="priority" type="varchar(255)">
@@ -43,6 +43,9 @@
             </column>
             <column name="facility_id" type="bigint">
                 <constraints nullable="true" />
+            </column>
+            <column name="coverage_eligibility_response_id" type="bigint">
+                <constraints nullable="true" unique="true" uniqueConstraintName="ux_coverage_eligibility_request__coverage_eligibility_respons_ae" />
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>

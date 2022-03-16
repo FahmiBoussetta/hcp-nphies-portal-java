@@ -51,15 +51,14 @@ public class TaskInput implements Serializable {
     @Column(name = "input_line_item")
     private Integer inputLineItem;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JsonIgnoreProperties(value = { "item", "detailItem", "subDetailItem" }, allowSetters = true)
     private ReferenceIdentifier inputOrigResponse;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JsonIgnoreProperties(value = { "inputs", "requester", "owner" }, allowSetters = true)
     private Task task;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
     }
@@ -203,8 +202,6 @@ public class TaskInput implements Serializable {
         this.task = task;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -218,23 +215,18 @@ public class TaskInput implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        // see
+        // https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
     }
 
     // prettier-ignore
     @Override
     public String toString() {
-        return "TaskInput{" +
-            "id=" + getId() +
-            ", inputInclude='" + getInputInclude() + "'" +
-            ", inputExclude='" + getInputExclude() + "'" +
-            ", inputIncludeMessage='" + getInputIncludeMessage() + "'" +
-            ", inputExcludeMessage='" + getInputExcludeMessage() + "'" +
-            ", inputCount=" + getInputCount() +
-            ", inputStart='" + getInputStart() + "'" +
-            ", inputEnd='" + getInputEnd() + "'" +
-            ", inputLineItem=" + getInputLineItem() +
-            "}";
+        return "TaskInput{" + "id=" + getId() + ", inputInclude='" + getInputInclude() + "'" + ", inputExclude='"
+                + getInputExclude() + "'" + ", inputIncludeMessage='" + getInputIncludeMessage() + "'"
+                + ", inputExcludeMessage='" + getInputExcludeMessage() + "'" + ", inputCount=" + getInputCount()
+                + ", inputStart='" + getInputStart() + "'" + ", inputEnd='" + getInputEnd() + "'" + ", inputLineItem="
+                + getInputLineItem() + "}";
     }
 }

@@ -1,5 +1,7 @@
 package com.platformsandsolutions.hcpnphiesportal.domain.enumeration;
 
+import platform.fhir_client.utils.Enums;
+
 /**
  * The SupportingInfoCodeVisitEnum enumeration.
  */
@@ -18,5 +20,14 @@ public enum SupportingInfoCodeVisitEnum {
 
     public String getValue() {
         return value;
+    }
+
+    public Enums.SupportingInfoCodeVisitEnum convert() {
+        for (Enums.SupportingInfoCodeVisitEnum e : Enums.SupportingInfoCodeVisitEnum.values()) {
+            if (e.getDescription() == this.getValue()) {
+                return e;
+            }
+        }
+        return null;
     }
 }

@@ -1,5 +1,7 @@
 package com.platformsandsolutions.hcpnphiesportal.domain.enumeration;
 
+import platform.fhir_client.utils.Enums;
+
 /**
  * The DiagnosisTypeEnum enumeration.
  */
@@ -25,5 +27,14 @@ public enum DiagnosisTypeEnum {
 
     public String getValue() {
         return value;
+    }
+
+    public Enums.DiagnosisTypeEnum convert() {
+        for (Enums.DiagnosisTypeEnum e : Enums.DiagnosisTypeEnum.values()) {
+            if (e.getDescription() == this.getValue()) {
+                return e;
+            }
+        }
+        return null;
     }
 }

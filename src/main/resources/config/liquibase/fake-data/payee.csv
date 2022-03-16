@@ -1,11 +1,2 @@
-id;type
-1;Other
-2;Other
-3;Subscriber
-4;Other
-5;Subscriber
-6;Other
-7;Subscriber
-8;Subscriber
-9;Subscriber
-10;Subscriber
+id;type;party_organization_id
+1;Provider;1

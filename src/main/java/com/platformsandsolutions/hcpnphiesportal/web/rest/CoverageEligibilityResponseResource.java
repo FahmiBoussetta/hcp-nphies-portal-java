@@ -75,7 +75,7 @@ public class CoverageEligibilityResponseResource {
         @PathVariable(value = "id", required = false) final Long id,
         @RequestBody CoverageEligibilityResponse coverageEligibilityResponse
     ) throws URISyntaxException {
-        log.debug("REST request to update CoverageEligibilityResponse : {}, {}", id, coverageEligibilityResponse);
+        //log.debug("REST request to update CoverageEligibilityResponse : {}, {}", id, coverageEligibilityResponse);
         if (coverageEligibilityResponse.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
@@ -110,7 +110,7 @@ public class CoverageEligibilityResponseResource {
         @PathVariable(value = "id", required = false) final Long id,
         @RequestBody CoverageEligibilityResponse coverageEligibilityResponse
     ) throws URISyntaxException {
-        log.debug("REST request to partial update CoverageEligibilityResponse partially : {}, {}", id, coverageEligibilityResponse);
+        //log.debug("REST request to partial update CoverageEligibilityResponse partially : {}, {}", id, coverageEligibilityResponse);
         if (coverageEligibilityResponse.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }

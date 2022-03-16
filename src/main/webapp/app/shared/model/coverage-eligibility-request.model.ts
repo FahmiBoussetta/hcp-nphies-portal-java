@@ -4,6 +4,7 @@ import { IListEligibilityPurposeEnum } from 'app/shared/model/list-eligibility-p
 import { IPatient } from 'app/shared/model/patient.model';
 import { IOrganization } from 'app/shared/model/organization.model';
 import { ILocation } from 'app/shared/model/location.model';
+import { ICoverageEligibilityResponse } from 'app/shared/model/coverage-eligibility-response.model';
 import { ICoverage } from 'app/shared/model/coverage.model';
 import { PriorityEnum } from 'app/shared/model/enumerations/priority-enum.model';
 
@@ -21,6 +22,7 @@ export interface ICoverageEligibilityRequest {
   provider?: IOrganization | null;
   insurer?: IOrganization | null;
   facility?: ILocation | null;
+  coverageEligibilityResponse?: ICoverageEligibilityResponse | null;
   coverages?: ICoverage[] | null;
 }
 

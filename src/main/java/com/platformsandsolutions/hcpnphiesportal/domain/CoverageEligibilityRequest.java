@@ -3,6 +3,7 @@ package com.platformsandsolutions.hcpnphiesportal.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.PriorityEnum;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
@@ -50,12 +51,12 @@ public class CoverageEligibilityRequest implements Serializable {
     @Column(name = "serviced_date_end")
     private Instant servicedDateEnd;
 
-    @OneToMany(mappedBy = "coverageEligibilityRequest")
+    @OneToMany(mappedBy = "coverageEligibilityRequest", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "coverageEligibilityRequest" }, allowSetters = true)
     private Set<CovEliErrorMessages> errors = new HashSet<>();
 
-    @OneToMany(mappedBy = "coverageEligibilityRequest", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "coverageEligibilityRequest", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "coverageEligibilityRequest" }, allowSetters = true)
     private Set<ListEligibilityPurposeEnum> purposes = new HashSet<>();
@@ -76,6 +77,11 @@ public class CoverageEligibilityRequest implements Serializable {
     @JsonIgnoreProperties(value = { "managingOrganization" }, allowSetters = true)
     private Location facility;
 
+    @JsonIgnoreProperties(value = { "errors", "insurances", "patient", "insurer" }, allowSetters = true)
+    @OneToOne
+    @JoinColumn(unique = true)
+    private CoverageEligibilityResponse coverageEligibilityResponse;
+
     @ManyToMany
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JoinTable(
@@ -91,7 +97,18 @@ public class CoverageEligibilityRequest implements Serializable {
     )
     private Set<Coverage> coverages = new HashSet<>();
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here
+    @ManyToMany(mappedBy = "covEliReqIdentifiers")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    private Set<ReferenceIdentifier> identifiers = new HashSet<>();
+
+    public Set<ReferenceIdentifier> getIdentifiers() {
+        return identifiers;
+    }
+
+    public void setIdentifiers(Set<ReferenceIdentifier> identifiers) {
+        this.identifiers = identifiers;
+    }
+
     public Long getId() {
         return id;
     }
@@ -297,6 +314,19 @@ public class CoverageEligibilityRequest implements Serializable {
         this.facility = location;
     }
 
+    public CoverageEligibilityResponse getCoverageEligibilityResponse() {
+        return this.coverageEligibilityResponse;
+    }
+
+    public CoverageEligibilityRequest coverageEligibilityResponse(CoverageEligibilityResponse coverageEligibilityResponse) {
+        this.setCoverageEligibilityResponse(coverageEligibilityResponse);
+        return this;
+    }
+
+    public void setCoverageEligibilityResponse(CoverageEligibilityResponse coverageEligibilityResponse) {
+        this.coverageEligibilityResponse = coverageEligibilityResponse;
+    }
+
     public Set<Coverage> getCoverages() {
         return this.coverages;
     }
@@ -320,24 +350,6 @@ public class CoverageEligibilityRequest implements Serializable {
 
     public void setCoverages(Set<Coverage> coverages) {
         this.coverages = coverages;
-    }
-
-    public CoverageEligibilityRequestModel convert(ArrayList<CoreResourceModel> coreResources) {
-        CoverageEligibilityRequestModel model = new CoverageEligibilityRequestModel();
-        model.setCoverages(
-            this.getCoverages().stream().map(i -> i.convert(coreResources)).collect(Collectors.toCollection(ArrayList::new))
-        );
-        if (this.getFacility() != null) {
-            model.setFacility(this.getFacility().convert(coreResources));
-        }
-        model.setPatient(this.getPatient().convert(coreResources));
-        model.setInsurer(this.getInsurer().convert(coreResources));
-        model.setIdentifier(this.getIdentifier());
-        model.setPurposes(this.getPurposes().stream().map(i -> i.convert()).collect(Collectors.toCollection(ArrayList::new)));
-        model.setServicedDate(Date.from(this.getServicedDate()));
-        model.setServicedDateEnd(Date.from(this.getServicedDate()));
-        model.setPriority(this.getPriority().convert());
-        return model;
     }
 
     @Override
@@ -366,4 +378,52 @@ public class CoverageEligibilityRequest implements Serializable {
 				+ ", servicedDate='" + getServicedDate() + "'" + ", servicedDateEnd='" + getServicedDateEnd() + "'"
 				+ "}";
 	}
+
+    public CoverageEligibilityRequestModel convert(ArrayList<CoreResourceModel> coreResources) {
+        CoverageEligibilityRequestModel model = new CoverageEligibilityRequestModel();
+        model.setCoverages(
+            this.getCoverages().stream().map(i -> i.convert(coreResources)).collect(Collectors.toCollection(ArrayList::new))
+        );
+        if (this.getFacility() != null) {
+            model.setFacility(this.getFacility().convert(coreResources));
+        }
+        model.setPatient(this.getPatient().convert(coreResources));
+        model.setInsurer(this.getInsurer().convert(coreResources));
+        IdentifierModel id = new IdentifierModel();
+        id.setValue(this.getIdentifier() + "_" + this.getId() + "_" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()));
+        model.addIdentifier(id);
+        model.setPurposes(this.getPurposes().stream().map(i -> i.convert()).collect(Collectors.toCollection(ArrayList::new)));
+        model.setServicedDate(Date.from(this.getServicedDate()));
+        model.setServicedDateEnd(Date.from(this.getServicedDate()));
+        model.setPriority(this.getPriority().convert());
+        return model;
+    }
+
+    public CoverageEligibilityRequest convertFrom(CoverageEligibilityRequestModel model) {
+        CoverageEligibilityRequest c = new CoverageEligibilityRequest();
+        if (model.getIdentifiers() != null) {
+            c.setIdentifiers(model.getIdentifiers().stream().map(i -> ReferenceIdentifier.convertFrom(i)).collect(Collectors.toSet()));
+        }
+        if (model.getCoverages() != null) {
+            c.setCoverages(model.getCoverages().stream().map(i -> Coverage.convertFrom(i)).collect(Collectors.toSet()));
+        }
+        if (model.getFacility() != null) {
+            c.setFacility(Location.convertFrom(model.getFacility()));
+        }
+        c.setPatient(Patient.convertFrom(model.getPatient()));
+        c.setInsurer(Organization.convertFrom(model.getInsurer()));
+        if (model.getPurposes() != null) {
+            c.setPurposes(model.getPurposes().stream().map(i -> ListEligibilityPurposeEnum.convertFrom(i)).collect(Collectors.toSet()));
+        }
+        if (model.getServicedDate() != null) {
+            c.setServicedDate(model.getServicedDate().toInstant());
+        }
+        if (model.getServicedDate() != null) {
+            c.setServicedDateEnd(model.getServicedDate().toInstant());
+        }
+        if (model.getPriority() != null) {
+            c.setPriority(PriorityEnum.valueOf(model.getPriority().name()));
+        }
+        return c;
+    }
 }

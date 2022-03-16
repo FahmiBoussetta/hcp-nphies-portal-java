@@ -65,9 +65,6 @@ export const Item = (props: RouteComponentProps<{ url: string }>) => {
                   <Translate contentKey="hcpNphiesPortalApp.item.patientShare">Patient Share</Translate>
                 </th>
                 <th>
-                  <Translate contentKey="hcpNphiesPortalApp.item.careTeamSequence">Care Team Sequence</Translate>
-                </th>
-                <th>
                   <Translate contentKey="hcpNphiesPortalApp.item.transportationSRCA">Transportation SRCA</Translate>
                 </th>
                 <th>
@@ -137,7 +134,6 @@ export const Item = (props: RouteComponentProps<{ url: string }>) => {
                   <td>{item.tax}</td>
                   <td>{item.payerShare}</td>
                   <td>{item.patientShare}</td>
-                  <td>{item.careTeamSequence}</td>
                   <td>{item.transportationSRCA}</td>
                   <td>{item.imaging}</td>
                   <td>{item.laboratory}</td>

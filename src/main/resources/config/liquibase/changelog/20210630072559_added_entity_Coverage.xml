@@ -75,6 +75,9 @@
             <column name="relation_ship" type="string"/>
             <column name="network" type="string"/>
             <column name="subrogation" type="boolean"/>
+            <column name="subscriber_patient_id" type="numeric"/>
+            <column name="beneficiary_id" type="numeric"/>
+            <column name="payor_id" type="numeric"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
     </changeSet>

@@ -5,6 +5,7 @@ import java.io.Serializable;
 import javax.persistence.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import platform.fhir_client.models.EligibilityResponseErrorModel;
 
 /**
  * A CovEliRespErrorMessages.
@@ -67,7 +68,8 @@ public class CovEliRespErrorMessages implements Serializable {
         this.coverageEligibilityResponse = coverageEligibilityResponse;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and
+    // setters here
 
     @Override
     public boolean equals(Object o) {
@@ -82,7 +84,8 @@ public class CovEliRespErrorMessages implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        // see
+        // https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
     }
 
@@ -90,8 +93,16 @@ public class CovEliRespErrorMessages implements Serializable {
     @Override
     public String toString() {
         return "CovEliRespErrorMessages{" +
-            "id=" + getId() +
-            ", message='" + getMessage() + "'" +
-            "}";
+                "id=" + getId() +
+                ", message='" + getMessage() + "'" +
+                "}";
+    }
+
+    public static CovEliRespErrorMessages convertFrom(EligibilityResponseErrorModel x) {
+        CovEliRespErrorMessages model = new CovEliRespErrorMessages();
+        if (x.getCode() != null) {
+            model.setMessage(x.getCode().toString());
+        }
+        return model;
     }
 }

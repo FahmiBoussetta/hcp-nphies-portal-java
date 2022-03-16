@@ -63,7 +63,7 @@ export const AddressUpdate = (props: RouteComponentProps<{ id: string }>) => {
       <Row className="justify-content-center">
         <Col md="8">
           <h2 id="hcpNphiesPortalApp.address.home.createOrEditLabel" data-cy="AddressCreateUpdateHeading">
-            <Translate contentKey="hcpNphiesPortalApp.address.home.createOrEditLabel">Create or edit a Address</Translate>
+            <Translate contentKey="hcpNphiesPortalApp.address.home.createOrEditLabel">Create or edit an Address</Translate>
           </h2>
         </Col>
       </Row>

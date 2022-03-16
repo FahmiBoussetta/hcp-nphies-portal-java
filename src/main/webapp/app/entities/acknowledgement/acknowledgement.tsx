@@ -71,7 +71,7 @@ export const Acknowledgement = (props: RouteComponentProps<{ url: string }>) => 
                   </td>
                   <td>{acknowledgement.value}</td>
                   <td>{acknowledgement.system}</td>
-                  <td>{acknowledgement.parsed}</td>
+                  <td>{acknowledgement.parsed?.substring(0, 80)}...</td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`${match.url}/${acknowledgement.id}`} color="info" size="sm" data-cy="entityDetailsButton">

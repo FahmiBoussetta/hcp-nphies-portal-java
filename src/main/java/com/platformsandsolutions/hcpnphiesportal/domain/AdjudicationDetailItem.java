@@ -4,10 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import platform.fhir_client.models.AdjudicationDetailItemModel;
 
 /**
  * A AdjudicationDetailItem.
@@ -27,26 +29,25 @@ public class AdjudicationDetailItem implements Serializable {
     @Column(name = "sequence", nullable = false)
     private Integer sequence;
 
-    @OneToMany(mappedBy = "adjudicationDetailItem")
+    @OneToMany(mappedBy = "adjudicationDetailItem", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "adjudicationDetailItem" }, allowSetters = true)
     private Set<AdjudicationDetailNotes> notes = new HashSet<>();
 
-    @OneToMany(mappedBy = "adjudicationDetailItem")
+    @OneToMany(mappedBy = "adjudicationDetailItem", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "adjudicationItem", "adjudicationDetailItem", "adjudicationSubDetailItem" }, allowSetters = true)
     private Set<Adjudication> adjudications = new HashSet<>();
 
-    @OneToMany(mappedBy = "adjudicationDetailItem")
+    @OneToMany(mappedBy = "adjudicationDetailItem", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "notes", "adjudications", "adjudicationDetailItem" }, allowSetters = true)
     private Set<AdjudicationSubDetailItem> subDetails = new HashSet<>();
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JsonIgnoreProperties(value = { "notes", "adjudications", "details", "claimResponse" }, allowSetters = true)
     private AdjudicationItem adjudicationItem;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
     }
@@ -179,8 +180,6 @@ public class AdjudicationDetailItem implements Serializable {
         this.adjudicationItem = adjudicationItem;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -194,16 +193,31 @@ public class AdjudicationDetailItem implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        // see
+        // https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
     }
 
     // prettier-ignore
     @Override
     public String toString() {
-        return "AdjudicationDetailItem{" +
-            "id=" + getId() +
-            ", sequence=" + getSequence() +
-            "}";
+        return "AdjudicationDetailItem{" + "id=" + getId() + ", sequence=" + getSequence() + "}";
+    }
+
+    public static AdjudicationDetailItem convertFrom(AdjudicationDetailItemModel y2) {
+        AdjudicationDetailItem adj = new AdjudicationDetailItem();
+        if (y2.getAdjudications() != null) {
+            adj.setAdjudications(y2.getAdjudications().stream().map(y -> Adjudication.convertFrom(y)).collect(Collectors.toSet()));
+        }
+
+        if (y2.getSubDetails() != null) {
+            adj.setSubDetails(y2.getSubDetails().stream().map(y -> AdjudicationSubDetailItem.convertFrom(y)).collect(Collectors.toSet()));
+        }
+
+        if (y2.getNotes() != null) {
+            adj.setNotes(y2.getNotes().stream().map(y -> AdjudicationDetailNotes.convertFrom(y)).collect(Collectors.toSet()));
+        }
+        adj.setSequence(y2.getSequence());
+        return adj;
     }
 }

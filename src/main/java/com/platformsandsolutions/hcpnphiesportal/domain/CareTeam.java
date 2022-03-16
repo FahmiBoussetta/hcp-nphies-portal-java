@@ -2,11 +2,15 @@ package com.platformsandsolutions.hcpnphiesportal.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.CareTeamRoleEnum;
+import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.SpecialtyEnum;
 import java.io.Serializable;
+import java.util.ArrayList;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import platform.fhir_client.models.CareTeamModel;
+import platform.fhir_client.models.CoreResourceModel;
 
 /**
  * A CareTeam.
@@ -30,6 +34,11 @@ public class CareTeam implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     private CareTeamRoleEnum role;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "qualification", nullable = false)
+    private SpecialtyEnum qualification;
 
     @ManyToOne
     @JsonIgnoreProperties(value = { "names" }, allowSetters = true)
@@ -65,7 +74,6 @@ public class CareTeam implements Serializable {
     )
     private Claim claim;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
     }
@@ -103,6 +111,19 @@ public class CareTeam implements Serializable {
 
     public void setRole(CareTeamRoleEnum role) {
         this.role = role;
+    }
+
+    public SpecialtyEnum getQualification() {
+        return qualification;
+    }
+
+    public CareTeam qualification(SpecialtyEnum qualification) {
+        this.setQualification(qualification);
+        return this;
+    }
+
+    public void setQualification(SpecialtyEnum qualification) {
+        this.qualification = qualification;
     }
 
     public Practitioner getProvider() {
@@ -144,8 +165,6 @@ public class CareTeam implements Serializable {
         this.claim = claim;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -159,17 +178,56 @@ public class CareTeam implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        // see
+        // https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
     }
 
     // prettier-ignore
     @Override
     public String toString() {
-        return "CareTeam{" +
-            "id=" + getId() +
-            ", sequence=" + getSequence() +
-            ", role='" + getRole() + "'" +
-            "}";
+        return "CareTeam{" + "id=" + getId() + ", sequence=" + getSequence() + ", role='" + getRole() + "'"
+                + ", qualification='" + getQualification() + "'" + ", provider='" + getProvider().getId() + "'"
+                + ", providerRole='" + getProviderRole().getId() + "'" + "}";
+    }
+
+    public CareTeamModel convert(ArrayList<CoreResourceModel> coreResources) {
+        CareTeamModel ct = new CareTeamModel();
+        if (this.getProvider() != null) {
+            ct.setProvider(this.getProvider().convert(coreResources));
+        }
+        if (this.getProviderRole() != null) {
+            ct.setProviderRole(this.getProviderRole().convert(coreResources));
+        }
+        if (this.getRole() != null) {
+            ct.setRole(this.getRole().convert());
+        }
+        if (this.getSequence() != null) {
+            ct.setSequence(this.getSequence());
+        }
+        if (this.getQualification() != null) {
+            ct.setQualification(this.getQualification().convert());
+        }
+        return ct;
+    }
+
+    public static CareTeam convertFrom(CareTeamModel model) {
+        CareTeam ct = new CareTeam();
+        if (model.getProvider() != null) {
+            ct.setProvider(Practitioner.convertFrom(model.getProvider()));
+        }
+        if (model.getProviderRole() != null) {
+            ct.setProviderRole(PractitionerRole.convertFrom(model.getProviderRole()));
+        }
+        if (model.getRole() != null) {
+            ct.setRole(CareTeamRoleEnum.valueOf(model.getRole().name()));
+        }
+        if (model.getSequence() > -1) {
+            ct.setSequence(model.getSequence());
+        }
+        if (model.getQualification() != null) {
+            ct.setQualification(SpecialtyEnum.valueOf(model.getQualification().name()));
+        }
+        return ct;
     }
 }

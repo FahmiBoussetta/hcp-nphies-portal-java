@@ -17,7 +17,7 @@
             <column name="guid" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
-            <column name="parsed" type="varchar(255)">
+            <column name="parsed" type="varchar(max)">
                 <constraints nullable="true" />
             </column>
             <column name="identifier" type="varchar(255)">

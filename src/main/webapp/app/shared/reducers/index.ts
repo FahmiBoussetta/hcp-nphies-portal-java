@@ -28,6 +28,8 @@ import opeOutErrorMessages from 'app/entities/ope-out-error-messages/ope-out-err
 // prettier-ignore
 import payNotErrorMessages from 'app/entities/pay-not-error-messages/pay-not-error-messages.reducer';
 // prettier-ignore
+import careTeamSequence from 'app/entities/care-team-sequence/care-team-sequence.reducer';
+// prettier-ignore
 import diagnosisSequence from 'app/entities/diagnosis-sequence/diagnosis-sequence.reducer';
 // prettier-ignore
 import informationSequence from 'app/entities/information-sequence/information-sequence.reducer';
@@ -174,6 +176,7 @@ const rootReducer = {
   covEliRespErrorMessages,
   opeOutErrorMessages,
   payNotErrorMessages,
+  careTeamSequence,
   diagnosisSequence,
   informationSequence,
   adjudicationNotes,

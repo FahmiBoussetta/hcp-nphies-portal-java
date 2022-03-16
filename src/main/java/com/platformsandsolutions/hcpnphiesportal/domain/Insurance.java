@@ -2,10 +2,21 @@ package com.platformsandsolutions.hcpnphiesportal.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
-import javax.persistence.*;
-import javax.validation.constraints.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import platform.fhir_client.models.CoreResourceModel;
+import platform.fhir_client.models.InsuranceModel;
 
 /**
  * A Insurance.
@@ -71,7 +82,6 @@ public class Insurance implements Serializable {
     )
     private Claim claim;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
     }
@@ -163,8 +173,6 @@ public class Insurance implements Serializable {
         this.claim = claim;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -178,18 +186,55 @@ public class Insurance implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        // see
+        // https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
     }
 
     // prettier-ignore
     @Override
     public String toString() {
-        return "Insurance{" +
-            "id=" + getId() +
-            ", sequence=" + getSequence() +
-            ", focal='" + getFocal() + "'" +
-            ", preAuthRef='" + getPreAuthRef() + "'" +
-            "}";
+        return "Insurance{" + "id=" + getId() + ", sequence=" + getSequence() + ", focal='" + getFocal() + "'"
+                + ", preAuthRef='" + getPreAuthRef() + "'" + "}";
+    }
+
+    public InsuranceModel convert(ArrayList<CoreResourceModel> coreResources) {
+        InsuranceModel ins = new InsuranceModel();
+        if (this.getClaimResponse() != null) {
+            ins.setClaimResponse(this.getClaimResponse().convertIdentifier());
+        }
+        if (this.getCoverage() != null) {
+            ins.setCoverage(this.getCoverage().convert(coreResources));
+        }
+        if (this.getFocal() != null) {
+            ins.setFocal(this.getFocal());
+        }
+        if (this.getPreAuthRef() != null) {
+            ins.setPreAuthRef(Arrays.asList(this.getPreAuthRef().split(";")));
+        }
+        if (this.getSequence() != null) {
+            ins.setSequence(this.getSequence());
+        }
+        return ins;
+    }
+
+    public static Insurance convertFrom(InsuranceModel model) {
+        Insurance ins = new Insurance();
+        if (model.getClaimResponse() != null) {
+            ins.setClaimResponse(ClaimResponse.convertFrom(model.getClaimResponse()));
+        }
+        if (model.getCoverage() != null) {
+            ins.setCoverage(Coverage.convertFrom(model.getCoverage()));
+        }
+        if (model.getFocal() != null) {
+            ins.setFocal(model.getFocal());
+        }
+        if (model.getPreAuthRef() != null) {
+            ins.setPreAuthRef(String.join(";", model.getPreAuthRef()));
+        }
+        if (model.getSequence() > -1) {
+            ins.setSequence(model.getSequence());
+        }
+        return ins;
     }
 }

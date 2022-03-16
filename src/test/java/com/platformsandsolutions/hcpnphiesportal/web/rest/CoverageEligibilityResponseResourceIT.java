@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.platformsandsolutions.hcpnphiesportal.IntegrationTest;
 import com.platformsandsolutions.hcpnphiesportal.domain.CoverageEligibilityResponse;
+import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.NotInForceReasonEnum;
 import com.platformsandsolutions.hcpnphiesportal.repository.CoverageEligibilityResponseRepository;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -24,7 +25,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Integration tests for the {@link CoverageEligibilityResponseResource} REST controller.
+ * Integration tests for the {@link CoverageEligibilityResponseResource} REST
+ * controller.
  */
 @IntegrationTest
 @AutoConfigureMockMvc
@@ -52,8 +54,8 @@ class CoverageEligibilityResponseResourceIT {
     private static final String DEFAULT_DISPOSITION = "AAAAAAAAAA";
     private static final String UPDATED_DISPOSITION = "BBBBBBBBBB";
 
-    private static final String DEFAULT_NOT_INFORCE_REASON = "AAAAAAAAAA";
-    private static final String UPDATED_NOT_INFORCE_REASON = "BBBBBBBBBB";
+    private static final NotInForceReasonEnum DEFAULT_NOT_INFORCE_REASON = NotInForceReasonEnum.ALC;
+    private static final NotInForceReasonEnum UPDATED_NOT_INFORCE_REASON = NotInForceReasonEnum.NC;
 
     private static final String ENTITY_API_URL = "/api/coverage-eligibility-responses";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
@@ -229,7 +231,8 @@ class CoverageEligibilityResponseResourceIT {
         CoverageEligibilityResponse updatedCoverageEligibilityResponse = coverageEligibilityResponseRepository
             .findById(coverageEligibilityResponse.getId())
             .get();
-        // Disconnect from session so that the updates on updatedCoverageEligibilityResponse are not directly saved in db
+        // Disconnect from session so that the updates on
+        // updatedCoverageEligibilityResponse are not directly saved in db
         em.detach(updatedCoverageEligibilityResponse);
         updatedCoverageEligibilityResponse
             .value(UPDATED_VALUE)

@@ -20,8 +20,8 @@
             <column name="reason" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
-            <column name="amount" type="integer">
-                <constraints nullable="false" />
+            <column name="amount" type="decimal(21,2)">
+                <constraints nullable="true" />
             </column>
             <column name="value" type="decimal(21,2)">
                 <constraints nullable="true" />

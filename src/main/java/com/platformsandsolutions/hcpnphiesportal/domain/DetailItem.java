@@ -3,12 +3,16 @@ package com.platformsandsolutions.hcpnphiesportal.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import platform.fhir_client.models.CoreResourceModel;
+import platform.fhir_client.models.DetailItemModel;
 
 /**
  * A DetailItem.
@@ -66,21 +70,23 @@ public class DetailItem implements Serializable {
     @Column(name = "unit_price", nullable = false)
     private Integer unitPrice;
 
-    @OneToMany(mappedBy = "detailItem")
+    @OneToMany(mappedBy = "detailItem", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "item", "detailItem", "subDetailItem" }, allowSetters = true)
     private Set<ReferenceIdentifier> udis = new HashSet<>();
 
-    @OneToMany(mappedBy = "detailItem")
+    @OneToMany(mappedBy = "detailItem", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "udis", "detailItem" }, allowSetters = true)
     private Set<SubDetailItem> subDetails = new HashSet<>();
 
-    @ManyToOne
-    @JsonIgnoreProperties(value = { "diagnosisSequences", "informationSequences", "udis", "details", "claim" }, allowSetters = true)
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JsonIgnoreProperties(
+        value = { "careTeamSequences", "diagnosisSequences", "informationSequences", "udis", "details", "claim" },
+        allowSetters = true
+    )
     private Item item;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
     }
@@ -338,8 +344,6 @@ public class DetailItem implements Serializable {
         this.item = item;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -353,28 +357,119 @@ public class DetailItem implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        // see
+        // https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
     }
 
     // prettier-ignore
     @Override
     public String toString() {
-        return "DetailItem{" +
-            "id=" + getId() +
-            ", sequence=" + getSequence() +
-            ", tax=" + getTax() +
-            ", transportationSRCA='" + getTransportationSRCA() + "'" +
-            ", imaging='" + getImaging() + "'" +
-            ", laboratory='" + getLaboratory() + "'" +
-            ", medicalDevice='" + getMedicalDevice() + "'" +
-            ", oralHealthIP='" + getOralHealthIP() + "'" +
-            ", oralHealthOP='" + getOralHealthOP() + "'" +
-            ", procedure='" + getProcedure() + "'" +
-            ", services='" + getServices() + "'" +
-            ", medicationCode='" + getMedicationCode() + "'" +
-            ", quantity=" + getQuantity() +
-            ", unitPrice=" + getUnitPrice() +
-            "}";
+        return "DetailItem{" + "id=" + getId() + ", sequence=" + getSequence() + ", tax=" + getTax()
+                + ", transportationSRCA='" + getTransportationSRCA() + "'" + ", imaging='" + getImaging() + "'"
+                + ", laboratory='" + getLaboratory() + "'" + ", medicalDevice='" + getMedicalDevice() + "'"
+                + ", oralHealthIP='" + getOralHealthIP() + "'" + ", oralHealthOP='" + getOralHealthOP() + "'"
+                + ", procedure='" + getProcedure() + "'" + ", services='" + getServices() + "'" + ", medicationCode='"
+                + getMedicationCode() + "'" + ", quantity=" + getQuantity() + ", unitPrice=" + getUnitPrice() + "}";
+    }
+
+    public DetailItemModel convert(ArrayList<CoreResourceModel> coreResources) {
+        DetailItemModel detailItem = new DetailItemModel();
+        if (this.getImaging() != null) {
+            detailItem.setImaging(this.getImaging());
+        }
+        if (this.getLaboratory() != null) {
+            detailItem.setLaboratory(this.getLaboratory());
+        }
+        if (this.getMedicalDevice() != null) {
+            detailItem.setMedicalDevice(this.getMedicalDevice());
+        }
+        if (this.getMedicationCode() != null) {
+            detailItem.setMedicationCode(this.getMedicationCode());
+        }
+        if (this.getOralHealthIP() != null) {
+            detailItem.setOralHealthIP(this.getOralHealthIP());
+        }
+        if (this.getOralHealthOP() != null) {
+            detailItem.setOralHealthOP(this.getOralHealthOP());
+        }
+        if (this.getProcedure() != null) {
+            detailItem.setProcedure(this.getProcedure());
+        }
+        if (this.getQuantity() != null) {
+            detailItem.setQuantity(this.getQuantity());
+        }
+        if (this.getSequence() != null) {
+            detailItem.setSequence(this.getSequence());
+        }
+        if (this.getServices() != null) {
+            detailItem.setService(this.getServices());
+        }
+        if (this.getSubDetails() != null) {
+            detailItem.setSubDetails(this.getSubDetails().stream().map(i -> i.convert(coreResources)).collect(Collectors.toList()));
+        }
+        if (this.getTax() != null) {
+            detailItem.setTax(this.getTax());
+        }
+        if (this.getTransportationSRCA() != null) {
+            detailItem.setTransportationSRCA(this.getTransportationSRCA());
+        }
+        if (this.getUdis() != null) {
+            detailItem.setUdi(this.getUdis().stream().map(i -> i.convert()).collect(Collectors.toList()));
+        }
+        if (this.getUnitPrice() != null) {
+            detailItem.setUnitPrice(this.getUnitPrice());
+        }
+        return detailItem;
+    }
+
+    public static DetailItem convertFrom(DetailItemModel model) {
+        DetailItem detailItem = new DetailItem();
+        if (model.getImaging() != null) {
+            detailItem.setImaging(model.getImaging());
+        }
+        if (model.getLaboratory() != null) {
+            detailItem.setLaboratory(model.getLaboratory());
+        }
+        if (model.getMedicalDevice() != null) {
+            detailItem.setMedicalDevice(model.getMedicalDevice());
+        }
+        if (model.getMedicationCode() != null) {
+            detailItem.setMedicationCode(model.getMedicationCode());
+        }
+        if (model.getOralHealthIP() != null) {
+            detailItem.setOralHealthIP(model.getOralHealthIP());
+        }
+        if (model.getOralHealthOP() != null) {
+            detailItem.setOralHealthOP(model.getOralHealthOP());
+        }
+        if (model.getProcedure() != null) {
+            detailItem.setProcedure(model.getProcedure());
+        }
+        if (model.getQuantity() > -1) {
+            detailItem.setQuantity(model.getQuantity());
+        }
+        if (model.getSequence() > -1) {
+            detailItem.setSequence(model.getSequence());
+        }
+        if (model.getService() != null) {
+            detailItem.setServices(model.getService());
+        }
+        if (model.getSubDetails() != null) {
+            detailItem.setSubDetails(model.getSubDetails().stream().map(i -> SubDetailItem.convertFrom(i)).collect(Collectors.toSet()));
+        }
+        if (model.getTax() != null) {
+            detailItem.setTax(model.getTax());
+        }
+        if (model.getTransportationSRCA() != null) {
+            detailItem.setTransportationSRCA(model.getTransportationSRCA());
+        }
+        if (model.getUdi() != null) {
+            detailItem.setUdis(model.getUdi().stream().map(i -> ReferenceIdentifier.convertFrom(i)).collect(Collectors.toSet()));
+        }
+        if (model.getUnitPrice() > -1) {
+            detailItem.setUnitPrice(model.getUnitPrice());
+        }
+        return detailItem;
     }
 }

@@ -35,7 +35,8 @@ public class TokenProvider {
 
     public TokenProvider(JHipsterProperties jHipsterProperties) {
         byte[] keyBytes;
-        String secret = jHipsterProperties.getSecurity().getAuthentication().getJwt().getBase64Secret();
+        String secret =
+            "ZGVmYjc0ZjZlMTdlNDBhZDljNDIzMjdhY2YyZjEwNTUxMmI4YjI5Y2Y2MTJmY2M5YzA0YTg2ZTkzMTBjOGM0ZjM0Zjg3OGQzMjhmZDQ5MjlmMmU2M2M3ZWYzYmVjNDg2YTZkNTMyYWZjZmQzMWY2NmFmMDRjZWNiYmVjM2RhNjM=";
         if (!ObjectUtils.isEmpty(secret)) {
             log.debug("Using a Base64-encoded JWT secret key");
             keyBytes = Decoders.BASE64.decode(secret);

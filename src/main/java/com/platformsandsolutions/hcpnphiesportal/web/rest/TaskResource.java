@@ -8,6 +8,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,7 +19,8 @@ import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.ResponseUtil;
 
 /**
- * REST controller for managing {@link com.platformsandsolutions.hcpnphiesportal.domain.Task}.
+ * REST controller for managing
+ * {@link com.platformsandsolutions.hcpnphiesportal.domain.Task}.
  */
 @RestController
 @RequestMapping("/api")
@@ -42,7 +44,9 @@ public class TaskResource {
      * {@code POST  /tasks} : Create a new task.
      *
      * @param task the task to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new task, or with status {@code 400 (Bad Request)} if the task has already an ID.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with
+     *         body the new task, or with status {@code 400 (Bad Request)} if the
+     *         task has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/tasks")
@@ -51,6 +55,7 @@ public class TaskResource {
         if (task.getId() != null) {
             throw new BadRequestAlertException("A new task cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        task.setGuid(UUID.randomUUID().toString());
         Task result = taskRepository.save(task);
         return ResponseEntity
             .created(new URI("/api/tasks/" + result.getId()))
@@ -61,11 +66,12 @@ public class TaskResource {
     /**
      * {@code PUT  /tasks/:id} : Updates an existing task.
      *
-     * @param id the id of the task to save.
+     * @param id   the id of the task to save.
      * @param task the task to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated task,
-     * or with status {@code 400 (Bad Request)} if the task is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the task couldn't be updated.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
+     *         the updated task, or with status {@code 400 (Bad Request)} if the
+     *         task is not valid, or with status {@code 500 (Internal Server Error)}
+     *         if the task couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/tasks/{id}")
@@ -91,14 +97,16 @@ public class TaskResource {
     }
 
     /**
-     * {@code PATCH  /tasks/:id} : Partial updates given fields of an existing task, field will ignore if it is null
+     * {@code PATCH  /tasks/:id} : Partial updates given fields of an existing task,
+     * field will ignore if it is null
      *
-     * @param id the id of the task to save.
+     * @param id   the id of the task to save.
      * @param task the task to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated task,
-     * or with status {@code 400 (Bad Request)} if the task is not valid,
-     * or with status {@code 404 (Not Found)} if the task is not found,
-     * or with status {@code 500 (Internal Server Error)} if the task couldn't be updated.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
+     *         the updated task, or with status {@code 400 (Bad Request)} if the
+     *         task is not valid, or with status {@code 404 (Not Found)} if the task
+     *         is not found, or with status {@code 500 (Internal Server Error)} if
+     *         the task couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/tasks/{id}", consumes = "application/merge-patch+json")
@@ -159,7 +167,8 @@ public class TaskResource {
     /**
      * {@code GET  /tasks} : get all the tasks.
      *
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of tasks in body.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list
+     *         of tasks in body.
      */
     @GetMapping("/tasks")
     public List<Task> getAllTasks() {
@@ -171,7 +180,8 @@ public class TaskResource {
      * {@code GET  /tasks/:id} : get the "id" task.
      *
      * @param id the id of the task to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the task, or with status {@code 404 (Not Found)}.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
+     *         the task, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/tasks/{id}")
     public ResponseEntity<Task> getTask(@PathVariable Long id) {

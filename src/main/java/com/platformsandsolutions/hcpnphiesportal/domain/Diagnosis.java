@@ -4,10 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.DiagnosisOnAdmissionEnum;
 import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.DiagnosisTypeEnum;
 import java.io.Serializable;
+import java.util.ArrayList;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import platform.fhir_client.models.CoreResourceModel;
+import platform.fhir_client.models.DiagnosisModel;
 
 /**
  * A Diagnosis.
@@ -66,7 +69,6 @@ public class Diagnosis implements Serializable {
     )
     private Claim claim;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
     }
@@ -145,8 +147,6 @@ public class Diagnosis implements Serializable {
         this.claim = claim;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -160,19 +160,49 @@ public class Diagnosis implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        // see
+        // https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
     }
 
     // prettier-ignore
     @Override
     public String toString() {
-        return "Diagnosis{" +
-            "id=" + getId() +
-            ", sequence=" + getSequence() +
-            ", diagnosis='" + getDiagnosis() + "'" +
-            ", type='" + getType() + "'" +
-            ", onAdmission='" + getOnAdmission() + "'" +
-            "}";
+        return "Diagnosis{" + "id=" + getId() + ", sequence=" + getSequence() + ", diagnosis='" + getDiagnosis() + "'"
+                + ", type='" + getType() + "'" + ", onAdmission='" + getOnAdmission() + "'" + "}";
+    }
+
+    public DiagnosisModel convert(ArrayList<CoreResourceModel> coreResources) {
+        DiagnosisModel d = new DiagnosisModel();
+        if (this.getDiagnosis() != null) {
+            d.setDiagnosis(this.getDiagnosis());
+        }
+        if (this.getOnAdmission() != null) {
+            d.setOnAdmission(this.getOnAdmission().convert());
+        }
+        if (this.getSequence() != null) {
+            d.setSequence(this.getSequence());
+        }
+        if (this.getType() != null) {
+            d.setType(this.getType().convert());
+        }
+        return d;
+    }
+
+    public static Diagnosis convertFrom(DiagnosisModel model) {
+        Diagnosis d = new Diagnosis();
+        if (model.getDiagnosis() != null) {
+            d.setDiagnosis(model.getDiagnosis());
+        }
+        if (model.getOnAdmission() != null) {
+            d.setOnAdmission(DiagnosisOnAdmissionEnum.valueOf(model.getOnAdmission().name()));
+        }
+        if (model.getSequence() > -1) {
+            d.setSequence(model.getSequence());
+        }
+        if (model.getType() != null) {
+            d.setType(DiagnosisTypeEnum.valueOf(model.getType().name()));
+        }
+        return d;
     }
 }

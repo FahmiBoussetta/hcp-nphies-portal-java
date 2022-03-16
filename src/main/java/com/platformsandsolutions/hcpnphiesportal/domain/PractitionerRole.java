@@ -3,11 +3,17 @@ package com.platformsandsolutions.hcpnphiesportal.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
 import javax.persistence.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import platform.fhir_client.models.CoreResourceModel;
+import platform.fhir_client.models.PractitionerRoleModel;
 
 /**
  * A PractitionerRole.
@@ -35,12 +41,12 @@ public class PractitionerRole implements Serializable {
     @Column(name = "end")
     private Instant end;
 
-    @OneToMany(mappedBy = "practitionerRole")
+    @OneToMany(mappedBy = "practitionerRole", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "practitionerRole" }, allowSetters = true)
     private Set<ListRoleCodeEnum> codes = new HashSet<>();
 
-    @OneToMany(mappedBy = "practitionerRole")
+    @OneToMany(mappedBy = "practitionerRole", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "practitionerRole" }, allowSetters = true)
     private Set<ListSpecialtyEnum> specialties = new HashSet<>();
@@ -53,7 +59,18 @@ public class PractitionerRole implements Serializable {
     @JsonIgnoreProperties(value = { "contacts", "address" }, allowSetters = true)
     private Organization organization;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here
+    @ManyToMany(mappedBy = "practitionerRoleIdentifiers")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    private Set<ReferenceIdentifier> identifiers = new HashSet<>();
+
+    public Set<ReferenceIdentifier> getIdentifiers() {
+        return identifiers;
+    }
+
+    public void setIdentifiers(Set<ReferenceIdentifier> identifiers) {
+        this.identifiers = identifiers;
+    }
+
     public Long getId() {
         return id;
     }
@@ -207,8 +224,6 @@ public class PractitionerRole implements Serializable {
         this.organization = organization;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -222,19 +237,73 @@ public class PractitionerRole implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        // see
+        // https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
     }
 
     // prettier-ignore
     @Override
     public String toString() {
-        return "PractitionerRole{" +
-            "id=" + getId() +
-            ", guid='" + getGuid() + "'" +
-            ", forceId='" + getForceId() + "'" +
-            ", start='" + getStart() + "'" +
-            ", end='" + getEnd() + "'" +
-            "}";
+        return "PractitionerRole{" + "id=" + getId() + ", guid='" + getGuid() + "'" + ", forceId='" + getForceId() + "'"
+                + ", start='" + getStart() + "'" + ", end='" + getEnd() + "'" + "}";
+    }
+
+    public PractitionerRoleModel convert(ArrayList<CoreResourceModel> coreResources) {
+        if (coreResources.stream().anyMatch(x -> x.getId() == UUID.fromString(this.getGuid()))) {
+            return (PractitionerRoleModel) coreResources
+                .stream()
+                .filter(x -> x.getId() == UUID.fromString(this.getGuid()))
+                .findFirst()
+                .get();
+        }
+        PractitionerRoleModel p = new PractitionerRoleModel();
+        p.setId(UUID.fromString(this.getGuid()));
+        p.setPractitioner(this.getPractitioner().convert(coreResources));
+        p.setForceId(this.getForceId());
+        if (this.getStart() != null) {
+            p.setStart(Date.from(this.getStart()));
+        }
+        if (this.getEnd() != null) {
+            p.setEnd(Date.from(this.getEnd()));
+        }
+        p.setCodes(this.getCodes().stream().map(i -> i.convert()).collect(Collectors.toCollection(ArrayList::new)));
+        p.setOrganization(this.getOrganization().convert(coreResources));
+        p.setSpecialties(this.getSpecialties().stream().map(i -> i.convert()).collect(Collectors.toCollection(ArrayList::new)));
+        coreResources.add(p);
+        return p;
+    }
+
+    public static PractitionerRole convertFrom(PractitionerRoleModel model) {
+        PractitionerRole p = new PractitionerRole();
+        if (model.getIdentifiers() != null) {
+            p.setIdentifiers(model.getIdentifiers().stream().map(i -> ReferenceIdentifier.convertFrom(i)).collect(Collectors.toSet()));
+        }
+        if (model.getId() != null) {
+            p.setGuid(model.getId().toString());
+        }
+        if (model.getPractitioner() != null) {
+            p.setPractitioner(Practitioner.convertFrom(model.getPractitioner()));
+        }
+        if (model.getForceId() != null) {
+            p.setForceId(model.getForceId());
+        }
+        if (model.getStart() != null) {
+            p.setStart(model.getStart().toInstant());
+        }
+        if (model.getEnd() != null) {
+            p.setEnd(model.getEnd().toInstant());
+        }
+        if (model.getCodes() != null) {
+            p.setCodes(model.getCodes().stream().map(i -> ListRoleCodeEnum.convertFrom(i)).collect(Collectors.toSet()));
+        }
+        if (model.getOrganization() != null) {
+            p.setOrganization(Organization.convertFrom(model.getOrganization()));
+        }
+        if (model.getSpecialties() != null) {
+            p.setSpecialties(model.getSpecialties().stream().map(i -> ListSpecialtyEnum.convertFrom(i)).collect(Collectors.toSet()));
+        }
+
+        return p;
     }
 }

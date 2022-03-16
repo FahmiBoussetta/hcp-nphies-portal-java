@@ -113,7 +113,7 @@ export const PatientUpdate = (props: RouteComponentProps<{ id: string }>) => {
     const newGivenList = [...givenList];
     const givenEntity = {
       ...givenFormData,
-      textName: (givenFormData.prefix + ' ' + givenFormData.given + ' ' + givenFormData.suffix).trim(),
+      textName: ((givenFormData.prefix ?? '') + ' ' + givenFormData.given + ' ' + (givenFormData.suffix ?? '')).trim(),
     };
     newGivenList.push(givenEntity);
     setGivenList(newGivenList);
@@ -175,11 +175,11 @@ export const PatientUpdate = (props: RouteComponentProps<{ id: string }>) => {
         }
       : {
           ...patientEntity,
-          religion: 'N0',
-          gender: 'Male',
+          religion: patientEntity.religion ?? 'N0',
+          gender: patientEntity.gender ?? 'Male',
           birthDate: convertDateTimeFromServer(patientEntity.birthDate),
           deceasedDate: convertDateTimeFromServer(patientEntity.deceasedDate),
-          maritalStatus: 'L',
+          maritalStatus: patientEntity.maritalStatus,
           contactsId: patientEntity?.contacts?.id,
           addressId: patientEntity?.address?.id,
         };
@@ -360,6 +360,7 @@ export const PatientUpdate = (props: RouteComponentProps<{ id: string }>) => {
                 data-cy="religion"
                 type="select"
               >
+                <option value=""></option>
                 <option value="N0">{translate('hcpNphiesPortalApp.ReligionEnum.N0')}</option>
                 <option value="N1">{translate('hcpNphiesPortalApp.ReligionEnum.N1')}</option>
                 <option value="N2">{translate('hcpNphiesPortalApp.ReligionEnum.N2')}</option>
@@ -411,6 +412,7 @@ export const PatientUpdate = (props: RouteComponentProps<{ id: string }>) => {
                 data-cy="maritalStatus"
                 type="select"
               >
+                <option value=""></option>
                 <option value="L">{translate('hcpNphiesPortalApp.MaritalStatusEnum.L')}</option>
                 <option value="D">{translate('hcpNphiesPortalApp.MaritalStatusEnum.D')}</option>
                 <option value="M">{translate('hcpNphiesPortalApp.MaritalStatusEnum.M')}</option>
@@ -452,9 +454,6 @@ export const PatientUpdate = (props: RouteComponentProps<{ id: string }>) => {
                 data-cy="address.addressLine"
                 type="text"
                 name="address.addressLine"
-                validate={{
-                  required: { value: true, message: translate('entity.validation.required') },
-                }}
               />
               <ValidatedField
                 label={translate('hcpNphiesPortalApp.address.city')}
@@ -462,9 +461,6 @@ export const PatientUpdate = (props: RouteComponentProps<{ id: string }>) => {
                 data-cy="address.city"
                 type="text"
                 name="address.city"
-                validate={{
-                  required: { value: true, message: translate('entity.validation.required') },
-                }}
               />
               <ValidatedField
                 label={translate('hcpNphiesPortalApp.address.district')}
@@ -486,9 +482,6 @@ export const PatientUpdate = (props: RouteComponentProps<{ id: string }>) => {
                 data-cy="address.postalCode"
                 type="text"
                 name="address.postalCode"
-                validate={{
-                  required: { value: true, message: translate('entity.validation.required') },
-                }}
               />
               <ValidatedField
                 label={translate('hcpNphiesPortalApp.address.country')}

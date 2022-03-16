@@ -50,9 +50,6 @@ class ItemResourceIT {
     private static final BigDecimal DEFAULT_PATIENT_SHARE = new BigDecimal(1);
     private static final BigDecimal UPDATED_PATIENT_SHARE = new BigDecimal(2);
 
-    private static final Integer DEFAULT_CARE_TEAM_SEQUENCE = 1;
-    private static final Integer UPDATED_CARE_TEAM_SEQUENCE = 2;
-
     private static final String DEFAULT_TRANSPORTATION_SRCA = "AAAAAAAAAA";
     private static final String UPDATED_TRANSPORTATION_SRCA = "BBBBBBBBBB";
 
@@ -134,7 +131,6 @@ class ItemResourceIT {
             .tax(DEFAULT_TAX)
             .payerShare(DEFAULT_PAYER_SHARE)
             .patientShare(DEFAULT_PATIENT_SHARE)
-            .careTeamSequence(DEFAULT_CARE_TEAM_SEQUENCE)
             .transportationSRCA(DEFAULT_TRANSPORTATION_SRCA)
             .imaging(DEFAULT_IMAGING)
             .laboratory(DEFAULT_LABORATORY)
@@ -168,7 +164,6 @@ class ItemResourceIT {
             .tax(UPDATED_TAX)
             .payerShare(UPDATED_PAYER_SHARE)
             .patientShare(UPDATED_PATIENT_SHARE)
-            .careTeamSequence(UPDATED_CARE_TEAM_SEQUENCE)
             .transportationSRCA(UPDATED_TRANSPORTATION_SRCA)
             .imaging(UPDATED_IMAGING)
             .laboratory(UPDATED_LABORATORY)
@@ -212,7 +207,6 @@ class ItemResourceIT {
         assertThat(testItem.getTax()).isEqualByComparingTo(DEFAULT_TAX);
         assertThat(testItem.getPayerShare()).isEqualByComparingTo(DEFAULT_PAYER_SHARE);
         assertThat(testItem.getPatientShare()).isEqualByComparingTo(DEFAULT_PATIENT_SHARE);
-        assertThat(testItem.getCareTeamSequence()).isEqualTo(DEFAULT_CARE_TEAM_SEQUENCE);
         assertThat(testItem.getTransportationSRCA()).isEqualTo(DEFAULT_TRANSPORTATION_SRCA);
         assertThat(testItem.getImaging()).isEqualTo(DEFAULT_IMAGING);
         assertThat(testItem.getLaboratory()).isEqualTo(DEFAULT_LABORATORY);
@@ -286,23 +280,6 @@ class ItemResourceIT {
 
     @Test
     @Transactional
-    void checkCareTeamSequenceIsRequired() throws Exception {
-        int databaseSizeBeforeTest = itemRepository.findAll().size();
-        // set the field null
-        item.setCareTeamSequence(null);
-
-        // Create the Item, which fails.
-
-        restItemMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(item)))
-            .andExpect(status().isBadRequest());
-
-        List<Item> itemList = itemRepository.findAll();
-        assertThat(itemList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     void checkQuantityIsRequired() throws Exception {
         int databaseSizeBeforeTest = itemRepository.findAll().size();
         // set the field null
@@ -352,7 +329,6 @@ class ItemResourceIT {
             .andExpect(jsonPath("$.[*].tax").value(hasItem(sameNumber(DEFAULT_TAX))))
             .andExpect(jsonPath("$.[*].payerShare").value(hasItem(sameNumber(DEFAULT_PAYER_SHARE))))
             .andExpect(jsonPath("$.[*].patientShare").value(hasItem(sameNumber(DEFAULT_PATIENT_SHARE))))
-            .andExpect(jsonPath("$.[*].careTeamSequence").value(hasItem(DEFAULT_CARE_TEAM_SEQUENCE)))
             .andExpect(jsonPath("$.[*].transportationSRCA").value(hasItem(DEFAULT_TRANSPORTATION_SRCA)))
             .andExpect(jsonPath("$.[*].imaging").value(hasItem(DEFAULT_IMAGING)))
             .andExpect(jsonPath("$.[*].laboratory").value(hasItem(DEFAULT_LABORATORY)))
@@ -389,7 +365,6 @@ class ItemResourceIT {
             .andExpect(jsonPath("$.tax").value(sameNumber(DEFAULT_TAX)))
             .andExpect(jsonPath("$.payerShare").value(sameNumber(DEFAULT_PAYER_SHARE)))
             .andExpect(jsonPath("$.patientShare").value(sameNumber(DEFAULT_PATIENT_SHARE)))
-            .andExpect(jsonPath("$.careTeamSequence").value(DEFAULT_CARE_TEAM_SEQUENCE))
             .andExpect(jsonPath("$.transportationSRCA").value(DEFAULT_TRANSPORTATION_SRCA))
             .andExpect(jsonPath("$.imaging").value(DEFAULT_IMAGING))
             .andExpect(jsonPath("$.laboratory").value(DEFAULT_LABORATORY))
@@ -434,7 +409,6 @@ class ItemResourceIT {
             .tax(UPDATED_TAX)
             .payerShare(UPDATED_PAYER_SHARE)
             .patientShare(UPDATED_PATIENT_SHARE)
-            .careTeamSequence(UPDATED_CARE_TEAM_SEQUENCE)
             .transportationSRCA(UPDATED_TRANSPORTATION_SRCA)
             .imaging(UPDATED_IMAGING)
             .laboratory(UPDATED_LABORATORY)
@@ -470,7 +444,6 @@ class ItemResourceIT {
         assertThat(testItem.getTax()).isEqualTo(UPDATED_TAX);
         assertThat(testItem.getPayerShare()).isEqualTo(UPDATED_PAYER_SHARE);
         assertThat(testItem.getPatientShare()).isEqualTo(UPDATED_PATIENT_SHARE);
-        assertThat(testItem.getCareTeamSequence()).isEqualTo(UPDATED_CARE_TEAM_SEQUENCE);
         assertThat(testItem.getTransportationSRCA()).isEqualTo(UPDATED_TRANSPORTATION_SRCA);
         assertThat(testItem.getImaging()).isEqualTo(UPDATED_IMAGING);
         assertThat(testItem.getLaboratory()).isEqualTo(UPDATED_LABORATORY);
@@ -560,16 +533,16 @@ class ItemResourceIT {
 
         partialUpdatedItem
             .payerShare(UPDATED_PAYER_SHARE)
-            .imaging(UPDATED_IMAGING)
             .laboratory(UPDATED_LABORATORY)
             .medicalDevice(UPDATED_MEDICAL_DEVICE)
             .oralHealthIP(UPDATED_ORAL_HEALTH_IP)
             .oralHealthOP(UPDATED_ORAL_HEALTH_OP)
-            .services(UPDATED_SERVICES)
+            .procedure(UPDATED_PROCEDURE)
             .medicationCode(UPDATED_MEDICATION_CODE)
             .servicedDate(UPDATED_SERVICED_DATE)
-            .servicedDateEnd(UPDATED_SERVICED_DATE_END)
-            .bodySite(UPDATED_BODY_SITE);
+            .servicedDateStart(UPDATED_SERVICED_DATE_START)
+            .quantity(UPDATED_QUANTITY)
+            .subSite(UPDATED_SUB_SITE);
 
         restItemMockMvc
             .perform(
@@ -588,24 +561,23 @@ class ItemResourceIT {
         assertThat(testItem.getTax()).isEqualByComparingTo(DEFAULT_TAX);
         assertThat(testItem.getPayerShare()).isEqualByComparingTo(UPDATED_PAYER_SHARE);
         assertThat(testItem.getPatientShare()).isEqualByComparingTo(DEFAULT_PATIENT_SHARE);
-        assertThat(testItem.getCareTeamSequence()).isEqualTo(DEFAULT_CARE_TEAM_SEQUENCE);
         assertThat(testItem.getTransportationSRCA()).isEqualTo(DEFAULT_TRANSPORTATION_SRCA);
-        assertThat(testItem.getImaging()).isEqualTo(UPDATED_IMAGING);
+        assertThat(testItem.getImaging()).isEqualTo(DEFAULT_IMAGING);
         assertThat(testItem.getLaboratory()).isEqualTo(UPDATED_LABORATORY);
         assertThat(testItem.getMedicalDevice()).isEqualTo(UPDATED_MEDICAL_DEVICE);
         assertThat(testItem.getOralHealthIP()).isEqualTo(UPDATED_ORAL_HEALTH_IP);
         assertThat(testItem.getOralHealthOP()).isEqualTo(UPDATED_ORAL_HEALTH_OP);
-        assertThat(testItem.getProcedure()).isEqualTo(DEFAULT_PROCEDURE);
-        assertThat(testItem.getServices()).isEqualTo(UPDATED_SERVICES);
+        assertThat(testItem.getProcedure()).isEqualTo(UPDATED_PROCEDURE);
+        assertThat(testItem.getServices()).isEqualTo(DEFAULT_SERVICES);
         assertThat(testItem.getMedicationCode()).isEqualTo(UPDATED_MEDICATION_CODE);
         assertThat(testItem.getServicedDate()).isEqualTo(UPDATED_SERVICED_DATE);
-        assertThat(testItem.getServicedDateStart()).isEqualTo(DEFAULT_SERVICED_DATE_START);
-        assertThat(testItem.getServicedDateEnd()).isEqualTo(UPDATED_SERVICED_DATE_END);
-        assertThat(testItem.getQuantity()).isEqualTo(DEFAULT_QUANTITY);
+        assertThat(testItem.getServicedDateStart()).isEqualTo(UPDATED_SERVICED_DATE_START);
+        assertThat(testItem.getServicedDateEnd()).isEqualTo(DEFAULT_SERVICED_DATE_END);
+        assertThat(testItem.getQuantity()).isEqualTo(UPDATED_QUANTITY);
         assertThat(testItem.getUnitPrice()).isEqualTo(DEFAULT_UNIT_PRICE);
         assertThat(testItem.getFactor()).isEqualByComparingTo(DEFAULT_FACTOR);
-        assertThat(testItem.getBodySite()).isEqualTo(UPDATED_BODY_SITE);
-        assertThat(testItem.getSubSite()).isEqualTo(DEFAULT_SUB_SITE);
+        assertThat(testItem.getBodySite()).isEqualTo(DEFAULT_BODY_SITE);
+        assertThat(testItem.getSubSite()).isEqualTo(UPDATED_SUB_SITE);
     }
 
     @Test
@@ -626,7 +598,6 @@ class ItemResourceIT {
             .tax(UPDATED_TAX)
             .payerShare(UPDATED_PAYER_SHARE)
             .patientShare(UPDATED_PATIENT_SHARE)
-            .careTeamSequence(UPDATED_CARE_TEAM_SEQUENCE)
             .transportationSRCA(UPDATED_TRANSPORTATION_SRCA)
             .imaging(UPDATED_IMAGING)
             .laboratory(UPDATED_LABORATORY)
@@ -662,7 +633,6 @@ class ItemResourceIT {
         assertThat(testItem.getTax()).isEqualByComparingTo(UPDATED_TAX);
         assertThat(testItem.getPayerShare()).isEqualByComparingTo(UPDATED_PAYER_SHARE);
         assertThat(testItem.getPatientShare()).isEqualByComparingTo(UPDATED_PATIENT_SHARE);
-        assertThat(testItem.getCareTeamSequence()).isEqualTo(UPDATED_CARE_TEAM_SEQUENCE);
         assertThat(testItem.getTransportationSRCA()).isEqualTo(UPDATED_TRANSPORTATION_SRCA);
         assertThat(testItem.getImaging()).isEqualTo(UPDATED_IMAGING);
         assertThat(testItem.getLaboratory()).isEqualTo(UPDATED_LABORATORY);

@@ -13,6 +13,7 @@ export interface ISupportingInfo {
   id?: number;
   sequence?: number | null;
   codeLOINC?: string | null;
+  codeIcd?: string | null;
   category?: SupportingInfoCategoryEnum | null;
   codeVisit?: SupportingInfoCodeVisitEnum | null;
   codeFdiOral?: SupportingInfoCodeFdiEnum | null;

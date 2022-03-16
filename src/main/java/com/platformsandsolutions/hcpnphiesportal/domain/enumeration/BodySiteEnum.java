@@ -1,5 +1,7 @@
 package com.platformsandsolutions.hcpnphiesportal.domain.enumeration;
 
+import platform.fhir_client.utils.Enums;
+
 /**
  * The BodySiteEnum enumeration.
  */
@@ -44,5 +46,14 @@ public enum BodySiteEnum {
 
     public String getValue() {
         return value;
+    }
+
+    public Enums.BodySiteEnum convert() {
+        for (Enums.BodySiteEnum e : Enums.BodySiteEnum.values()) {
+            if (e.getDescription() == this.getValue()) {
+                return e;
+            }
+        }
+        return null;
     }
 }

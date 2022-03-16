@@ -23,7 +23,7 @@ public class OpeOutErrorMessages implements Serializable {
     @Column(name = "message")
     private String message;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JsonIgnoreProperties(value = { "errors" }, allowSetters = true)
     private OperationOutcome operationOutcome;
 
@@ -67,7 +67,8 @@ public class OpeOutErrorMessages implements Serializable {
         this.operationOutcome = operationOutcome;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and
+    // setters here
 
     @Override
     public boolean equals(Object o) {
@@ -82,7 +83,8 @@ public class OpeOutErrorMessages implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        // see
+        // https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
     }
 
@@ -90,8 +92,8 @@ public class OpeOutErrorMessages implements Serializable {
     @Override
     public String toString() {
         return "OpeOutErrorMessages{" +
-            "id=" + getId() +
-            ", message='" + getMessage() + "'" +
-            "}";
+                "id=" + getId() +
+                ", message='" + getMessage() + "'" +
+                "}";
     }
 }

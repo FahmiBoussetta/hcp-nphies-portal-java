@@ -41,7 +41,10 @@ public class Note implements Serializable {
     @JsonIgnoreProperties(value = { "payloads", "notes", "subject", "about", "sender", "communication" }, allowSetters = true)
     private CommunicationRequest communicationRequest;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here
+    @ManyToOne
+    @JsonIgnoreProperties(value = { "errors", "items", "totals" }, allowSetters = true)
+    private ClaimResponse claimResponse;
+
     public Long getId() {
         return id;
     }
@@ -120,8 +123,6 @@ public class Note implements Serializable {
         this.communicationRequest = communicationRequest;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -135,18 +136,15 @@ public class Note implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        // see
+        // https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
     }
 
     // prettier-ignore
     @Override
     public String toString() {
-        return "Note{" +
-            "id=" + getId() +
-            ", text='" + getText() + "'" +
-            ", author='" + getAuthor() + "'" +
-            ", time='" + getTime() + "'" +
-            "}";
+        return "Note{" + "id=" + getId() + ", text='" + getText() + "'" + ", author='" + getAuthor() + "'" + ", time='"
+                + getTime() + "'" + "}";
     }
 }

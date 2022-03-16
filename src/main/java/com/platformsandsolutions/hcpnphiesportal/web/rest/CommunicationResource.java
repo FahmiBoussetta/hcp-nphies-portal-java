@@ -8,6 +8,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,7 +19,8 @@ import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.ResponseUtil;
 
 /**
- * REST controller for managing {@link com.platformsandsolutions.hcpnphiesportal.domain.Communication}.
+ * REST controller for managing
+ * {@link com.platformsandsolutions.hcpnphiesportal.domain.Communication}.
  */
 @RestController
 @RequestMapping("/api")
@@ -42,7 +44,9 @@ public class CommunicationResource {
      * {@code POST  /communications} : Create a new communication.
      *
      * @param communication the communication to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new communication, or with status {@code 400 (Bad Request)} if the communication has already an ID.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with
+     *         body the new communication, or with status {@code 400 (Bad Request)}
+     *         if the communication has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/communications")
@@ -51,6 +55,7 @@ public class CommunicationResource {
         if (communication.getId() != null) {
             throw new BadRequestAlertException("A new communication cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        communication.setGuid(UUID.randomUUID().toString());
         Communication result = communicationRepository.save(communication);
         return ResponseEntity
             .created(new URI("/api/communications/" + result.getId()))
@@ -61,11 +66,13 @@ public class CommunicationResource {
     /**
      * {@code PUT  /communications/:id} : Updates an existing communication.
      *
-     * @param id the id of the communication to save.
+     * @param id            the id of the communication to save.
      * @param communication the communication to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated communication,
-     * or with status {@code 400 (Bad Request)} if the communication is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the communication couldn't be updated.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
+     *         the updated communication, or with status {@code 400 (Bad Request)}
+     *         if the communication is not valid, or with status
+     *         {@code 500 (Internal Server Error)} if the communication couldn't be
+     *         updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/communications/{id}")
@@ -93,14 +100,17 @@ public class CommunicationResource {
     }
 
     /**
-     * {@code PATCH  /communications/:id} : Partial updates given fields of an existing communication, field will ignore if it is null
+     * {@code PATCH  /communications/:id} : Partial updates given fields of an
+     * existing communication, field will ignore if it is null
      *
-     * @param id the id of the communication to save.
+     * @param id            the id of the communication to save.
      * @param communication the communication to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated communication,
-     * or with status {@code 400 (Bad Request)} if the communication is not valid,
-     * or with status {@code 404 (Not Found)} if the communication is not found,
-     * or with status {@code 500 (Internal Server Error)} if the communication couldn't be updated.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
+     *         the updated communication, or with status {@code 400 (Bad Request)}
+     *         if the communication is not valid, or with status
+     *         {@code 404 (Not Found)} if the communication is not found, or with
+     *         status {@code 500 (Internal Server Error)} if the communication
+     *         couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/communications/{id}", consumes = "application/merge-patch+json")
@@ -154,7 +164,8 @@ public class CommunicationResource {
     /**
      * {@code GET  /communications} : get all the communications.
      *
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of communications in body.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list
+     *         of communications in body.
      */
     @GetMapping("/communications")
     public List<Communication> getAllCommunications() {
@@ -166,7 +177,8 @@ public class CommunicationResource {
      * {@code GET  /communications/:id} : get the "id" communication.
      *
      * @param id the id of the communication to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the communication, or with status {@code 404 (Not Found)}.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
+     *         the communication, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/communications/{id}")
     public ResponseEntity<Communication> getCommunication(@PathVariable Long id) {

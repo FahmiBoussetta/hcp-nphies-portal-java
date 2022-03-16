@@ -1,12 +1,27 @@
 package com.platformsandsolutions.hcpnphiesportal.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.BenefitCategoryEnum;
+import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.BenefitNetworkEnum;
+import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.BenefitTermEnum;
+import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.BenefitUnitEnum;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.*;
+import java.util.stream.Collectors;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import platform.fhir_client.models.EligibilityResponseInsuranceItemModel;
 
 /**
  * A ResponseInsuranceItem.
@@ -23,7 +38,7 @@ public class ResponseInsuranceItem implements Serializable {
     private Long id;
 
     @Column(name = "category")
-    private String category;
+    private BenefitCategoryEnum category;
 
     @Column(name = "excluded")
     private Boolean excluded;
@@ -35,24 +50,23 @@ public class ResponseInsuranceItem implements Serializable {
     private String description;
 
     @Column(name = "network")
-    private String network;
+    private BenefitNetworkEnum network;
 
     @Column(name = "unit")
-    private String unit;
+    private BenefitUnitEnum unit;
 
     @Column(name = "term")
-    private String term;
+    private BenefitTermEnum term;
 
-    @OneToMany(mappedBy = "responseInsuranceItem")
+    @OneToMany(mappedBy = "responseInsuranceItem", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "responseInsuranceItem" }, allowSetters = true)
     private Set<InsuranceBenefit> benefits = new HashSet<>();
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JsonIgnoreProperties(value = { "items", "coverage", "coverageEligibilityResponse" }, allowSetters = true)
     private ResponseInsurance responseInsurance;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
     }
@@ -66,17 +80,17 @@ public class ResponseInsuranceItem implements Serializable {
         return this;
     }
 
-    public String getCategory() {
+    public BenefitCategoryEnum getCategory() {
         return this.category;
     }
 
-    public ResponseInsuranceItem category(String category) {
+    public ResponseInsuranceItem category(BenefitCategoryEnum category) {
         this.category = category;
         return this;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setCategory(BenefitCategoryEnum benefitCategoryEnum) {
+        this.category = benefitCategoryEnum;
     }
 
     public Boolean getExcluded() {
@@ -118,42 +132,42 @@ public class ResponseInsuranceItem implements Serializable {
         this.description = description;
     }
 
-    public String getNetwork() {
+    public BenefitNetworkEnum getNetwork() {
         return this.network;
     }
 
-    public ResponseInsuranceItem network(String network) {
+    public ResponseInsuranceItem network(BenefitNetworkEnum network) {
         this.network = network;
         return this;
     }
 
-    public void setNetwork(String network) {
+    public void setNetwork(BenefitNetworkEnum network) {
         this.network = network;
     }
 
-    public String getUnit() {
+    public BenefitUnitEnum getUnit() {
         return this.unit;
     }
 
-    public ResponseInsuranceItem unit(String unit) {
+    public ResponseInsuranceItem unit(BenefitUnitEnum unit) {
         this.unit = unit;
         return this;
     }
 
-    public void setUnit(String unit) {
+    public void setUnit(BenefitUnitEnum unit) {
         this.unit = unit;
     }
 
-    public String getTerm() {
+    public BenefitTermEnum getTerm() {
         return this.term;
     }
 
-    public ResponseInsuranceItem term(String term) {
+    public ResponseInsuranceItem term(BenefitTermEnum term) {
         this.term = term;
         return this;
     }
 
-    public void setTerm(String term) {
+    public void setTerm(BenefitTermEnum term) {
         this.term = term;
     }
 
@@ -201,8 +215,6 @@ public class ResponseInsuranceItem implements Serializable {
         this.responseInsurance = responseInsurance;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -216,22 +228,46 @@ public class ResponseInsuranceItem implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        // see
+        // https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
     }
 
     // prettier-ignore
     @Override
     public String toString() {
-        return "ResponseInsuranceItem{" +
-            "id=" + getId() +
-            ", category='" + getCategory() + "'" +
-            ", excluded='" + getExcluded() + "'" +
-            ", name='" + getName() + "'" +
-            ", description='" + getDescription() + "'" +
-            ", network='" + getNetwork() + "'" +
-            ", unit='" + getUnit() + "'" +
-            ", term='" + getTerm() + "'" +
-            "}";
+        return "ResponseInsuranceItem{" + "id=" + getId() + ", category='" + getCategory() + "'" + ", excluded='"
+                + getExcluded() + "'" + ", name='" + getName() + "'" + ", description='" + getDescription() + "'"
+                + ", network='" + getNetwork() + "'" + ", unit='" + getUnit() + "'" + ", term='" + getTerm() + "'"
+                + "}";
+    }
+
+    public static ResponseInsuranceItem convertFrom(EligibilityResponseInsuranceItemModel y2) {
+        ResponseInsuranceItem item = new ResponseInsuranceItem();
+        if (y2.getBenefits() != null) {
+            item.setBenefits(y2.getBenefits().stream().map(y -> InsuranceBenefit.convertFrom(y)).collect(Collectors.toSet()));
+        }
+        if (y2.getCategory() != null) {
+            item.setCategory(BenefitCategoryEnum.valueOf(y2.getCategory().name()));
+        }
+        if (y2.getDescription() != null) {
+            item.setDescription(y2.getDescription());
+        }
+        if (y2.getExcluded() != null) {
+            item.setExcluded(y2.getExcluded());
+        }
+        if (y2.getName() != null) {
+            item.setName(y2.getName());
+        }
+        if (y2.getNetwork() != null) {
+            item.setNetwork(BenefitNetworkEnum.valueOf(y2.getNetwork().name()));
+        }
+        if (y2.getTerm() != null) {
+            item.setTerm(BenefitTermEnum.valueOf(y2.getTerm().name()));
+        }
+        if (y2.getUnit() != null) {
+            item.setUnit(BenefitUnitEnum.valueOf(y2.getUnit().name()));
+        }
+        return item;
     }
 }

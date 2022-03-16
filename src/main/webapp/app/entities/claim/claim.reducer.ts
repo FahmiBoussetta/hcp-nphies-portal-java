@@ -42,6 +42,16 @@ export const createEntity = createAsyncThunk(
   { serializeError: serializeAxiosError }
 );
 
+export const sendEntity = createAsyncThunk(
+  'claim/send_entity',
+  async (entity: IClaim, thunkAPI) => {
+    const result = await axios.post<IClaim>(`${apiUrl}/send/${entity.id}`, cleanEntity(entity));
+    thunkAPI.dispatch(getEntities({}));
+    return result;
+  },
+  { serializeError: serializeAxiosError }
+);
+
 export const updateEntity = createAsyncThunk(
   'claim/update_entity',
   async (entity: IClaim, thunkAPI) => {

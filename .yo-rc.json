@@ -54,6 +54,7 @@
       "CovEliRespErrorMessages",
       "OpeOutErrorMessages",
       "PayNotErrorMessages",
+      "CareTeamSequence",
       "DiagnosisSequence",
       "InformationSequence",
       "AdjudicationNotes",
@@ -118,7 +119,7 @@
       "TaskResponse",
       "TaskOutput"
     ],
-    "lastLiquibaseTimestamp": 1625037986000
+    "lastLiquibaseTimestamp": 1632380954000
   },
   "git-provider": "GitHub",
   "git-company": "FahmiBoussetta",

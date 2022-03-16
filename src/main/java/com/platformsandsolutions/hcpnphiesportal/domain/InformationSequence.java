@@ -23,8 +23,11 @@ public class InformationSequence implements Serializable {
     @Column(name = "inf_seq")
     private Integer infSeq;
 
-    @ManyToOne
-    @JsonIgnoreProperties(value = { "diagnosisSequences", "informationSequences", "udis", "details", "claim" }, allowSetters = true)
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JsonIgnoreProperties(
+        value = { "diagnosisSequences", "careTeamSequences", "informationSequences", "udis", "details", "claim" },
+        allowSetters = true
+    )
     private Item item;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -67,7 +70,8 @@ public class InformationSequence implements Serializable {
         this.item = item;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and
+    // setters here
 
     @Override
     public boolean equals(Object o) {
@@ -82,7 +86,8 @@ public class InformationSequence implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        // see
+        // https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
     }
 
@@ -90,8 +95,14 @@ public class InformationSequence implements Serializable {
     @Override
     public String toString() {
         return "InformationSequence{" +
-            "id=" + getId() +
-            ", infSeq=" + getInfSeq() +
-            "}";
+                "id=" + getId() +
+                ", infSeq=" + getInfSeq() +
+                "}";
+    }
+
+    public static InformationSequence convertFrom(Integer model) {
+        InformationSequence i = new InformationSequence();
+        i.setInfSeq(model);
+        return i;
     }
 }

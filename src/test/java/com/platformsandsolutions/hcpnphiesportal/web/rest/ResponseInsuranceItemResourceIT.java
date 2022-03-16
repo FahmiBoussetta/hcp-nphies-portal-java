@@ -7,6 +7,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.platformsandsolutions.hcpnphiesportal.IntegrationTest;
 import com.platformsandsolutions.hcpnphiesportal.domain.ResponseInsuranceItem;
+import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.BenefitCategoryEnum;
+import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.BenefitNetworkEnum;
+import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.BenefitTermEnum;
+import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.BenefitUnitEnum;
 import com.platformsandsolutions.hcpnphiesportal.repository.ResponseInsuranceItemRepository;
 import java.util.List;
 import java.util.Random;
@@ -22,15 +26,16 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Integration tests for the {@link ResponseInsuranceItemResource} REST controller.
+ * Integration tests for the {@link ResponseInsuranceItemResource} REST
+ * controller.
  */
 @IntegrationTest
 @AutoConfigureMockMvc
 @WithMockUser
 class ResponseInsuranceItemResourceIT {
 
-    private static final String DEFAULT_CATEGORY = "AAAAAAAAAA";
-    private static final String UPDATED_CATEGORY = "BBBBBBBBBB";
+    private static final BenefitCategoryEnum DEFAULT_CATEGORY = BenefitCategoryEnum._1;
+    private static final BenefitCategoryEnum UPDATED_CATEGORY = BenefitCategoryEnum._10;
 
     private static final Boolean DEFAULT_EXCLUDED = false;
     private static final Boolean UPDATED_EXCLUDED = true;
@@ -41,14 +46,14 @@ class ResponseInsuranceItemResourceIT {
     private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
     private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
 
-    private static final String DEFAULT_NETWORK = "AAAAAAAAAA";
-    private static final String UPDATED_NETWORK = "BBBBBBBBBB";
+    private static final BenefitNetworkEnum DEFAULT_NETWORK = BenefitNetworkEnum.in;
+    private static final BenefitNetworkEnum UPDATED_NETWORK = BenefitNetworkEnum.out;
 
-    private static final String DEFAULT_UNIT = "AAAAAAAAAA";
-    private static final String UPDATED_UNIT = "BBBBBBBBBB";
+    private static final BenefitUnitEnum DEFAULT_UNIT = BenefitUnitEnum.family;
+    private static final BenefitUnitEnum UPDATED_UNIT = BenefitUnitEnum.individual;
 
-    private static final String DEFAULT_TERM = "AAAAAAAAAA";
-    private static final String UPDATED_TERM = "BBBBBBBBBB";
+    private static final BenefitTermEnum DEFAULT_TERM = BenefitTermEnum.annual;
+    private static final BenefitTermEnum UPDATED_TERM = BenefitTermEnum.day;
 
     private static final String ENTITY_API_URL = "/api/response-insurance-items";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
@@ -215,7 +220,8 @@ class ResponseInsuranceItemResourceIT {
 
         // Update the responseInsuranceItem
         ResponseInsuranceItem updatedResponseInsuranceItem = responseInsuranceItemRepository.findById(responseInsuranceItem.getId()).get();
-        // Disconnect from session so that the updates on updatedResponseInsuranceItem are not directly saved in db
+        // Disconnect from session so that the updates on updatedResponseInsuranceItem
+        // are not directly saved in db
         em.detach(updatedResponseInsuranceItem);
         updatedResponseInsuranceItem
             .category(UPDATED_CATEGORY)

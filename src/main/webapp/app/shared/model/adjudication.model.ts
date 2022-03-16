@@ -6,7 +6,7 @@ export interface IAdjudication {
   id?: number;
   category?: string;
   reason?: string | null;
-  amount?: number;
+  amount?: number | null;
   value?: number | null;
   adjudicationItem?: IAdjudicationItem | null;
   adjudicationDetailItem?: IAdjudicationDetailItem | null;

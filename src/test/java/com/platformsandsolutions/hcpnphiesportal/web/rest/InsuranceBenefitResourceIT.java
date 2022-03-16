@@ -59,7 +59,7 @@ class InsuranceBenefitResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static InsuranceBenefit createEntity(EntityManager em) {
-        InsuranceBenefit insuranceBenefit = new InsuranceBenefit().allowed(DEFAULT_ALLOWED).used(DEFAULT_USED);
+        InsuranceBenefit insuranceBenefit = new InsuranceBenefit().allowedString(DEFAULT_ALLOWED).usedString(DEFAULT_USED);
         return insuranceBenefit;
     }
 
@@ -70,7 +70,7 @@ class InsuranceBenefitResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static InsuranceBenefit createUpdatedEntity(EntityManager em) {
-        InsuranceBenefit insuranceBenefit = new InsuranceBenefit().allowed(UPDATED_ALLOWED).used(UPDATED_USED);
+        InsuranceBenefit insuranceBenefit = new InsuranceBenefit().allowedString(UPDATED_ALLOWED).usedString(UPDATED_USED);
         return insuranceBenefit;
     }
 
@@ -94,8 +94,8 @@ class InsuranceBenefitResourceIT {
         List<InsuranceBenefit> insuranceBenefitList = insuranceBenefitRepository.findAll();
         assertThat(insuranceBenefitList).hasSize(databaseSizeBeforeCreate + 1);
         InsuranceBenefit testInsuranceBenefit = insuranceBenefitList.get(insuranceBenefitList.size() - 1);
-        assertThat(testInsuranceBenefit.getAllowed()).isEqualTo(DEFAULT_ALLOWED);
-        assertThat(testInsuranceBenefit.getUsed()).isEqualTo(DEFAULT_USED);
+        assertThat(testInsuranceBenefit.getAllowedString()).isEqualTo(DEFAULT_ALLOWED);
+        assertThat(testInsuranceBenefit.getUsedString()).isEqualTo(DEFAULT_USED);
     }
 
     @Test
@@ -167,9 +167,10 @@ class InsuranceBenefitResourceIT {
 
         // Update the insuranceBenefit
         InsuranceBenefit updatedInsuranceBenefit = insuranceBenefitRepository.findById(insuranceBenefit.getId()).get();
-        // Disconnect from session so that the updates on updatedInsuranceBenefit are not directly saved in db
+        // Disconnect from session so that the updates on updatedInsuranceBenefit are
+        // not directly saved in db
         em.detach(updatedInsuranceBenefit);
-        updatedInsuranceBenefit.allowed(UPDATED_ALLOWED).used(UPDATED_USED);
+        updatedInsuranceBenefit.allowedString(UPDATED_ALLOWED).usedString(UPDATED_USED);
 
         restInsuranceBenefitMockMvc
             .perform(
@@ -183,8 +184,8 @@ class InsuranceBenefitResourceIT {
         List<InsuranceBenefit> insuranceBenefitList = insuranceBenefitRepository.findAll();
         assertThat(insuranceBenefitList).hasSize(databaseSizeBeforeUpdate);
         InsuranceBenefit testInsuranceBenefit = insuranceBenefitList.get(insuranceBenefitList.size() - 1);
-        assertThat(testInsuranceBenefit.getAllowed()).isEqualTo(UPDATED_ALLOWED);
-        assertThat(testInsuranceBenefit.getUsed()).isEqualTo(UPDATED_USED);
+        assertThat(testInsuranceBenefit.getAllowedString()).isEqualTo(UPDATED_ALLOWED);
+        assertThat(testInsuranceBenefit.getUsedString()).isEqualTo(UPDATED_USED);
     }
 
     @Test
@@ -257,7 +258,7 @@ class InsuranceBenefitResourceIT {
         InsuranceBenefit partialUpdatedInsuranceBenefit = new InsuranceBenefit();
         partialUpdatedInsuranceBenefit.setId(insuranceBenefit.getId());
 
-        partialUpdatedInsuranceBenefit.allowed(UPDATED_ALLOWED);
+        partialUpdatedInsuranceBenefit.allowedString(UPDATED_ALLOWED);
 
         restInsuranceBenefitMockMvc
             .perform(
@@ -271,8 +272,8 @@ class InsuranceBenefitResourceIT {
         List<InsuranceBenefit> insuranceBenefitList = insuranceBenefitRepository.findAll();
         assertThat(insuranceBenefitList).hasSize(databaseSizeBeforeUpdate);
         InsuranceBenefit testInsuranceBenefit = insuranceBenefitList.get(insuranceBenefitList.size() - 1);
-        assertThat(testInsuranceBenefit.getAllowed()).isEqualTo(UPDATED_ALLOWED);
-        assertThat(testInsuranceBenefit.getUsed()).isEqualTo(DEFAULT_USED);
+        assertThat(testInsuranceBenefit.getAllowedString()).isEqualTo(UPDATED_ALLOWED);
+        assertThat(testInsuranceBenefit.getUsedString()).isEqualTo(DEFAULT_USED);
     }
 
     @Test
@@ -287,7 +288,7 @@ class InsuranceBenefitResourceIT {
         InsuranceBenefit partialUpdatedInsuranceBenefit = new InsuranceBenefit();
         partialUpdatedInsuranceBenefit.setId(insuranceBenefit.getId());
 
-        partialUpdatedInsuranceBenefit.allowed(UPDATED_ALLOWED).used(UPDATED_USED);
+        partialUpdatedInsuranceBenefit.allowedString(UPDATED_ALLOWED).usedString(UPDATED_USED);
 
         restInsuranceBenefitMockMvc
             .perform(
@@ -301,8 +302,8 @@ class InsuranceBenefitResourceIT {
         List<InsuranceBenefit> insuranceBenefitList = insuranceBenefitRepository.findAll();
         assertThat(insuranceBenefitList).hasSize(databaseSizeBeforeUpdate);
         InsuranceBenefit testInsuranceBenefit = insuranceBenefitList.get(insuranceBenefitList.size() - 1);
-        assertThat(testInsuranceBenefit.getAllowed()).isEqualTo(UPDATED_ALLOWED);
-        assertThat(testInsuranceBenefit.getUsed()).isEqualTo(UPDATED_USED);
+        assertThat(testInsuranceBenefit.getAllowedString()).isEqualTo(UPDATED_ALLOWED);
+        assertThat(testInsuranceBenefit.getUsedString()).isEqualTo(UPDATED_USED);
     }
 
     @Test

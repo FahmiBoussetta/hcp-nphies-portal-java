@@ -1,5 +1,7 @@
 package com.platformsandsolutions.hcpnphiesportal.domain.enumeration;
 
+import platform.fhir_client.utils.Enums;
+
 /**
  * The ServiceTypeEnum enumeration.
  */
@@ -18,5 +20,14 @@ public enum ServiceTypeEnum {
 
     public String getValue() {
         return value;
+    }
+
+    public Enums.ServiceTypeEnum convert() {
+        for (Enums.ServiceTypeEnum e : Enums.ServiceTypeEnum.values()) {
+            if (e.getDescription() == this.getValue()) {
+                return e;
+            }
+        }
+        return null;
     }
 }

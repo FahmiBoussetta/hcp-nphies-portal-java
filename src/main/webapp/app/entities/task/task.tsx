@@ -92,7 +92,7 @@ export const Task = (props: RouteComponentProps<{ url: string }>) => {
                   </td>
                   <td>{task.guid}</td>
                   <td>{task.isQueued ? 'true' : 'false'}</td>
-                  <td>{task.parsed}</td>
+                  <td>{task.parsed?.substring(0, 80)}...</td>
                   <td>{task.identifier}</td>
                   <td>
                     <Translate contentKey={`hcpNphiesPortalApp.TaskCodeEnum.${task.code}`} />

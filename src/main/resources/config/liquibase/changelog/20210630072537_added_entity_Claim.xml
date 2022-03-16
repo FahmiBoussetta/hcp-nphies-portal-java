@@ -20,7 +20,7 @@
             <column name="is_queued" type="boolean">
                 <constraints nullable="true" />
             </column>
-            <column name="parsed" type="varchar(255)">
+            <column name="parsed" type="varchar(max)">
                 <constraints nullable="true" />
             </column>
             <column name="identifier" type="varchar(255)">
@@ -127,6 +127,9 @@
             <column name="billable_end" type="${datetimeType}"/>
             <column name="priority" type="string"/>
             <column name="funds_reserve" type="string"/>
+            <column name="patient_id" type="numeric"/>
+            <column name="insurer_id" type="numeric"/>
+            <column name="payee_id" type="numeric"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
     </changeSet>

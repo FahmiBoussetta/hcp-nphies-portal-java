@@ -64,7 +64,7 @@ export const AttachmentUpdate = (props: RouteComponentProps<{ id: string }>) => 
       <Row className="justify-content-center">
         <Col md="8">
           <h2 id="hcpNphiesPortalApp.attachment.home.createOrEditLabel" data-cy="AttachmentCreateUpdateHeading">
-            <Translate contentKey="hcpNphiesPortalApp.attachment.home.createOrEditLabel">Create or edit a Attachment</Translate>
+            <Translate contentKey="hcpNphiesPortalApp.attachment.home.createOrEditLabel">Create or edit an attachment</Translate>
           </h2>
         </Col>
       </Row>

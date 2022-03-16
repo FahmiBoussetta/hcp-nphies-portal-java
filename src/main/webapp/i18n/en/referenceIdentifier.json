@@ -18,7 +18,7 @@
         "title": "Reference Identifier"
       },
       "id": "ID",
-      "ref": "Ref",
+      "ref": "Type",
       "idValue": "Id Value",
       "identifier": "Identifier",
       "display": "Display",

@@ -3,9 +3,12 @@ package com.platformsandsolutions.hcpnphiesportal.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.ClaimRelationshipEnum;
 import java.io.Serializable;
+import java.util.ArrayList;
 import javax.persistence.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import platform.fhir_client.models.CoreResourceModel;
+import platform.fhir_client.models.RelatedModel;
 
 /**
  * A Related.
@@ -25,11 +28,7 @@ public class Related implements Serializable {
     @Column(name = "relation_ship")
     private ClaimRelationshipEnum relationShip;
 
-    @ManyToOne
-    @JsonIgnoreProperties(value = { "item", "detailItem", "subDetailItem" }, allowSetters = true)
-    private ReferenceIdentifier claimReference;
-
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JsonIgnoreProperties(
         value = {
             "errors",
@@ -82,19 +81,6 @@ public class Related implements Serializable {
         this.relationShip = relationShip;
     }
 
-    public ReferenceIdentifier getClaimReference() {
-        return this.claimReference;
-    }
-
-    public Related claimReference(ReferenceIdentifier referenceIdentifier) {
-        this.setClaimReference(referenceIdentifier);
-        return this;
-    }
-
-    public void setClaimReference(ReferenceIdentifier referenceIdentifier) {
-        this.claimReference = referenceIdentifier;
-    }
-
     public Claim getClaim() {
         return this.claim;
     }
@@ -108,7 +94,8 @@ public class Related implements Serializable {
         this.claim = claim;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and
+    // setters here
 
     @Override
     public boolean equals(Object o) {
@@ -123,16 +110,36 @@ public class Related implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        // see
+        // https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
     }
 
     // prettier-ignore
     @Override
     public String toString() {
-        return "Related{" +
-            "id=" + getId() +
-            ", relationShip='" + getRelationShip() + "'" +
-            "}";
+        return "Related{" + "id=" + getId() + ", relationShip='" + getRelationShip() + "'" + "}";
+    }
+
+    public RelatedModel convert(ArrayList<CoreResourceModel> coreResources) {
+        RelatedModel r = new RelatedModel();
+        if (this.getClaim() != null) {
+            r.setClaim(this.getClaim().convert(coreResources));
+        }
+        if (this.getRelationShip() != null) {
+            r.setRelationship(this.getRelationShip().convert());
+        }
+        return r;
+    }
+
+    public static Related convertFrom(RelatedModel model) {
+        Related r = new Related();
+        if (model.getClaim() != null) {
+            r.setClaim(Claim.convertFrom(model.getClaim()));
+        }
+        if (model.getRelationship() != null) {
+            r.setRelationShip(ClaimRelationshipEnum.valueOf(model.getRelationship().name()));
+        }
+        return r;
     }
 }

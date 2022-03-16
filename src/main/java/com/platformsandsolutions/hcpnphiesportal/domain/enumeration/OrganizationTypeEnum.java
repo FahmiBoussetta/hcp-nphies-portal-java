@@ -6,11 +6,11 @@ import platform.fhir_client.utils.Enums;
  * The OrganizationTypeEnum enumeration.
  */
 public enum OrganizationTypeEnum {
-    Prov("Healthcare Provider"),
-    Dept("Hospital Department"),
-    Ins("Insurance Company"),
-    Pay("Payer"),
-    Other("Other");
+    prov("Healthcare Provider"),
+    dept("Hospital Department"),
+    ins("Insurance Company"),
+    pay("Payer"),
+    other("Other");
 
     private final String value;
 

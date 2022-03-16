@@ -6,6 +6,7 @@ import java.io.Serializable;
 import javax.persistence.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import platform.fhir_client.utils.Enums;
 
 /**
  * A ListSpecialtyEnum.
@@ -29,7 +30,6 @@ public class ListSpecialtyEnum implements Serializable {
     @JsonIgnoreProperties(value = { "codes", "specialties", "practitioner", "organization" }, allowSetters = true)
     private PractitionerRole practitionerRole;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
     }
@@ -69,8 +69,6 @@ public class ListSpecialtyEnum implements Serializable {
         this.practitionerRole = practitionerRole;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -84,16 +82,24 @@ public class ListSpecialtyEnum implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        // see
+        // https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
     }
 
     // prettier-ignore
     @Override
     public String toString() {
-        return "ListSpecialtyEnum{" +
-            "id=" + getId() +
-            ", s='" + getS() + "'" +
-            "}";
+        return "ListSpecialtyEnum{" + "id=" + getId() + ", s='" + getS() + "'" + "}";
+    }
+
+    public Enums.SpecialtyEnum convert() {
+        return this.getS().convert();
+    }
+
+    public static ListSpecialtyEnum convertFrom(platform.fhir_client.utils.Enums.SpecialtyEnum i) {
+        ListSpecialtyEnum r = new ListSpecialtyEnum();
+        r.setS(SpecialtyEnum.valueOf(i.name()));
+        return r;
     }
 }

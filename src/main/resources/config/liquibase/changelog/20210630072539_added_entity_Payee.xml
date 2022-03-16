@@ -44,6 +44,7 @@
                   tableName="payee">
             <column name="id" type="numeric"/>
             <column name="type" type="string"/>
+            <column name="party_organization_id" type="numeric"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
     </changeSet>

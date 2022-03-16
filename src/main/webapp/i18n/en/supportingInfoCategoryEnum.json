@@ -24,7 +24,8 @@
       "Vital_Sign_Diastolic": "Vital Sign Diastolic",
       "Icu_hours": "ICU Hours",
       "Ventilation_hours": "Ventilation Hours",
-      "Vital_Sign_Height": "Vital Sign Height"
+      "Vital_Sign_Height": "Vital Sign Height",
+      "Chief_complaint": "Chief complaint"
     }
   }
 }

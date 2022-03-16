@@ -1,0 +1,25 @@
+{
+  "hcpNphiesPortalApp": {
+    "careTeamSequence": {
+      "home": {
+        "title": "Care Team Sequences",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Care Team Sequence",
+        "createOrEditLabel": "Create or edit a Care Team Sequence",
+        "notFound": "No Care Team Sequences found"
+      },
+      "created": "A new Care Team Sequence is created with identifier {{ param }}",
+      "updated": "A Care Team Sequence is updated with identifier {{ param }}",
+      "deleted": "A Care Team Sequence is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Care Team Sequence {{ id }}?"
+      },
+      "detail": {
+        "title": "Care Team Sequence"
+      },
+      "id": "ID",
+      "careSeq": "Care Seq",
+      "item": "Item"
+    }
+  }
+}

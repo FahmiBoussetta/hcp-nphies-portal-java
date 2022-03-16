@@ -8,6 +8,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,7 +19,8 @@ import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.ResponseUtil;
 
 /**
- * REST controller for managing {@link com.platformsandsolutions.hcpnphiesportal.domain.PractitionerRole}.
+ * REST controller for managing
+ * {@link com.platformsandsolutions.hcpnphiesportal.domain.PractitionerRole}.
  */
 @RestController
 @RequestMapping("/api")
@@ -42,7 +44,9 @@ public class PractitionerRoleResource {
      * {@code POST  /practitioner-roles} : Create a new practitionerRole.
      *
      * @param practitionerRole the practitionerRole to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new practitionerRole, or with status {@code 400 (Bad Request)} if the practitionerRole has already an ID.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with
+     *         body the new practitionerRole, or with status
+     *         {@code 400 (Bad Request)} if the practitionerRole has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/practitioner-roles")
@@ -52,6 +56,9 @@ public class PractitionerRoleResource {
         if (practitionerRole.getId() != null) {
             throw new BadRequestAlertException("A new practitionerRole cannot already have an ID", ENTITY_NAME, "idexists");
         }
+
+        practitionerRole.setGuid(UUID.randomUUID().toString());
+
         PractitionerRole result = practitionerRoleRepository.save(practitionerRole);
         return ResponseEntity
             .created(new URI("/api/practitioner-roles/" + result.getId()))
@@ -62,11 +69,13 @@ public class PractitionerRoleResource {
     /**
      * {@code PUT  /practitioner-roles/:id} : Updates an existing practitionerRole.
      *
-     * @param id the id of the practitionerRole to save.
+     * @param id               the id of the practitionerRole to save.
      * @param practitionerRole the practitionerRole to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated practitionerRole,
-     * or with status {@code 400 (Bad Request)} if the practitionerRole is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the practitionerRole couldn't be updated.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
+     *         the updated practitionerRole, or with status
+     *         {@code 400 (Bad Request)} if the practitionerRole is not valid, or
+     *         with status {@code 500 (Internal Server Error)} if the
+     *         practitionerRole couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/practitioner-roles/{id}")
@@ -94,14 +103,17 @@ public class PractitionerRoleResource {
     }
 
     /**
-     * {@code PATCH  /practitioner-roles/:id} : Partial updates given fields of an existing practitionerRole, field will ignore if it is null
+     * {@code PATCH  /practitioner-roles/:id} : Partial updates given fields of an
+     * existing practitionerRole, field will ignore if it is null
      *
-     * @param id the id of the practitionerRole to save.
+     * @param id               the id of the practitionerRole to save.
      * @param practitionerRole the practitionerRole to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated practitionerRole,
-     * or with status {@code 400 (Bad Request)} if the practitionerRole is not valid,
-     * or with status {@code 404 (Not Found)} if the practitionerRole is not found,
-     * or with status {@code 500 (Internal Server Error)} if the practitionerRole couldn't be updated.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
+     *         the updated practitionerRole, or with status
+     *         {@code 400 (Bad Request)} if the practitionerRole is not valid, or
+     *         with status {@code 404 (Not Found)} if the practitionerRole is not
+     *         found, or with status {@code 500 (Internal Server Error)} if the
+     *         practitionerRole couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/practitioner-roles/{id}", consumes = "application/merge-patch+json")
@@ -152,7 +164,8 @@ public class PractitionerRoleResource {
     /**
      * {@code GET  /practitioner-roles} : get all the practitionerRoles.
      *
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of practitionerRoles in body.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list
+     *         of practitionerRoles in body.
      */
     @GetMapping("/practitioner-roles")
     public List<PractitionerRole> getAllPractitionerRoles() {
@@ -164,7 +177,8 @@ public class PractitionerRoleResource {
      * {@code GET  /practitioner-roles/:id} : get the "id" practitionerRole.
      *
      * @param id the id of the practitionerRole to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the practitionerRole, or with status {@code 404 (Not Found)}.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
+     *         the practitionerRole, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/practitioner-roles/{id}")
     public ResponseEntity<PractitionerRole> getPractitionerRole(@PathVariable Long id) {

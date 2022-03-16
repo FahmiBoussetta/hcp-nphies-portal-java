@@ -5,6 +5,7 @@ import java.io.Serializable;
 import javax.persistence.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import platform.fhir_client.models.AttachmentModel;
 
 /**
  * A Attachment.
@@ -53,7 +54,6 @@ public class Attachment implements Serializable {
     @Column(name = "hash_content_type")
     private String hashContentType;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
     }
@@ -197,8 +197,6 @@ public class Attachment implements Serializable {
         this.hashContentType = hashContentType;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -212,25 +210,46 @@ public class Attachment implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        // see
+        // https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
     }
 
     // prettier-ignore
     @Override
     public String toString() {
-        return "Attachment{" +
-            "id=" + getId() +
-            ", contentType='" + getContentType() + "'" +
-            ", title='" + getTitle() + "'" +
-            ", language='" + getLanguage() + "'" +
-            ", isData='" + getIsData() + "'" +
-            ", dataFile='" + getDataFile() + "'" +
-            ", dataFileContentType='" + getDataFileContentType() + "'" +
-            ", url='" + getUrl() + "'" +
-            ", attachmentSize=" + getAttachmentSize() +
-            ", hash='" + getHash() + "'" +
-            ", hashContentType='" + getHashContentType() + "'" +
-            "}";
+        return "Attachment{" + "id=" + getId() + ", contentType='" + getContentType() + "'" + ", title='" + getTitle()
+                + "'" + ", language='" + getLanguage() + "'" + ", isData='" + getIsData() + "'" + ", dataFile='"
+                + getDataFile() + "'" + ", dataFileContentType='" + getDataFileContentType() + "'" + ", url='"
+                + getUrl() + "'" + ", attachmentSize=" + getAttachmentSize() + ", hash='" + getHash() + "'"
+                + ", hashContentType='" + getHashContentType() + "'" + "}";
+    }
+
+    public AttachmentModel convert() {
+        AttachmentModel a = new AttachmentModel();
+        a.setContentType(this.getContentType());
+        a.setData(this.getDataFile());
+        a.setHash(this.getHash());
+        a.setIsData(this.getIsData());
+        a.setLanguage(this.getLanguage().convert());
+        a.setSize(this.getAttachmentSize());
+        a.setTitle(this.getTitle());
+        a.setUrl(this.getUrl());
+        return a;
+    }
+
+    public static Attachment convertFrom(AttachmentModel model) {
+        Attachment a = new Attachment();
+        a.setContentType(model.getContentType());
+        a.setDataFile(model.getData());
+        a.setHash(model.getHash());
+        a.setIsData(model.getIsData());
+        if (model.getLanguage() != null) {
+            a.setLanguage(LanguageEnum.valueOf(model.getLanguage().name()));
+        }
+        a.setAttachmentSize(model.getSize());
+        a.setTitle(model.getTitle());
+        a.setUrl(model.getUrl());
+        return a;
     }
 }

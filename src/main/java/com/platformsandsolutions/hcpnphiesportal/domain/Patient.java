@@ -7,6 +7,7 @@ import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.ReligionEnum
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -22,13 +23,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import platform.fhir_client.models.CoreResourceModel;
-import platform.fhir_client.models.CoverageModel;
 import platform.fhir_client.models.PatientModel;
 
 /**
@@ -81,7 +82,7 @@ public class Patient implements Serializable {
     @Column(name = "marital_status")
     private MaritalStatusEnum maritalStatus;
 
-    @OneToMany(mappedBy = "patient", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "givens", "patient", "practitioner" }, allowSetters = true)
     private Set<HumanName> names = new HashSet<>();
@@ -95,7 +96,18 @@ public class Patient implements Serializable {
     @JoinColumn(unique = true)
     private Address address;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here
+    @ManyToMany(mappedBy = "patientIdentifiers")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    private Set<ReferenceIdentifier> identifiers = new HashSet<>();
+
+    public Set<ReferenceIdentifier> getIdentifiers() {
+        return identifiers;
+    }
+
+    public void setIdentifiers(Set<ReferenceIdentifier> identifiers) {
+        this.identifiers = identifiers;
+    }
+
     public Long getId() {
         return id;
     }
@@ -309,9 +321,6 @@ public class Patient implements Serializable {
         this.address = address;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and
-    // setters here
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -345,24 +354,81 @@ public class Patient implements Serializable {
             return (PatientModel) coreResources.stream().filter(x -> x.getId() == UUID.fromString(this.getGuid())).findFirst().get();
         }
         PatientModel pat = new PatientModel();
-        pat.setId(UUID.fromString(this.getGuid()));
-        pat.setResidentNumber(this.getResidentNumber());
-        pat.setNationalHealthId(this.getNationalHealthId());
-        pat.setPassportNumber(this.getPassportNumber());
-        pat.setIqama(this.getIqama());
-        pat.setBirthDate(Date.from(this.getBirthDate()));
+        if (this.getGuid() != null) {
+            pat.setId(UUID.fromString(this.getGuid()));
+        }
+        if (this.getResidentNumber() != null) {
+            pat.setResidentNumber(this.getResidentNumber());
+        }
+        if (this.getNationalHealthId() != null) {
+            pat.setNationalHealthId(this.getNationalHealthId());
+        }
+        if (this.getPassportNumber() != null) {
+            pat.setPassportNumber(this.getPassportNumber());
+        }
+        if (this.getIqama() != null) {
+            pat.setVisa(this.getIqama());
+        }
+        if (this.getBirthDate() != null) {
+            pat.setBirthDate(Date.from(this.getBirthDate()));
+        }
         if (this.getContacts() != null) {
-            pat.setContacts(this.getContacts().convert());
+            pat.setContacts(Arrays.asList(this.getContacts().convert()));
         }
         if (this.getAddress() != null) {
             pat.setAddress(this.getAddress().convert());
         }
-        pat.setGender(this.gender.convert());
+        if (this.getGender() != null) {
+            pat.setGender(this.getGender().convert());
+        }
         if (this.getMaritalStatus() != null) {
             pat.setMaritalStatus(this.getMaritalStatus().convert());
         }
-        pat.setNames(this.getNames().stream().map(i -> i.convert()).collect(Collectors.toCollection(ArrayList::new)));
+        if (this.getNames() != null) {
+            pat.setNames(this.getNames().stream().map(i -> i.convert()).collect(Collectors.toCollection(ArrayList::new)));
+        }
         coreResources.add(pat);
+        return pat;
+    }
+
+    public static Patient convertFrom(PatientModel model) {
+        Patient pat = new Patient();
+        if (model.getIdentifiers() != null) {
+            pat.setIdentifiers(model.getIdentifiers().stream().map(i -> ReferenceIdentifier.convertFrom(i)).collect(Collectors.toSet()));
+        }
+        if (model.getId() != null) {
+            pat.setGuid(model.getId().toString());
+        }
+        if (model.getResidentNumber() != null) {
+            pat.setResidentNumber(model.getResidentNumber());
+        }
+        if (model.getNationalHealthId() != null) {
+            pat.setNationalHealthId(model.getNationalHealthId());
+        }
+        if (model.getPassportNumber() != null) {
+            pat.setPassportNumber(model.getPassportNumber());
+        }
+        if (model.getVisa() != null) {
+            pat.setIqama(model.getVisa());
+        }
+        if (model.getBirthDate() != null) {
+            pat.setBirthDate(model.getBirthDate().toInstant());
+        }
+        if (model.getContacts() != null) {
+            pat.setContacts(Contact.convertFrom(model.getContacts().get(0)));
+        }
+        if (model.getAddress() != null) {
+            pat.setAddress(Address.convertFrom(model.getAddress()));
+        }
+        if (model.getGender() != null) {
+            pat.setGender(AdministrativeGenderEnum.valueOf(model.getGender().name()));
+        }
+        if (model.getMaritalStatus() != null) {
+            pat.setMaritalStatus(MaritalStatusEnum.valueOf(model.getMaritalStatus().name()));
+        }
+        if (model.getNames() != null) {
+            pat.setNames(model.getNames().stream().map(i -> HumanName.convertFrom(i)).collect(Collectors.toSet()));
+        }
         return pat;
     }
 }

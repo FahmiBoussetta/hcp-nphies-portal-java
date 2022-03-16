@@ -5,11 +5,19 @@ import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.ExemptionTyp
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.Date;
-import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import platform.fhir_client.models.ClassComponentModel;
 import platform.fhir_client.models.ExemptionComponentModel;
 
 /**
@@ -37,11 +45,10 @@ public class ExemptionComponent implements Serializable {
     @Column(name = "end")
     private Instant end;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JsonIgnoreProperties(value = { "exceptions", "coverage" }, allowSetters = true)
     private CostToBeneficiaryComponent costToBeneficiary;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
     }
@@ -107,8 +114,6 @@ public class ExemptionComponent implements Serializable {
         this.costToBeneficiary = costToBeneficiaryComponent;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -122,26 +127,43 @@ public class ExemptionComponent implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        // see
+        // https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
     }
 
     // prettier-ignore
     @Override
     public String toString() {
-        return "ExemptionComponent{" +
-            "id=" + getId() +
-            ", type='" + getType() + "'" +
-            ", start='" + getStart() + "'" +
-            ", end='" + getEnd() + "'" +
-            "}";
+        return "ExemptionComponent{" + "id=" + getId() + ", type='" + getType() + "'" + ", start='" + getStart() + "'"
+                + ", end='" + getEnd() + "'" + "}";
     }
 
     public ExemptionComponentModel convert() {
         ExemptionComponentModel model = new ExemptionComponentModel();
-        model.setEnd(Date.from(this.getEnd()));
-        model.setType(this.getType().convert());
-        model.setStart(Date.from(this.getStart()));
+        if (this.getEnd() != null) {
+            model.setEnd(Date.from(this.getEnd()));
+        }
+        if (this.getType() != null) {
+            model.setType(this.getType().convert());
+        }
+        if (this.getStart() != null) {
+            model.setStart(Date.from(this.getStart()));
+        }
         return model;
+    }
+
+    public static ExemptionComponent convertFrom(ExemptionComponentModel model) {
+        ExemptionComponent e = new ExemptionComponent();
+        if (model.getEnd() != null) {
+            e.setEnd(model.getEnd().toInstant());
+        }
+        if (model.getType() != null) {
+            e.setType(ExemptionTypeEnum.valueOf(model.getType().name()));
+        }
+        if (model.getStart() != null) {
+            e.setStart(model.getStart().toInstant());
+        }
+        return e;
     }
 }

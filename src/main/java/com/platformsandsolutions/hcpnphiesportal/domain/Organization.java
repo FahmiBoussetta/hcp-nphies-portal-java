@@ -8,11 +8,22 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import platform.fhir_client.models.CoreResourceModel;
-import platform.fhir_client.models.CoverageModel;
 import platform.fhir_client.models.OrganizationModel;
 
 /**
@@ -48,15 +59,26 @@ public class Organization implements Serializable {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "organization")
+    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "name", "organization" }, allowSetters = true)
     private Set<Contact> contacts = new HashSet<>();
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private Address address;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here
+    @ManyToMany(mappedBy = "organizationIdentifiers")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    private Set<ReferenceIdentifier> identifiers = new HashSet<>();
+
+    public Set<ReferenceIdentifier> getIdentifiers() {
+        return identifiers;
+    }
+
+    public void setIdentifiers(Set<ReferenceIdentifier> identifiers) {
+        this.identifiers = identifiers;
+    }
+
     public Long getId() {
         return id;
     }
@@ -192,9 +214,6 @@ public class Organization implements Serializable {
         this.address = address;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and
-    // setters here
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -226,19 +245,63 @@ public class Organization implements Serializable {
             return (OrganizationModel) coreResources.stream().filter(x -> x.getId() == UUID.fromString(this.getGuid())).findFirst().get();
         }
         OrganizationModel org = new OrganizationModel();
-        org.setId(UUID.fromString(this.getGuid()));
-        org.setBaseUrl(this.getBaseUrl());
+        if (this.getGuid() != null) {
+            org.setId(UUID.fromString(this.getGuid()));
+        }
+        if (this.getBaseUrl() != null) {
+            org.setBaseUrl(this.getBaseUrl());
+        }
         if (this.getAddress() != null) {
             org.setAddress(this.getAddress().convert());
         }
-        if (this.getAddress() != null) {
+        if (this.getContacts() != null) {
             org.setContacts(this.getContacts().stream().map(i -> i.convert()).collect(Collectors.toCollection(ArrayList::new)));
         }
-        org.setForceId(this.getForceId());
-        org.setName(this.getName());
-        org.setOrganizationLicense(this.getOrganizationLicense());
-        org.setOrganizationType(this.getOrganizationType().convert());
+        if (this.getForceId() != null) {
+            org.setForceId(this.getForceId());
+        }
+        if (this.getName() != null) {
+            org.setName(this.getName());
+        }
+        if (this.getOrganizationLicense() != null) {
+            org.setOrganizationLicense(this.getOrganizationLicense());
+        }
+        if (this.getOrganizationType() != null) {
+            org.setOrganizationType(this.getOrganizationType().convert());
+        }
         coreResources.add(org);
+        return org;
+    }
+
+    public static Organization convertFrom(OrganizationModel model) {
+        Organization org = new Organization();
+        if (model.getIdentifiers() != null) {
+            org.setIdentifiers(model.getIdentifiers().stream().map(i -> ReferenceIdentifier.convertFrom(i)).collect(Collectors.toSet()));
+        }
+        if (model.getId() != null) {
+            org.setGuid(model.getId().toString());
+        }
+        if (model.getBaseUrl() != null) {
+            org.setBaseUrl(model.getBaseUrl());
+        }
+        if (model.getAddress() != null) {
+            org.setAddress(Address.convertFrom(model.getAddress()));
+        }
+        if (model.getContacts() != null) {
+            org.setContacts(model.getContacts().stream().map(i -> Contact.convertFrom(i)).collect(Collectors.toSet()));
+        }
+        if (model.getForceId() != null) {
+            org.setForceId(model.getForceId());
+        }
+        if (model.getName() != null) {
+            org.setName(model.getName());
+        }
+        if (model.getOrganizationLicense() != null) {
+            org.setOrganizationLicense(model.getOrganizationLicense());
+        }
+        if (model.getOrganizationType() != null) {
+            org.setOrganizationType(OrganizationTypeEnum.valueOf(model.getOrganizationType().name()));
+        }
         return org;
     }
 }

@@ -8,6 +8,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,7 +19,8 @@ import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.ResponseUtil;
 
 /**
- * REST controller for managing {@link com.platformsandsolutions.hcpnphiesportal.domain.Encounter}.
+ * REST controller for managing
+ * {@link com.platformsandsolutions.hcpnphiesportal.domain.Encounter}.
  */
 @RestController
 @RequestMapping("/api")
@@ -42,7 +44,9 @@ public class EncounterResource {
      * {@code POST  /encounters} : Create a new encounter.
      *
      * @param encounter the encounter to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new encounter, or with status {@code 400 (Bad Request)} if the encounter has already an ID.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with
+     *         body the new encounter, or with status {@code 400 (Bad Request)} if
+     *         the encounter has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/encounters")
@@ -51,6 +55,7 @@ public class EncounterResource {
         if (encounter.getId() != null) {
             throw new BadRequestAlertException("A new encounter cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        encounter.setGuid(UUID.randomUUID().toString());
         Encounter result = encounterRepository.save(encounter);
         return ResponseEntity
             .created(new URI("/api/encounters/" + result.getId()))
@@ -61,11 +66,13 @@ public class EncounterResource {
     /**
      * {@code PUT  /encounters/:id} : Updates an existing encounter.
      *
-     * @param id the id of the encounter to save.
+     * @param id        the id of the encounter to save.
      * @param encounter the encounter to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated encounter,
-     * or with status {@code 400 (Bad Request)} if the encounter is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the encounter couldn't be updated.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
+     *         the updated encounter, or with status {@code 400 (Bad Request)} if
+     *         the encounter is not valid, or with status
+     *         {@code 500 (Internal Server Error)} if the encounter couldn't be
+     *         updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/encounters/{id}")
@@ -93,14 +100,17 @@ public class EncounterResource {
     }
 
     /**
-     * {@code PATCH  /encounters/:id} : Partial updates given fields of an existing encounter, field will ignore if it is null
+     * {@code PATCH  /encounters/:id} : Partial updates given fields of an existing
+     * encounter, field will ignore if it is null
      *
-     * @param id the id of the encounter to save.
+     * @param id        the id of the encounter to save.
      * @param encounter the encounter to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated encounter,
-     * or with status {@code 400 (Bad Request)} if the encounter is not valid,
-     * or with status {@code 404 (Not Found)} if the encounter is not found,
-     * or with status {@code 500 (Internal Server Error)} if the encounter couldn't be updated.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
+     *         the updated encounter, or with status {@code 400 (Bad Request)} if
+     *         the encounter is not valid, or with status {@code 404 (Not Found)} if
+     *         the encounter is not found, or with status
+     *         {@code 500 (Internal Server Error)} if the encounter couldn't be
+     *         updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/encounters/{id}", consumes = "application/merge-patch+json")
@@ -163,7 +173,8 @@ public class EncounterResource {
     /**
      * {@code GET  /encounters} : get all the encounters.
      *
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of encounters in body.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list
+     *         of encounters in body.
      */
     @GetMapping("/encounters")
     public List<Encounter> getAllEncounters() {
@@ -175,7 +186,8 @@ public class EncounterResource {
      * {@code GET  /encounters/:id} : get the "id" encounter.
      *
      * @param id the id of the encounter to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the encounter, or with status {@code 404 (Not Found)}.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
+     *         the encounter, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/encounters/{id}")
     public ResponseEntity<Encounter> getEncounter(@PathVariable Long id) {

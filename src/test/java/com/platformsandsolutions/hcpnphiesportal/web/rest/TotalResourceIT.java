@@ -1,5 +1,6 @@
 package com.platformsandsolutions.hcpnphiesportal.web.rest;
 
+import static com.platformsandsolutions.hcpnphiesportal.web.rest.TestUtil.sameNumber;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -7,7 +8,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.platformsandsolutions.hcpnphiesportal.IntegrationTest;
 import com.platformsandsolutions.hcpnphiesportal.domain.Total;
+import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.AdjudicationEnum;
 import com.platformsandsolutions.hcpnphiesportal.repository.TotalRepository;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
@@ -29,11 +32,11 @@ import org.springframework.transaction.annotation.Transactional;
 @WithMockUser
 class TotalResourceIT {
 
-    private static final String DEFAULT_CATEGORY = "AAAAAAAAAA";
-    private static final String UPDATED_CATEGORY = "BBBBBBBBBB";
+    private static final AdjudicationEnum DEFAULT_CATEGORY = AdjudicationEnum.benefit;
+    private static final AdjudicationEnum UPDATED_CATEGORY = AdjudicationEnum.copay;
 
-    private static final Integer DEFAULT_AMOUNT = 1;
-    private static final Integer UPDATED_AMOUNT = 2;
+    private static final BigDecimal DEFAULT_AMOUNT = new BigDecimal(1);
+    private static final BigDecimal UPDATED_AMOUNT = new BigDecimal(2);
 
     private static final String ENTITY_API_URL = "/api/totals";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
@@ -93,7 +96,7 @@ class TotalResourceIT {
         assertThat(totalList).hasSize(databaseSizeBeforeCreate + 1);
         Total testTotal = totalList.get(totalList.size() - 1);
         assertThat(testTotal.getCategory()).isEqualTo(DEFAULT_CATEGORY);
-        assertThat(testTotal.getAmount()).isEqualTo(DEFAULT_AMOUNT);
+        assertThat(testTotal.getAmount()).isEqualByComparingTo(DEFAULT_AMOUNT);
     }
 
     @Test
@@ -127,7 +130,7 @@ class TotalResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(total.getId().intValue())))
             .andExpect(jsonPath("$.[*].category").value(hasItem(DEFAULT_CATEGORY)))
-            .andExpect(jsonPath("$.[*].amount").value(hasItem(DEFAULT_AMOUNT)));
+            .andExpect(jsonPath("$.[*].amount").value(hasItem(sameNumber(DEFAULT_AMOUNT))));
     }
 
     @Test
@@ -143,7 +146,7 @@ class TotalResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(total.getId().intValue()))
             .andExpect(jsonPath("$.category").value(DEFAULT_CATEGORY))
-            .andExpect(jsonPath("$.amount").value(DEFAULT_AMOUNT));
+            .andExpect(jsonPath("$.amount").value(sameNumber(DEFAULT_AMOUNT)));
     }
 
     @Test
@@ -163,7 +166,8 @@ class TotalResourceIT {
 
         // Update the total
         Total updatedTotal = totalRepository.findById(total.getId()).get();
-        // Disconnect from session so that the updates on updatedTotal are not directly saved in db
+        // Disconnect from session so that the updates on updatedTotal are not directly
+        // saved in db
         em.detach(updatedTotal);
         updatedTotal.category(UPDATED_CATEGORY).amount(UPDATED_AMOUNT);
 
@@ -266,7 +270,7 @@ class TotalResourceIT {
         assertThat(totalList).hasSize(databaseSizeBeforeUpdate);
         Total testTotal = totalList.get(totalList.size() - 1);
         assertThat(testTotal.getCategory()).isEqualTo(UPDATED_CATEGORY);
-        assertThat(testTotal.getAmount()).isEqualTo(DEFAULT_AMOUNT);
+        assertThat(testTotal.getAmount()).isEqualByComparingTo(DEFAULT_AMOUNT);
     }
 
     @Test
@@ -296,7 +300,7 @@ class TotalResourceIT {
         assertThat(totalList).hasSize(databaseSizeBeforeUpdate);
         Total testTotal = totalList.get(totalList.size() - 1);
         assertThat(testTotal.getCategory()).isEqualTo(UPDATED_CATEGORY);
-        assertThat(testTotal.getAmount()).isEqualTo(UPDATED_AMOUNT);
+        assertThat(testTotal.getAmount()).isEqualByComparingTo(UPDATED_AMOUNT);
     }
 
     @Test

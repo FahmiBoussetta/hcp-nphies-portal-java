@@ -18,7 +18,8 @@ import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.ResponseUtil;
 
 /**
- * REST controller for managing {@link com.platformsandsolutions.hcpnphiesportal.domain.InsuranceBenefit}.
+ * REST controller for managing
+ * {@link com.platformsandsolutions.hcpnphiesportal.domain.InsuranceBenefit}.
  */
 @RestController
 @RequestMapping("/api")
@@ -42,7 +43,9 @@ public class InsuranceBenefitResource {
      * {@code POST  /insurance-benefits} : Create a new insuranceBenefit.
      *
      * @param insuranceBenefit the insuranceBenefit to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new insuranceBenefit, or with status {@code 400 (Bad Request)} if the insuranceBenefit has already an ID.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with
+     *         body the new insuranceBenefit, or with status
+     *         {@code 400 (Bad Request)} if the insuranceBenefit has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/insurance-benefits")
@@ -62,11 +65,14 @@ public class InsuranceBenefitResource {
     /**
      * {@code PUT  /insurance-benefits/:id} : Updates an existing insuranceBenefit.
      *
-     * @param id the id of the insuranceBenefit to save.
+     * @param id               the id of the insuranceBenefit to save.
      * @param insuranceBenefit the insuranceBenefit to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated insuranceBenefit,
-     * or with status {@code 400 (Bad Request)} if the insuranceBenefit is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the insuranceBenefit couldn't be updated.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
+     *         the updated insuranceBenefit,
+     *         or with status {@code 400 (Bad Request)} if the insuranceBenefit is
+     *         not valid,
+     *         or with status {@code 500 (Internal Server Error)} if the
+     *         insuranceBenefit couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/insurance-benefits/{id}")
@@ -94,14 +100,19 @@ public class InsuranceBenefitResource {
     }
 
     /**
-     * {@code PATCH  /insurance-benefits/:id} : Partial updates given fields of an existing insuranceBenefit, field will ignore if it is null
+     * {@code PATCH  /insurance-benefits/:id} : Partial updates given fields of an
+     * existing insuranceBenefit, field will ignore if it is null
      *
-     * @param id the id of the insuranceBenefit to save.
+     * @param id               the id of the insuranceBenefit to save.
      * @param insuranceBenefit the insuranceBenefit to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated insuranceBenefit,
-     * or with status {@code 400 (Bad Request)} if the insuranceBenefit is not valid,
-     * or with status {@code 404 (Not Found)} if the insuranceBenefit is not found,
-     * or with status {@code 500 (Internal Server Error)} if the insuranceBenefit couldn't be updated.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
+     *         the updated insuranceBenefit,
+     *         or with status {@code 400 (Bad Request)} if the insuranceBenefit is
+     *         not valid,
+     *         or with status {@code 404 (Not Found)} if the insuranceBenefit is not
+     *         found,
+     *         or with status {@code 500 (Internal Server Error)} if the
+     *         insuranceBenefit couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/insurance-benefits/{id}", consumes = "application/merge-patch+json")
@@ -125,11 +136,26 @@ public class InsuranceBenefitResource {
             .findById(insuranceBenefit.getId())
             .map(
                 existingInsuranceBenefit -> {
-                    if (insuranceBenefit.getAllowed() != null) {
-                        existingInsuranceBenefit.setAllowed(insuranceBenefit.getAllowed());
+                    if (insuranceBenefit.getType() != null) {
+                        existingInsuranceBenefit.setType(insuranceBenefit.getType());
                     }
-                    if (insuranceBenefit.getUsed() != null) {
-                        existingInsuranceBenefit.setUsed(insuranceBenefit.getUsed());
+                    if (insuranceBenefit.getAllowedString() != null) {
+                        existingInsuranceBenefit.setAllowedString(insuranceBenefit.getAllowedString());
+                    }
+                    if (insuranceBenefit.getAllowedUnsignedInt() != null) {
+                        existingInsuranceBenefit.setAllowedUnsignedInt(insuranceBenefit.getAllowedUnsignedInt());
+                    }
+                    if (insuranceBenefit.getAllowedMoney() != null) {
+                        existingInsuranceBenefit.setAllowedMoney(insuranceBenefit.getAllowedMoney());
+                    }
+                    if (insuranceBenefit.getUsedString() != null) {
+                        existingInsuranceBenefit.setUsedString(insuranceBenefit.getUsedString());
+                    }
+                    if (insuranceBenefit.getUsedUnsignedInt() != null) {
+                        existingInsuranceBenefit.setUsedUnsignedInt(insuranceBenefit.getUsedUnsignedInt());
+                    }
+                    if (insuranceBenefit.getUsedMoney() != null) {
+                        existingInsuranceBenefit.setUsedMoney(insuranceBenefit.getUsedMoney());
                     }
 
                     return existingInsuranceBenefit;
@@ -146,7 +172,8 @@ public class InsuranceBenefitResource {
     /**
      * {@code GET  /insurance-benefits} : get all the insuranceBenefits.
      *
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of insuranceBenefits in body.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list
+     *         of insuranceBenefits in body.
      */
     @GetMapping("/insurance-benefits")
     public List<InsuranceBenefit> getAllInsuranceBenefits() {
@@ -158,7 +185,8 @@ public class InsuranceBenefitResource {
      * {@code GET  /insurance-benefits/:id} : get the "id" insuranceBenefit.
      *
      * @param id the id of the insuranceBenefit to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the insuranceBenefit, or with status {@code 404 (Not Found)}.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
+     *         the insuranceBenefit, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/insurance-benefits/{id}")
     public ResponseEntity<InsuranceBenefit> getInsuranceBenefit(@PathVariable Long id) {

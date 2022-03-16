@@ -7,13 +7,21 @@ import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.FundsReserve
 import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.PriorityEnum;
 import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.Use;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import platform.fhir_client.models.ClaimModel;
+import platform.fhir_client.models.CoreResourceModel;
+import platform.fhir_client.models.IdentifierModel;
 
 /**
  * A Claim.
@@ -79,39 +87,42 @@ public class Claim implements Serializable {
     @Column(name = "funds_reserve")
     private FundsReserveEnum fundsReserve;
 
-    @OneToMany(mappedBy = "claim")
+    @OneToMany(mappedBy = "claim", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "claim" }, allowSetters = true)
     private Set<ClaimErrorMessages> errors = new HashSet<>();
 
-    @OneToMany(mappedBy = "claim")
+    @OneToMany(mappedBy = "claim", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "claimReference", "claim" }, allowSetters = true)
     private Set<Related> relateds = new HashSet<>();
 
-    @OneToMany(mappedBy = "claim")
+    @OneToMany(mappedBy = "claim", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "provider", "providerRole", "claim" }, allowSetters = true)
     private Set<CareTeam> careTeams = new HashSet<>();
 
-    @OneToMany(mappedBy = "claim")
+    @OneToMany(mappedBy = "claim", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "valueQuantity", "valueAttachment", "valueReference", "claim" }, allowSetters = true)
     private Set<SupportingInfo> supportingInfos = new HashSet<>();
 
-    @OneToMany(mappedBy = "claim")
+    @OneToMany(mappedBy = "claim", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "claim" }, allowSetters = true)
     private Set<Diagnosis> diagnoses = new HashSet<>();
 
-    @OneToMany(mappedBy = "claim")
+    @OneToMany(mappedBy = "claim", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "coverage", "claimResponse", "claim" }, allowSetters = true)
     private Set<Insurance> insurances = new HashSet<>();
 
-    @OneToMany(mappedBy = "claim")
+    @OneToMany(mappedBy = "claim", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "diagnosisSequences", "informationSequences", "udis", "details", "claim" }, allowSetters = true)
+    @JsonIgnoreProperties(
+        value = { "careTeamSequences", "diagnosisSequences", "informationSequences", "udis", "details", "claim" },
+        allowSetters = true
+    )
     private Set<Item> items = new HashSet<>();
 
     @ManyToOne
@@ -134,19 +145,19 @@ public class Claim implements Serializable {
     @JsonIgnoreProperties(value = { "contacts", "address" }, allowSetters = true)
     private Organization insurer;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JsonIgnoreProperties(value = { "item", "detailItem", "subDetailItem" }, allowSetters = true)
     private ReferenceIdentifier prescription;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JsonIgnoreProperties(value = { "item", "detailItem", "subDetailItem" }, allowSetters = true)
     private ReferenceIdentifier originalPrescription;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JsonIgnoreProperties(value = { "partyPatient", "partyOrganization" }, allowSetters = true)
     private Payee payee;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JsonIgnoreProperties(value = { "item", "detailItem", "subDetailItem" }, allowSetters = true)
     private ReferenceIdentifier referral;
 
@@ -154,11 +165,22 @@ public class Claim implements Serializable {
     @JsonIgnoreProperties(value = { "managingOrganization" }, allowSetters = true)
     private Location facility;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JsonIgnoreProperties(value = { "location" }, allowSetters = true)
     private Accident accident;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here
+    @ManyToMany(mappedBy = "claimIdentifiers")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    private Set<ReferenceIdentifier> identifiers = new HashSet<>();
+
+    public Set<ReferenceIdentifier> getIdentifiers() {
+        return identifiers;
+    }
+
+    public void setIdentifiers(Set<ReferenceIdentifier> identifiers) {
+        this.identifiers = identifiers;
+    }
+
     public Long getId() {
         return id;
     }
@@ -714,8 +736,6 @@ public class Claim implements Serializable {
         this.accident = accident;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -729,29 +749,209 @@ public class Claim implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        // see
+        // https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
     }
 
     // prettier-ignore
     @Override
     public String toString() {
-        return "Claim{" +
-            "id=" + getId() +
-            ", guid='" + getGuid() + "'" +
-            ", isQueued='" + getIsQueued() + "'" +
-            ", parsed='" + getParsed() + "'" +
-            ", identifier='" + getIdentifier() + "'" +
-            ", use='" + getUse() + "'" +
-            ", type='" + getType() + "'" +
-            ", subType='" + getSubType() + "'" +
-            ", eligibilityOffline='" + getEligibilityOffline() + "'" +
-            ", eligibilityOfflineDate='" + getEligibilityOfflineDate() + "'" +
-            ", authorizationOfflineDate='" + getAuthorizationOfflineDate() + "'" +
-            ", billableStart='" + getBillableStart() + "'" +
-            ", billableEnd='" + getBillableEnd() + "'" +
-            ", priority='" + getPriority() + "'" +
-            ", fundsReserve='" + getFundsReserve() + "'" +
-            "}";
+        return "Claim{" + "id=" + getId() + ", guid='" + getGuid() + "'" + ", isQueued='" + getIsQueued() + "'"
+                + ", parsed='" + getParsed() + "'" + ", identifier='" + getIdentifier() + "'" + ", use='" + getUse()
+                + "'" + ", type='" + getType() + "'" + ", subType='" + getSubType() + "'" + ", eligibilityOffline='"
+                + getEligibilityOffline() + "'" + ", eligibilityOfflineDate='" + getEligibilityOfflineDate() + "'"
+                + ", authorizationOfflineDate='" + getAuthorizationOfflineDate() + "'" + ", billableStart='"
+                + getBillableStart() + "'" + ", billableEnd='" + getBillableEnd() + "'" + ", priority='" + getPriority()
+                + "'" + ", fundsReserve='" + getFundsReserve() + "'" + "}";
+    }
+
+    public ClaimModel convert(ArrayList<CoreResourceModel> coreResources) {
+        ClaimModel model = new ClaimModel();
+        if (this.getAccident() != null) {
+            model.setAccident(this.getAccident().convert(coreResources));
+        }
+        if (this.getAuthorizationOfflineDate() != null) {
+            model.setAuthorizationOfflineDate(Date.from(this.getAuthorizationOfflineDate()));
+        }
+        if (this.getBillableEnd() != null) {
+            model.setBillableEnd(Date.from(this.getBillableEnd()));
+        }
+        if (this.getBillableStart() != null) {
+            model.setBillableStart(Date.from(this.getBillableStart()));
+        }
+        if (this.getCareTeams() != null) {
+            model.setCareTeam(this.getCareTeams().stream().map(i -> i.convert(coreResources)).collect(Collectors.toList()));
+        }
+        if (this.getDiagnoses() != null) {
+            model.setDiagnoses(this.getDiagnoses().stream().map(i -> i.convert(coreResources)).collect(Collectors.toList()));
+        }
+        if (this.getEligibilityOffline() != null) {
+            model.setEligibilityOffline(this.getEligibilityOffline());
+        }
+        if (this.getEligibilityOfflineDate() != null) {
+            model.setEligibilityOfflineDate(Date.from(this.getEligibilityOfflineDate()));
+        }
+        if (this.getEligibilityResponse() != null) {
+            model.setEligibilityResponse(this.getEligibilityResponse().convertIdentifier());
+        }
+        if (this.getEncounter() != null) {
+            model.setEncounter(this.getEncounter().convert(coreResources));
+        }
+        if (this.getFacility() != null) {
+            model.setFacility(this.getFacility().convert(coreResources));
+        }
+        if (this.getFundsReserve() != null) {
+            model.setFundsReserve(this.getFundsReserve().convert());
+        }
+        if (this.getGuid() != null) {
+            model.setId(UUID.fromString(this.getGuid()));
+        }
+        if (this.getIdentifier() != null) {
+            IdentifierModel identifier = new IdentifierModel();
+            identifier.setValue(
+                this.getIdentifier() + "_" + this.getId() + "_" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())
+            );
+            model.addIdentifier(identifier);
+        }
+        if (this.getInsurances() != null) {
+            model.setInsurances(this.getInsurances().stream().map(i -> i.convert(coreResources)).collect(Collectors.toList()));
+        }
+        if (this.getInsurer() != null) {
+            model.setInsurer(this.getInsurer().convert(coreResources));
+        }
+        if (this.getItems() != null) {
+            model.setItems(this.getItems().stream().map(i -> i.convert(coreResources)).collect(Collectors.toList()));
+        }
+        if (this.getOriginalPrescription() != null) {
+            model.setOriginalPrescription(this.getOriginalPrescription().convert());
+        }
+        if (this.getPatient() != null) {
+            model.setPatient(this.getPatient().convert(coreResources));
+        }
+        if (this.getPayee() != null) {
+            model.setPayee(this.getPayee().convert(coreResources));
+        }
+        if (this.getPrescription() != null) {
+            model.setPrescription(this.getPrescription().convert());
+        }
+        if (this.getPriority() != null) {
+            model.setPriority(this.getPriority().convert());
+        }
+        if (this.getReferral() != null) {
+            model.setReferral(this.getReferral().convert());
+        }
+        if (this.getRelateds() != null) {
+            model.setRelateds(
+                this.getRelateds().stream().map(i -> i.convert(coreResources)).collect(Collectors.toCollection(ArrayList::new))
+            );
+        }
+        if (this.getSubType() != null) {
+            model.setSubType(this.getSubType().convert());
+        }
+        if (this.getSupportingInfos() != null) {
+            model.setSupportingInfos(this.getSupportingInfos().stream().map(i -> i.convert(coreResources)).collect(Collectors.toList()));
+        }
+        if (this.getType() != null) {
+            model.setType(this.getType().convert());
+        }
+        if (this.getUse() != null) {
+            model.setUse(this.getUse().convert());
+        }
+
+        return model;
+    }
+
+    public static Claim convertFrom(ClaimModel model) {
+        Claim c = new Claim();
+        if (model.getIdentifiers() != null) {
+            c.setIdentifiers(model.getIdentifiers().stream().map(i -> ReferenceIdentifier.convertFrom(i)).collect(Collectors.toSet()));
+        }
+        if (model.getAccident() != null) {
+            c.setAccident(Accident.convertFrom(model.getAccident()));
+        }
+        if (model.getAuthorizationOfflineDate() != null) {
+            c.setAuthorizationOfflineDate(model.getAuthorizationOfflineDate().toInstant());
+        }
+        if (model.getBillableEnd() != null) {
+            c.setBillableEnd(model.getBillableEnd().toInstant());
+        }
+        if (model.getBillableStart() != null) {
+            c.setBillableStart(model.getBillableStart().toInstant());
+        }
+        if (model.getCareTeam() != null) {
+            c.setCareTeams(model.getCareTeam().stream().map(i -> CareTeam.convertFrom(i)).collect(Collectors.toSet()));
+        }
+        if (model.getDiagnoses() != null) {
+            c.setDiagnoses(model.getDiagnoses().stream().map(i -> Diagnosis.convertFrom(i)).collect(Collectors.toSet()));
+        }
+        if (model.getEligibilityOffline() != null) {
+            c.setEligibilityOffline(model.getEligibilityOffline());
+        }
+        if (model.getEligibilityOfflineDate() != null) {
+            c.setEligibilityOfflineDate(model.getEligibilityOfflineDate().toInstant());
+        }
+        if (model.getEligibilityResponse() != null) {
+            c.setEligibilityResponse(CoverageEligibilityResponse.convertFrom(model.getEligibilityResponse()));
+        }
+        if (model.getEncounter() != null) {
+            c.setEncounter(Encounter.convertFrom(model.getEncounter()));
+        }
+        if (model.getFacility() != null) {
+            c.setFacility(Location.convertFrom(model.getFacility()));
+        }
+        if (model.getFundsReserve() != null) {
+            c.setFundsReserve(FundsReserveEnum.valueOf(model.getFundsReserve().name()));
+        }
+        if (model.getId() != null) {
+            c.setGuid(model.getId().toString());
+        }
+        if (model.getIdentifiers() != null) {
+            c.setIdentifier(model.getIdentifiers().get(0).getValue());
+        }
+        if (model.getInsurances() != null) {
+            c.setInsurances(model.getInsurances().stream().map(i -> Insurance.convertFrom(i)).collect(Collectors.toSet()));
+        }
+        if (model.getInsurer() != null) {
+            c.setInsurer(Organization.convertFrom(model.getInsurer()));
+        }
+        if (model.getItems() != null) {
+            c.setItems(model.getItems().stream().map(i -> Item.convertFrom(i)).collect(Collectors.toSet()));
+        }
+        if (model.getOriginalPrescription() != null) {
+            c.setOriginalPrescription(ReferenceIdentifier.convertFrom(model.getOriginalPrescription()));
+        }
+        if (model.getPatient() != null) {
+            c.setPatient(Patient.convertFrom(model.getPatient()));
+        }
+        if (model.getPayee() != null) {
+            c.setPayee(Payee.convertFrom(model.getPayee()));
+        }
+        if (model.getPrescription() != null) {
+            c.setPrescription(ReferenceIdentifier.convertFrom(model.getPrescription()));
+        }
+        if (model.getPriority() != null) {
+            c.setPriority(PriorityEnum.valueOf(model.getPriority().name()));
+        }
+        if (model.getReferral() != null) {
+            c.setReferral(ReferenceIdentifier.convertFrom(model.getReferral()));
+        }
+        if (model.getRelateds() != null) {
+            c.setRelateds(model.getRelateds().stream().map(i -> Related.convertFrom(i)).collect(Collectors.toSet()));
+        }
+        if (model.getSubType() != null) {
+            c.setSubType(ClaimSubTypeEnum.valueOf(model.getSubType().name()));
+        }
+        if (model.getSupportingInfos() != null) {
+            c.setSupportingInfos(model.getSupportingInfos().stream().map(i -> SupportingInfo.convertFrom(i)).collect(Collectors.toSet()));
+        }
+        if (model.getType() != null) {
+            c.setType(ClaimTypeEnum.valueOf(model.getType().name()));
+        }
+        if (model.getUse() != null) {
+            c.setUse(Use.valueOf(model.getUse().name()));
+        }
+
+        return c;
     }
 }

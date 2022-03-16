@@ -136,6 +136,13 @@ export const SupportingInfoUpdate = (props: RouteComponentProps<{ id: string }>)
                 type="text"
               />
               <ValidatedField
+                label={translate('hcpNphiesPortalApp.supportingInfo.codeIcd')}
+                id="supporting-info-codeIcd"
+                name="codeIcd"
+                data-cy="codeIcd"
+                type="text"
+              />
+              <ValidatedField
                 label={translate('hcpNphiesPortalApp.supportingInfo.category')}
                 id="supporting-info-category"
                 name="category"
@@ -171,6 +178,7 @@ export const SupportingInfoUpdate = (props: RouteComponentProps<{ id: string }>)
                 <option value="Icu_hours">{translate('hcpNphiesPortalApp.SupportingInfoCategoryEnum.Icu_hours')}</option>
                 <option value="Ventilation_hours">{translate('hcpNphiesPortalApp.SupportingInfoCategoryEnum.Ventilation_hours')}</option>
                 <option value="Vital_Sign_Height">{translate('hcpNphiesPortalApp.SupportingInfoCategoryEnum.Vital_Sign_Height')}</option>
+                <option value="Chief_complaint">{translate('hcpNphiesPortalApp.SupportingInfoCategoryEnum.Chief_complaint')}</option>
               </ValidatedField>
               <ValidatedField
                 label={translate('hcpNphiesPortalApp.supportingInfo.codeVisit')}

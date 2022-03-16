@@ -1,10 +1,13 @@
 package com.platformsandsolutions.hcpnphiesportal.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.AdjudicationEnum;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import javax.persistence.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import platform.fhir_client.models.TotalModel;
 
 /**
  * A Total.
@@ -21,12 +24,12 @@ public class Total implements Serializable {
     private Long id;
 
     @Column(name = "category")
-    private String category;
+    private AdjudicationEnum category;
 
-    @Column(name = "amount")
-    private Integer amount;
+    @Column(name = "amount", precision = 21, scale = 2)
+    private BigDecimal amount;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JsonIgnoreProperties(value = { "errors", "items", "totals" }, allowSetters = true)
     private ClaimResponse claimResponse;
 
@@ -44,29 +47,29 @@ public class Total implements Serializable {
         return this;
     }
 
-    public String getCategory() {
+    public AdjudicationEnum getCategory() {
         return this.category;
     }
 
-    public Total category(String category) {
+    public Total category(AdjudicationEnum category) {
         this.category = category;
         return this;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(AdjudicationEnum category) {
         this.category = category;
     }
 
-    public Integer getAmount() {
+    public BigDecimal getAmount() {
         return this.amount;
     }
 
-    public Total amount(Integer amount) {
+    public Total amount(BigDecimal amount) {
         this.amount = amount;
         return this;
     }
 
-    public void setAmount(Integer amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
@@ -83,7 +86,8 @@ public class Total implements Serializable {
         this.claimResponse = claimResponse;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and
+    // setters here
 
     @Override
     public boolean equals(Object o) {
@@ -98,7 +102,8 @@ public class Total implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        // see
+        // https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
     }
 
@@ -106,9 +111,18 @@ public class Total implements Serializable {
     @Override
     public String toString() {
         return "Total{" +
-            "id=" + getId() +
-            ", category='" + getCategory() + "'" +
-            ", amount=" + getAmount() +
-            "}";
+                "id=" + getId() +
+                ", category='" + getCategory() + "'" +
+                ", amount=" + getAmount() +
+                "}";
+    }
+
+    public static Total convertFrom(TotalModel x) {
+        Total t = new Total();
+        if (x.getCategory() != null) {
+            t.setCategory(AdjudicationEnum.valueOf(x.getCategory().name()));
+        }
+        t.setAmount(x.getAmount());
+        return t;
     }
 }

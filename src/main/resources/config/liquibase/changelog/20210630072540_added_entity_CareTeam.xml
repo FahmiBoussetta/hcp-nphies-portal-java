@@ -20,6 +20,9 @@
             <column name="role" type="varchar(255)">
                 <constraints nullable="false" />
             </column>
+            <column name="qualification" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
             <column name="provider_id" type="bigint">
                 <constraints nullable="true" />
             </column>
@@ -51,6 +54,9 @@
             <column name="id" type="numeric"/>
             <column name="sequence" type="numeric"/>
             <column name="role" type="string"/>
+            <column name="qualification" type="string"/>
+            <column name="provider_role_id" type="numeric"/>
+            <column name="claim_id" type="numeric"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
     </changeSet>

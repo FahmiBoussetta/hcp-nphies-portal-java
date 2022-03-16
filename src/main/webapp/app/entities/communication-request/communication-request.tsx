@@ -86,7 +86,7 @@ export const CommunicationRequest = (props: RouteComponentProps<{ url: string }>
                   </td>
                   <td>{communicationRequest.value}</td>
                   <td>{communicationRequest.system}</td>
-                  <td>{communicationRequest.parsed}</td>
+                  <td>{communicationRequest.parsed?.substring(0, 80)}...</td>
                   <td>
                     {communicationRequest.limitDate ? (
                       <TextFormat type="date" value={communicationRequest.limitDate} format={APP_DATE_FORMAT} />

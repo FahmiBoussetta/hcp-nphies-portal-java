@@ -3,12 +3,17 @@ package com.platformsandsolutions.hcpnphiesportal.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.AdministrativeGenderEnum;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import platform.fhir_client.models.CoreResourceModel;
+import platform.fhir_client.models.PractitionerModel;
 
 /**
  * A Practitioner.
@@ -38,12 +43,23 @@ public class Practitioner implements Serializable {
     @Column(name = "gender")
     private AdministrativeGenderEnum gender;
 
-    @OneToMany(mappedBy = "practitioner")
+    @OneToMany(mappedBy = "practitioner", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "givens", "patient", "practitioner" }, allowSetters = true)
     private Set<HumanName> names = new HashSet<>();
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here
+    @ManyToMany(mappedBy = "practitionerIdentifiers")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    private Set<ReferenceIdentifier> identifiers = new HashSet<>();
+
+    public Set<ReferenceIdentifier> getIdentifiers() {
+        return identifiers;
+    }
+
+    public void setIdentifiers(Set<ReferenceIdentifier> identifiers) {
+        this.identifiers = identifiers;
+    }
+
     public Long getId() {
         return id;
     }
@@ -140,8 +156,6 @@ public class Practitioner implements Serializable {
         this.names = humanNames;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -155,19 +169,52 @@ public class Practitioner implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        // see
+        // https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
     }
 
     // prettier-ignore
     @Override
     public String toString() {
-        return "Practitioner{" +
-            "id=" + getId() +
-            ", guid='" + getGuid() + "'" +
-            ", forceId='" + getForceId() + "'" +
-            ", practitionerLicense='" + getPractitionerLicense() + "'" +
-            ", gender='" + getGender() + "'" +
-            "}";
+        return "Practitioner{" + "id=" + getId() + ", guid='" + getGuid() + "'" + ", forceId='" + getForceId() + "'"
+                + ", practitionerLicense='" + getPractitionerLicense() + "'" + ", gender='" + getGender() + "'" + "}";
+    }
+
+    public PractitionerModel convert(ArrayList<CoreResourceModel> coreResources) {
+        if (coreResources.stream().anyMatch(x -> x.getId() == UUID.fromString(this.getGuid()))) {
+            return (PractitionerModel) coreResources.stream().filter(x -> x.getId() == UUID.fromString(this.getGuid())).findFirst().get();
+        }
+        PractitionerModel p = new PractitionerModel();
+        p.setId(UUID.fromString(this.getGuid()));
+        p.setPractitionerLicense(this.getPractitionerLicense());
+        p.setForceId(this.getForceId());
+        p.setGender(this.getGender().convert());
+        p.setNames(this.getNames().stream().map(i -> i.convert()).collect(Collectors.toCollection(ArrayList::new)));
+        coreResources.add(p);
+        return p;
+    }
+
+    public static Practitioner convertFrom(PractitionerModel model) {
+        Practitioner p = new Practitioner();
+        if (model.getIdentifiers() != null) {
+            p.setIdentifiers(model.getIdentifiers().stream().map(i -> ReferenceIdentifier.convertFrom(i)).collect(Collectors.toSet()));
+        }
+        if (model.getId() != null) {
+            p.setGuid(model.getId().toString());
+        }
+        if (model.getPractitionerLicense() != null) {
+            p.setPractitionerLicense(model.getPractitionerLicense());
+        }
+        if (model.getForceId() != null) {
+            p.setForceId(model.getForceId());
+        }
+        if (model.getGender() != null) {
+            p.setGender(AdministrativeGenderEnum.valueOf(model.getGender().name()));
+        }
+        if (model.getNames() != null) {
+            p.setNames(model.getNames().stream().map(i -> HumanName.convertFrom(i)).collect(Collectors.toSet()));
+        }
+        return p;
     }
 }

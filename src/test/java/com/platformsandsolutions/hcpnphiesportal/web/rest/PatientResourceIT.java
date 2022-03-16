@@ -55,8 +55,8 @@ class PatientResourceIT {
     private static final ReligionEnum DEFAULT_RELIGION = ReligionEnum.N0;
     private static final ReligionEnum UPDATED_RELIGION = ReligionEnum.N1;
 
-    private static final AdministrativeGenderEnum DEFAULT_GENDER = AdministrativeGenderEnum.Male;
-    private static final AdministrativeGenderEnum UPDATED_GENDER = AdministrativeGenderEnum.Female;
+    private static final AdministrativeGenderEnum DEFAULT_GENDER = AdministrativeGenderEnum.male;
+    private static final AdministrativeGenderEnum UPDATED_GENDER = AdministrativeGenderEnum.female;
 
     private static final Instant DEFAULT_BIRTH_DATE = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_BIRTH_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
@@ -244,7 +244,8 @@ class PatientResourceIT {
 
         // Update the patient
         Patient updatedPatient = patientRepository.findById(patient.getId()).get();
-        // Disconnect from session so that the updates on updatedPatient are not directly saved in db
+        // Disconnect from session so that the updates on updatedPatient are not
+        // directly saved in db
         em.detach(updatedPatient);
         updatedPatient
             .guid(UPDATED_GUID)

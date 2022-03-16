@@ -1,5 +1,7 @@
 package com.platformsandsolutions.hcpnphiesportal.domain.enumeration;
 
+import platform.fhir_client.utils.Enums;
+
 /**
  * The SpecialtyEnum enumeration.
  */
@@ -223,5 +225,14 @@ public enum SpecialtyEnum {
 
     public String getValue() {
         return value;
+    }
+
+    public Enums.SpecialtyEnum convert() {
+        for (Enums.SpecialtyEnum e : Enums.SpecialtyEnum.values()) {
+            if (e.getDescription() == this.getValue()) {
+                return e;
+            }
+        }
+        return null;
     }
 }

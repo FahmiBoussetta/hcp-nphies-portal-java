@@ -1,4 +1,3 @@
-import { Organization } from './../../entities/organization/organization';
 export function matchEncToTerm(text, value) {
   return text.label.toLowerCase().indexOf(value.toLowerCase()) !== -1;
 }
@@ -21,7 +20,13 @@ export function matchPatToTerm(pat, value) {
 }
 
 export function getPatTerm(pat) {
-  return pat?.iqama;
+  return pat?.residentNumber && pat?.residentNumber !== ''
+    ? pat?.residentNumber
+    : pat?.nationalHealthId && pat?.nationalHealthId !== ''
+    ? pat?.nationalHealthId
+    : pat?.iqama && pat?.iqama !== ''
+    ? pat?.iqama
+    : pat?.passportNumber;
 }
 
 export function matchPracToTerm(text, value) {
@@ -37,13 +42,54 @@ export function matchCovToTerm(text, value) {
 }
 
 export function getCovTerm(cov) {
-  return cov.subscriberId + (cov.beneficiary ? ' - ' + getPatTerm(cov.beneficiary) ?? '' : '');
+  return cov.id + (cov.subscriberId ? ' - ' + cov.subscriberId : '') + (cov.beneficiary ? ' - ' + getPatTerm(cov.beneficiary) ?? '' : '');
 }
 
 export function matchOrgToTerm(org, value) {
-  return org.organizationLicense.toLowerCase().indexOf(value.toLowerCase()) !== -1;
+  return org.organizationLicense != null && org.organizationLicense.toLowerCase().indexOf(value.toLowerCase()) !== -1;
 }
 
 export function getOrgTerm(org) {
   return org.organizationLicense;
+}
+
+export function matchClaimToTerm(claim, value) {
+  return claim.identifier.indexOf(value) !== -1;
+}
+
+export function getClaimTerm(claim) {
+  return claim.identifier;
+}
+
+export function matchProdToTerm(prod, value) {
+  return prod.toLowerCase().indexOf(value.toLowerCase()) !== -1;
+}
+
+export function getProdTerm(p) {
+  const s = p.substring(0, p.length - 1);
+  return s.substring(s.lastIndexOf('|') + 1);
+}
+
+export function matchPractitionerToTerm(p, value) {
+  return p.id.toString().indexOf(value) !== -1;
+}
+
+export function getPractitionerTerm(p) {
+  return p.id.toString();
+}
+
+export function matchPractitionerRoleToTerm(p, value) {
+  return p.id.toString().indexOf(value) !== -1;
+}
+
+export function getPractitionerRoleTerm(p) {
+  return p.id.toString();
+}
+
+export function matchCrToTerm(c, value) {
+  return c.id.toString().indexOf(value) !== -1;
+}
+
+export function getCrTerm(c) {
+  return c.id.toString();
 }

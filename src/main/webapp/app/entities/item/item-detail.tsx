@@ -60,12 +60,6 @@ export const ItemDetail = (props: RouteComponentProps<{ id: string }>) => {
           </dt>
           <dd>{itemEntity.patientShare}</dd>
           <dt>
-            <span id="careTeamSequence">
-              <Translate contentKey="hcpNphiesPortalApp.item.careTeamSequence">Care Team Sequence</Translate>
-            </span>
-          </dt>
-          <dd>{itemEntity.careTeamSequence}</dd>
-          <dt>
             <span id="transportationSRCA">
               <Translate contentKey="hcpNphiesPortalApp.item.transportationSRCA">Transportation SRCA</Translate>
             </span>

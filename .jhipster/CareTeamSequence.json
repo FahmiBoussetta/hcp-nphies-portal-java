@@ -1,0 +1,27 @@
+{
+  "name": "CareTeamSequence",
+  "fields": [
+    {
+      "fieldName": "careSeq",
+      "fieldType": "Integer"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "item",
+      "otherEntityRelationshipName": "careTeamSequence",
+      "relationshipName": "item"
+    }
+  ],
+  "entityTableName": "care_team_sequence",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["hcpNphiesPortal"],
+  "changelogDate": "20210923070913"
+}

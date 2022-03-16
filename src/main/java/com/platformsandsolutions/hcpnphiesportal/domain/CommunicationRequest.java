@@ -35,12 +35,12 @@ public class CommunicationRequest implements Serializable {
     @Column(name = "limit_date")
     private Instant limitDate;
 
-    @OneToMany(mappedBy = "communicationRequest")
+    @OneToMany(mappedBy = "communicationRequest", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "contentAttachment", "contentReference", "communication", "communicationRequest" }, allowSetters = true)
     private Set<Payload> payloads = new HashSet<>();
 
-    @OneToMany(mappedBy = "communicationRequest")
+    @OneToMany(mappedBy = "communicationRequest", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "communication", "communicationRequest" }, allowSetters = true)
     private Set<Note> notes = new HashSet<>();
@@ -86,7 +86,18 @@ public class CommunicationRequest implements Serializable {
     )
     private Communication communication;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here
+    @ManyToMany(mappedBy = "comReqIdentifiers")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    private Set<ReferenceIdentifier> identifiers = new HashSet<>();
+
+    public Set<ReferenceIdentifier> getIdentifiers() {
+        return identifiers;
+    }
+
+    public void setIdentifiers(Set<ReferenceIdentifier> identifiers) {
+        this.identifiers = identifiers;
+    }
+
     public Long getId() {
         return id;
     }
@@ -266,8 +277,6 @@ public class CommunicationRequest implements Serializable {
         this.communication = communication;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -281,19 +290,15 @@ public class CommunicationRequest implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        // see
+        // https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
     }
 
     // prettier-ignore
     @Override
     public String toString() {
-        return "CommunicationRequest{" +
-            "id=" + getId() +
-            ", value='" + getValue() + "'" +
-            ", system='" + getSystem() + "'" +
-            ", parsed='" + getParsed() + "'" +
-            ", limitDate='" + getLimitDate() + "'" +
-            "}";
+        return "CommunicationRequest{" + "id=" + getId() + ", value='" + getValue() + "'" + ", system='" + getSystem()
+                + "'" + ", parsed='" + getParsed() + "'" + ", limitDate='" + getLimitDate() + "'" + "}";
     }
 }

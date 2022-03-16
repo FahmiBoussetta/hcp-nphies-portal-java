@@ -3,10 +3,13 @@ package com.platformsandsolutions.hcpnphiesportal.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.PayeeTypeEnum;
 import java.io.Serializable;
+import java.util.ArrayList;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import platform.fhir_client.models.CoreResourceModel;
+import platform.fhir_client.models.PayeeModel;
 
 /**
  * A Payee.
@@ -35,7 +38,6 @@ public class Payee implements Serializable {
     @JsonIgnoreProperties(value = { "contacts", "address" }, allowSetters = true)
     private Organization partyOrganization;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
     }
@@ -88,8 +90,6 @@ public class Payee implements Serializable {
         this.partyOrganization = organization;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -103,16 +103,42 @@ public class Payee implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        // see
+        // https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
     }
 
     // prettier-ignore
     @Override
     public String toString() {
-        return "Payee{" +
-            "id=" + getId() +
-            ", type='" + getType() + "'" +
-            "}";
+        return "Payee{" + "id=" + getId() + ", type='" + getType() + "'" + "}";
+    }
+
+    public PayeeModel convert(ArrayList<CoreResourceModel> coreResources) {
+        PayeeModel p = new PayeeModel();
+        if (this.getPartyOrganization() != null) {
+            p.setPartyOrganization(this.getPartyOrganization().convert(coreResources));
+        }
+        if (this.getPartyPatient() != null) {
+            p.setPartyPatient(this.getPartyPatient().convert(coreResources));
+        }
+        if (this.getType() != null) {
+            p.setType(this.getType().convert());
+        }
+        return p;
+    }
+
+    public static Payee convertFrom(PayeeModel model) {
+        Payee p = new Payee();
+        if (model.getPartyOrganization() != null) {
+            p.setPartyOrganization(Organization.convertFrom(model.getPartyOrganization()));
+        }
+        if (model.getPartyPatient() != null) {
+            p.setPartyPatient(Patient.convertFrom(model.getPartyPatient()));
+        }
+        if (model.getType() != null) {
+            p.setType(PayeeTypeEnum.valueOf(model.getType().name()));
+        }
+        return p;
     }
 }

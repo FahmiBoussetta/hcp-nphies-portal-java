@@ -67,6 +67,13 @@
       "relationshipName": "facility"
     },
     {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "coverageEligibilityResponse",
+      "otherEntityRelationshipName": "coverageEligibilityRequest",
+      "relationshipName": "coverageEligibilityResponse",
+      "ownerSide": true
+    },
+    {
       "relationshipType": "many-to-many",
       "otherEntityName": "coverage",
       "otherEntityRelationshipName": "coverageEligibilityRequests",

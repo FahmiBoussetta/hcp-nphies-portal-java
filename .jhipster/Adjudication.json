@@ -12,8 +12,7 @@
     },
     {
       "fieldName": "amount",
-      "fieldType": "Integer",
-      "fieldValidateRules": ["required"]
+      "fieldType": "BigDecimal"
     },
     {
       "fieldName": "value",

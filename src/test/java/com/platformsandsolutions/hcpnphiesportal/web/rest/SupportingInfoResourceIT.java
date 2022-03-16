@@ -42,6 +42,9 @@ class SupportingInfoResourceIT {
     private static final String DEFAULT_CODE_LOINC = "AAAAAAAAAA";
     private static final String UPDATED_CODE_LOINC = "BBBBBBBBBB";
 
+    private static final String DEFAULT_CODE_ICD = "AAAAAAAAAA";
+    private static final String UPDATED_CODE_ICD = "BBBBBBBBBB";
+
     private static final SupportingInfoCategoryEnum DEFAULT_CATEGORY = SupportingInfoCategoryEnum.Info;
     private static final SupportingInfoCategoryEnum UPDATED_CATEGORY = SupportingInfoCategoryEnum.Discharge;
 
@@ -96,6 +99,7 @@ class SupportingInfoResourceIT {
         SupportingInfo supportingInfo = new SupportingInfo()
             .sequence(DEFAULT_SEQUENCE)
             .codeLOINC(DEFAULT_CODE_LOINC)
+            .codeIcd(DEFAULT_CODE_ICD)
             .category(DEFAULT_CATEGORY)
             .codeVisit(DEFAULT_CODE_VISIT)
             .codeFdiOral(DEFAULT_CODE_FDI_ORAL)
@@ -118,6 +122,7 @@ class SupportingInfoResourceIT {
         SupportingInfo supportingInfo = new SupportingInfo()
             .sequence(UPDATED_SEQUENCE)
             .codeLOINC(UPDATED_CODE_LOINC)
+            .codeIcd(UPDATED_CODE_ICD)
             .category(UPDATED_CATEGORY)
             .codeVisit(UPDATED_CODE_VISIT)
             .codeFdiOral(UPDATED_CODE_FDI_ORAL)
@@ -152,6 +157,7 @@ class SupportingInfoResourceIT {
         SupportingInfo testSupportingInfo = supportingInfoList.get(supportingInfoList.size() - 1);
         assertThat(testSupportingInfo.getSequence()).isEqualTo(DEFAULT_SEQUENCE);
         assertThat(testSupportingInfo.getCodeLOINC()).isEqualTo(DEFAULT_CODE_LOINC);
+        assertThat(testSupportingInfo.getCodeIcd()).isEqualTo(DEFAULT_CODE_ICD);
         assertThat(testSupportingInfo.getCategory()).isEqualTo(DEFAULT_CATEGORY);
         assertThat(testSupportingInfo.getCodeVisit()).isEqualTo(DEFAULT_CODE_VISIT);
         assertThat(testSupportingInfo.getCodeFdiOral()).isEqualTo(DEFAULT_CODE_FDI_ORAL);
@@ -197,6 +203,7 @@ class SupportingInfoResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(supportingInfo.getId().intValue())))
             .andExpect(jsonPath("$.[*].sequence").value(hasItem(DEFAULT_SEQUENCE)))
             .andExpect(jsonPath("$.[*].codeLOINC").value(hasItem(DEFAULT_CODE_LOINC)))
+            .andExpect(jsonPath("$.[*].codeIcd").value(hasItem(DEFAULT_CODE_ICD)))
             .andExpect(jsonPath("$.[*].category").value(hasItem(DEFAULT_CATEGORY.toString())))
             .andExpect(jsonPath("$.[*].codeVisit").value(hasItem(DEFAULT_CODE_VISIT.toString())))
             .andExpect(jsonPath("$.[*].codeFdiOral").value(hasItem(DEFAULT_CODE_FDI_ORAL.toString())))
@@ -222,6 +229,7 @@ class SupportingInfoResourceIT {
             .andExpect(jsonPath("$.id").value(supportingInfo.getId().intValue()))
             .andExpect(jsonPath("$.sequence").value(DEFAULT_SEQUENCE))
             .andExpect(jsonPath("$.codeLOINC").value(DEFAULT_CODE_LOINC))
+            .andExpect(jsonPath("$.codeIcd").value(DEFAULT_CODE_ICD))
             .andExpect(jsonPath("$.category").value(DEFAULT_CATEGORY.toString()))
             .andExpect(jsonPath("$.codeVisit").value(DEFAULT_CODE_VISIT.toString()))
             .andExpect(jsonPath("$.codeFdiOral").value(DEFAULT_CODE_FDI_ORAL.toString()))
@@ -255,6 +263,7 @@ class SupportingInfoResourceIT {
         updatedSupportingInfo
             .sequence(UPDATED_SEQUENCE)
             .codeLOINC(UPDATED_CODE_LOINC)
+            .codeIcd(UPDATED_CODE_ICD)
             .category(UPDATED_CATEGORY)
             .codeVisit(UPDATED_CODE_VISIT)
             .codeFdiOral(UPDATED_CODE_FDI_ORAL)
@@ -279,6 +288,7 @@ class SupportingInfoResourceIT {
         SupportingInfo testSupportingInfo = supportingInfoList.get(supportingInfoList.size() - 1);
         assertThat(testSupportingInfo.getSequence()).isEqualTo(UPDATED_SEQUENCE);
         assertThat(testSupportingInfo.getCodeLOINC()).isEqualTo(UPDATED_CODE_LOINC);
+        assertThat(testSupportingInfo.getCodeIcd()).isEqualTo(UPDATED_CODE_ICD);
         assertThat(testSupportingInfo.getCategory()).isEqualTo(UPDATED_CATEGORY);
         assertThat(testSupportingInfo.getCodeVisit()).isEqualTo(UPDATED_CODE_VISIT);
         assertThat(testSupportingInfo.getCodeFdiOral()).isEqualTo(UPDATED_CODE_FDI_ORAL);
@@ -360,9 +370,9 @@ class SupportingInfoResourceIT {
 
         partialUpdatedSupportingInfo
             .codeLOINC(UPDATED_CODE_LOINC)
-            .codeFdiOral(UPDATED_CODE_FDI_ORAL)
-            .timingEnd(UPDATED_TIMING_END)
-            .valueBoolean(UPDATED_VALUE_BOOLEAN);
+            .codeVisit(UPDATED_CODE_VISIT)
+            .timing(UPDATED_TIMING)
+            .timingEnd(UPDATED_TIMING_END);
 
         restSupportingInfoMockMvc
             .perform(
@@ -378,12 +388,13 @@ class SupportingInfoResourceIT {
         SupportingInfo testSupportingInfo = supportingInfoList.get(supportingInfoList.size() - 1);
         assertThat(testSupportingInfo.getSequence()).isEqualTo(DEFAULT_SEQUENCE);
         assertThat(testSupportingInfo.getCodeLOINC()).isEqualTo(UPDATED_CODE_LOINC);
+        assertThat(testSupportingInfo.getCodeIcd()).isEqualTo(DEFAULT_CODE_ICD);
         assertThat(testSupportingInfo.getCategory()).isEqualTo(DEFAULT_CATEGORY);
-        assertThat(testSupportingInfo.getCodeVisit()).isEqualTo(DEFAULT_CODE_VISIT);
-        assertThat(testSupportingInfo.getCodeFdiOral()).isEqualTo(UPDATED_CODE_FDI_ORAL);
-        assertThat(testSupportingInfo.getTiming()).isEqualTo(DEFAULT_TIMING);
+        assertThat(testSupportingInfo.getCodeVisit()).isEqualTo(UPDATED_CODE_VISIT);
+        assertThat(testSupportingInfo.getCodeFdiOral()).isEqualTo(DEFAULT_CODE_FDI_ORAL);
+        assertThat(testSupportingInfo.getTiming()).isEqualTo(UPDATED_TIMING);
         assertThat(testSupportingInfo.getTimingEnd()).isEqualTo(UPDATED_TIMING_END);
-        assertThat(testSupportingInfo.getValueBoolean()).isEqualTo(UPDATED_VALUE_BOOLEAN);
+        assertThat(testSupportingInfo.getValueBoolean()).isEqualTo(DEFAULT_VALUE_BOOLEAN);
         assertThat(testSupportingInfo.getValueString()).isEqualTo(DEFAULT_VALUE_STRING);
         assertThat(testSupportingInfo.getReason()).isEqualTo(DEFAULT_REASON);
         assertThat(testSupportingInfo.getReasonMissingTooth()).isEqualTo(DEFAULT_REASON_MISSING_TOOTH);
@@ -404,6 +415,7 @@ class SupportingInfoResourceIT {
         partialUpdatedSupportingInfo
             .sequence(UPDATED_SEQUENCE)
             .codeLOINC(UPDATED_CODE_LOINC)
+            .codeIcd(UPDATED_CODE_ICD)
             .category(UPDATED_CATEGORY)
             .codeVisit(UPDATED_CODE_VISIT)
             .codeFdiOral(UPDATED_CODE_FDI_ORAL)
@@ -428,6 +440,7 @@ class SupportingInfoResourceIT {
         SupportingInfo testSupportingInfo = supportingInfoList.get(supportingInfoList.size() - 1);
         assertThat(testSupportingInfo.getSequence()).isEqualTo(UPDATED_SEQUENCE);
         assertThat(testSupportingInfo.getCodeLOINC()).isEqualTo(UPDATED_CODE_LOINC);
+        assertThat(testSupportingInfo.getCodeIcd()).isEqualTo(UPDATED_CODE_ICD);
         assertThat(testSupportingInfo.getCategory()).isEqualTo(UPDATED_CATEGORY);
         assertThat(testSupportingInfo.getCodeVisit()).isEqualTo(UPDATED_CODE_VISIT);
         assertThat(testSupportingInfo.getCodeFdiOral()).isEqualTo(UPDATED_CODE_FDI_ORAL);

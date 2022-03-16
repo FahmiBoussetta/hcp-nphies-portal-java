@@ -11,7 +11,7 @@ export const EntitiesMenu = props => (
     data-cy="entity"
     style={{ maxHeight: '80vh', overflow: 'auto' }}
   >
-    <>{/* to avoid warnings when empty */}</>
+    {/*
     <MenuItem icon="asterisk" to="/ack-error-messages">
       <Translate contentKey="global.menu.entities.ackErrorMessages" />
     </MenuItem>
@@ -68,17 +68,17 @@ export const EntitiesMenu = props => (
     </MenuItem>
     <MenuItem icon="asterisk" to="/list-specialty-enum">
       <Translate contentKey="global.menu.entities.listSpecialtyEnum" />
-    </MenuItem>
+    </MenuItem> */}
     <MenuItem icon="asterisk" to="/acknowledgement">
       <Translate contentKey="global.menu.entities.acknowledgement" />
     </MenuItem>
-    <MenuItem icon="asterisk" to="/address">
+    {/* <MenuItem icon="asterisk" to="/address">
       <Translate contentKey="global.menu.entities.address" />
-    </MenuItem>
+    </MenuItem> */}
     <MenuItem icon="asterisk" to="/claim">
       <Translate contentKey="global.menu.entities.claim" />
     </MenuItem>
-    <MenuItem icon="asterisk" to="/related">
+    {/* <MenuItem icon="asterisk" to="/related">
       <Translate contentKey="global.menu.entities.related" />
     </MenuItem>
     <MenuItem icon="asterisk" to="/payee">
@@ -104,11 +104,11 @@ export const EntitiesMenu = props => (
     </MenuItem>
     <MenuItem icon="asterisk" to="/sub-detail-item">
       <Translate contentKey="global.menu.entities.subDetailItem" />
-    </MenuItem>
+    </MenuItem> */}
     <MenuItem icon="asterisk" to="/claim-response">
       <Translate contentKey="global.menu.entities.claimResponse" />
     </MenuItem>
-    <MenuItem icon="asterisk" to="/adjudication-item">
+    {/* <MenuItem icon="asterisk" to="/adjudication-item">
       <Translate contentKey="global.menu.entities.adjudicationItem" />
     </MenuItem>
     <MenuItem icon="asterisk" to="/adjudication-detail-item">
@@ -122,11 +122,11 @@ export const EntitiesMenu = props => (
     </MenuItem>
     <MenuItem icon="asterisk" to="/total">
       <Translate contentKey="global.menu.entities.total" />
-    </MenuItem>
+    </MenuItem> */}
     <MenuItem icon="asterisk" to="/communication">
       <Translate contentKey="global.menu.entities.communication" />
     </MenuItem>
-    <MenuItem icon="asterisk" to="/attachment">
+    {/* <MenuItem icon="asterisk" to="/attachment">
       <Translate contentKey="global.menu.entities.attachment" />
     </MenuItem>
     <MenuItem icon="asterisk" to="/payload">
@@ -134,17 +134,17 @@ export const EntitiesMenu = props => (
     </MenuItem>
     <MenuItem icon="asterisk" to="/note">
       <Translate contentKey="global.menu.entities.note" />
-    </MenuItem>
+    </MenuItem> */}
     <MenuItem icon="asterisk" to="/communication-request">
       <Translate contentKey="global.menu.entities.communicationRequest" />
     </MenuItem>
-    <MenuItem icon="asterisk" to="/contact">
+    {/* <MenuItem icon="asterisk" to="/contact">
       <Translate contentKey="global.menu.entities.contact" />
-    </MenuItem>
+    </MenuItem> */}
     <MenuItem icon="asterisk" to="/coverage">
       <Translate contentKey="global.menu.entities.coverage" />
     </MenuItem>
-    <MenuItem icon="asterisk" to="/class-component">
+    {/* <MenuItem icon="asterisk" to="/class-component">
       <Translate contentKey="global.menu.entities.classComponent" />
     </MenuItem>
     <MenuItem icon="asterisk" to="/cost-to-beneficiary-component">
@@ -152,14 +152,14 @@ export const EntitiesMenu = props => (
     </MenuItem>
     <MenuItem icon="asterisk" to="/exemption-component">
       <Translate contentKey="global.menu.entities.exemptionComponent" />
-    </MenuItem>
+    </MenuItem> */}
     <MenuItem icon="asterisk" to="/coverage-eligibility-request">
       <Translate contentKey="global.menu.entities.coverageEligibilityRequest" />
     </MenuItem>
     <MenuItem icon="asterisk" to="/coverage-eligibility-response">
       <Translate contentKey="global.menu.entities.coverageEligibilityResponse" />
     </MenuItem>
-    <MenuItem icon="asterisk" to="/response-insurance">
+    {/* <MenuItem icon="asterisk" to="/response-insurance">
       <Translate contentKey="global.menu.entities.responseInsurance" />
     </MenuItem>
     <MenuItem icon="asterisk" to="/response-insurance-item">
@@ -167,16 +167,16 @@ export const EntitiesMenu = props => (
     </MenuItem>
     <MenuItem icon="asterisk" to="/insurance-benefit">
       <Translate contentKey="global.menu.entities.insuranceBenefit" />
-    </MenuItem>
+    </MenuItem> */}
     <MenuItem icon="asterisk" to="/encounter">
       <Translate contentKey="global.menu.entities.encounter" />
     </MenuItem>
-    <MenuItem icon="asterisk" to="/hospitalization">
+    {/* <MenuItem icon="asterisk" to="/hospitalization">
       <Translate contentKey="global.menu.entities.hospitalization" />
     </MenuItem>
     <MenuItem icon="asterisk" to="/human-name">
       <Translate contentKey="global.menu.entities.humanName" />
-    </MenuItem>
+    </MenuItem> */}
     <MenuItem icon="asterisk" to="/location">
       <Translate contentKey="global.menu.entities.location" />
     </MenuItem>
@@ -195,9 +195,9 @@ export const EntitiesMenu = props => (
     <MenuItem icon="asterisk" to="/payment-reconciliation">
       <Translate contentKey="global.menu.entities.paymentReconciliation" />
     </MenuItem>
-    <MenuItem icon="asterisk" to="/reconciliation-detail-item">
+    {/* <MenuItem icon="asterisk" to="/reconciliation-detail-item">
       <Translate contentKey="global.menu.entities.reconciliationDetailItem" />
-    </MenuItem>
+    </MenuItem> */}
     <MenuItem icon="asterisk" to="/practitioner">
       <Translate contentKey="global.menu.entities.practitioner" />
     </MenuItem>
@@ -207,24 +207,23 @@ export const EntitiesMenu = props => (
     <MenuItem icon="asterisk" to="/reference-identifier">
       <Translate contentKey="global.menu.entities.referenceIdentifier" />
     </MenuItem>
-    <MenuItem icon="asterisk" to="/supporting-info">
+    {/* <MenuItem icon="asterisk" to="/supporting-info">
       <Translate contentKey="global.menu.entities.supportingInfo" />
     </MenuItem>
     <MenuItem icon="asterisk" to="/quantity">
       <Translate contentKey="global.menu.entities.quantity" />
-    </MenuItem>
+    </MenuItem> */}
     <MenuItem icon="asterisk" to="/task">
       <Translate contentKey="global.menu.entities.task" />
     </MenuItem>
-    <MenuItem icon="asterisk" to="/task-input">
+    {/* <MenuItem icon="asterisk" to="/task-input">
       <Translate contentKey="global.menu.entities.taskInput" />
-    </MenuItem>
+    </MenuItem> */}
     <MenuItem icon="asterisk" to="/task-response">
       <Translate contentKey="global.menu.entities.taskResponse" />
     </MenuItem>
-    <MenuItem icon="asterisk" to="/task-output">
+    {/* <MenuItem icon="asterisk" to="/task-output">
       <Translate contentKey="global.menu.entities.taskOutput" />
-    </MenuItem>
-    {/* jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here */}
+    </MenuItem> */}
   </NavDropdown>
 );

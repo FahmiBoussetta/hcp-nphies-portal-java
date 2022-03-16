@@ -42,6 +42,12 @@ export const SupportingInfoDetail = (props: RouteComponentProps<{ id: string }>)
           </dt>
           <dd>{supportingInfoEntity.codeLOINC}</dd>
           <dt>
+            <span id="codeIcd">
+              <Translate contentKey="hcpNphiesPortalApp.supportingInfo.codeIcd">Code Icd</Translate>
+            </span>
+          </dt>
+          <dd>{supportingInfoEntity.codeIcd}</dd>
+          <dt>
             <span id="category">
               <Translate contentKey="hcpNphiesPortalApp.supportingInfo.category">Category</Translate>
             </span>

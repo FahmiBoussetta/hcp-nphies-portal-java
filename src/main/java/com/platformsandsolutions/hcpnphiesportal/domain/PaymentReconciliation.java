@@ -51,7 +51,7 @@ public class PaymentReconciliation implements Serializable {
     @Column(name = "payment_identifier")
     private String paymentIdentifier;
 
-    @OneToMany(mappedBy = "paymentReconciliation")
+    @OneToMany(mappedBy = "paymentReconciliation", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "request", "submitter", "response", "payee", "paymentReconciliation" }, allowSetters = true)
     private Set<ReconciliationDetailItem> details = new HashSet<>();
@@ -60,12 +60,23 @@ public class PaymentReconciliation implements Serializable {
     @JsonIgnoreProperties(value = { "contacts", "address" }, allowSetters = true)
     private Organization paymentIssuer;
 
-    @OneToMany(mappedBy = "payment")
+    @OneToMany(mappedBy = "payment", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "errors", "payment" }, allowSetters = true)
     private Set<PaymentNotice> paymentNotices = new HashSet<>();
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here
+    @ManyToMany(mappedBy = "payRecIdentifiers")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    private Set<ReferenceIdentifier> identifiers = new HashSet<>();
+
+    public Set<ReferenceIdentifier> getIdentifiers() {
+        return identifiers;
+    }
+
+    public void setIdentifiers(Set<ReferenceIdentifier> identifiers) {
+        this.identifiers = identifiers;
+    }
+
     public Long getId() {
         return id;
     }
@@ -271,8 +282,6 @@ public class PaymentReconciliation implements Serializable {
         this.paymentNotices = paymentNotices;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -286,24 +295,18 @@ public class PaymentReconciliation implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        // see
+        // https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
     }
 
     // prettier-ignore
     @Override
     public String toString() {
-        return "PaymentReconciliation{" +
-            "id=" + getId() +
-            ", value='" + getValue() + "'" +
-            ", system='" + getSystem() + "'" +
-            ", parsed='" + getParsed() + "'" +
-            ", periodStart='" + getPeriodStart() + "'" +
-            ", periodEnd='" + getPeriodEnd() + "'" +
-            ", outcome='" + getOutcome() + "'" +
-            ", disposition='" + getDisposition() + "'" +
-            ", paymentAmount=" + getPaymentAmount() +
-            ", paymentIdentifier='" + getPaymentIdentifier() + "'" +
-            "}";
+        return "PaymentReconciliation{" + "id=" + getId() + ", value='" + getValue() + "'" + ", system='" + getSystem()
+                + "'" + ", parsed='" + getParsed() + "'" + ", periodStart='" + getPeriodStart() + "'" + ", periodEnd='"
+                + getPeriodEnd() + "'" + ", outcome='" + getOutcome() + "'" + ", disposition='" + getDisposition() + "'"
+                + ", paymentAmount=" + getPaymentAmount() + ", paymentIdentifier='" + getPaymentIdentifier() + "'"
+                + "}";
     }
 }

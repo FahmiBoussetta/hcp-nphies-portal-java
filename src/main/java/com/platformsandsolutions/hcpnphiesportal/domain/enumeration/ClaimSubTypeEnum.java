@@ -1,5 +1,7 @@
 package com.platformsandsolutions.hcpnphiesportal.domain.enumeration;
 
+import platform.fhir_client.utils.Enums;
+
 /**
  * The ClaimSubTypeEnum enumeration.
  */
@@ -16,5 +18,14 @@ public enum ClaimSubTypeEnum {
 
     public String getValue() {
         return value;
+    }
+
+    public Enums.ClaimSubTypeEnum convert() {
+        for (Enums.ClaimSubTypeEnum e : Enums.ClaimSubTypeEnum.values()) {
+            if (e.getDescription() == this.getValue()) {
+                return e;
+            }
+        }
+        return null;
     }
 }

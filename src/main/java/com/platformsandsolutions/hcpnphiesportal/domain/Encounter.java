@@ -6,9 +6,18 @@ import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.EncounterCla
 import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.ServiceTypeEnum;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
 import javax.persistence.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import platform.fhir_client.models.CoreResourceModel;
+import platform.fhir_client.models.EncounterModel;
+import platform.fhir_client.models.IdentifierModel;
 
 /**
  * A Encounter.
@@ -55,7 +64,7 @@ public class Encounter implements Serializable {
     @JsonIgnoreProperties(value = { "names", "contacts", "address" }, allowSetters = true)
     private Patient subject;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JsonIgnoreProperties(value = { "origin" }, allowSetters = true)
     private Hospitalization hospitalization;
 
@@ -63,7 +72,18 @@ public class Encounter implements Serializable {
     @JsonIgnoreProperties(value = { "contacts", "address" }, allowSetters = true)
     private Organization serviceProvider;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here
+    @ManyToMany(mappedBy = "encounterIdentifiers")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    private Set<ReferenceIdentifier> identifiers = new HashSet<>();
+
+    public Set<ReferenceIdentifier> getIdentifiers() {
+        return identifiers;
+    }
+
+    public void setIdentifiers(Set<ReferenceIdentifier> identifiers) {
+        this.identifiers = identifiers;
+    }
+
     public Long getId() {
         return id;
     }
@@ -220,8 +240,6 @@ public class Encounter implements Serializable {
         this.serviceProvider = organization;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -235,23 +253,102 @@ public class Encounter implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        // see
+        // https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
     }
 
     // prettier-ignore
     @Override
     public String toString() {
-        return "Encounter{" +
-            "id=" + getId() +
-            ", guid='" + getGuid() + "'" +
-            ", forceId='" + getForceId() + "'" +
-            ", identifier='" + getIdentifier() + "'" +
-            ", encounterClass='" + getEncounterClass() + "'" +
-            ", start='" + getStart() + "'" +
-            ", end='" + getEnd() + "'" +
-            ", serviceType='" + getServiceType() + "'" +
-            ", priority='" + getPriority() + "'" +
-            "}";
+        return "Encounter{" + "id=" + getId() + ", guid='" + getGuid() + "'" + ", forceId='" + getForceId() + "'"
+                + ", identifier='" + getIdentifier() + "'" + ", encounterClass='" + getEncounterClass() + "'"
+                + ", start='" + getStart() + "'" + ", end='" + getEnd() + "'" + ", serviceType='" + getServiceType()
+                + "'" + ", priority='" + getPriority() + "'" + "}";
+    }
+
+    public EncounterModel convert(ArrayList<CoreResourceModel> coreResources) {
+        if (coreResources.stream().anyMatch(x -> x.getId() == UUID.fromString(this.getGuid()))) {
+            return (EncounterModel) coreResources.stream().filter(x -> x.getId() == UUID.fromString(this.getGuid())).findFirst().get();
+        }
+        EncounterModel e = new EncounterModel();
+        if (this.getGuid() != null) {
+            e.setId(UUID.fromString(this.getGuid()));
+        }
+        if (this.getIdentifier() != null) {
+            IdentifierModel i = new IdentifierModel();
+            i.setValue("enc-" + this.getIdentifier());
+            e.addIdentifier(i);
+        }
+        if (this.getEncounterClass() != null) {
+            e.setClass(this.getEncounterClass().convert());
+        }
+        if (this.getEnd() != null) {
+            e.setEnd(Date.from(this.getEnd()));
+        }
+        if (this.getForceId() != null) {
+            e.setForceId(this.getForceId());
+        }
+        if (this.getHospitalization() != null) {
+            e.setHospitalization(this.getHospitalization().convert(coreResources));
+        }
+        if (this.getPriority() != null) {
+            e.setPriority(this.getPriority().convert());
+        }
+        if (this.getServiceProvider() != null) {
+            e.setServiceProvider(this.getServiceProvider().convert(coreResources));
+        }
+        if (this.getServiceType() != null) {
+            e.setServiceType(this.getServiceType().convert());
+        }
+        if (this.getStart() != null) {
+            e.setStart(Date.from(this.getStart()));
+        }
+        if (this.getSubject() != null) {
+            e.setSubject(this.getSubject().convert(coreResources));
+        }
+        coreResources.add(e);
+        return e;
+    }
+
+    public static Encounter convertFrom(EncounterModel model) {
+        Encounter e = new Encounter();
+        if (model.getIdentifiers() != null) {
+            e.setIdentifiers(model.getIdentifiers().stream().map(i -> ReferenceIdentifier.convertFrom(i)).collect(Collectors.toSet()));
+        }
+        if (model.getId() != null) {
+            e.setGuid(model.getId().toString());
+        }
+        if (model.getIdentifiers() != null) {
+            e.setIdentifier(model.getIdentifiers().get(0).getValue());
+        }
+        if (model.getClass_() != null) {
+            e.setEncounterClass(EncounterClassEnum.valueOf(model.getClass_().name()));
+        }
+        if (model.getEnd() != null) {
+            e.setEnd(model.getEnd().toInstant());
+        }
+        if (model.getForceId() != null) {
+            e.setForceId(model.getForceId());
+        }
+        if (model.getHospitalization() != null) {
+            e.setHospitalization(Hospitalization.convertFrom(model.getHospitalization()));
+        }
+        if (model.getPriority() != null) {
+            e.setPriority(ActPriorityEnum.valueOf(model.getPriority().name()));
+        }
+        if (model.getServiceProvider() != null) {
+            e.setServiceProvider(Organization.convertFrom(model.getServiceProvider()));
+        }
+        if (model.getServiceType() != null) {
+            e.setServiceType(ServiceTypeEnum.valueOf(model.getServiceType().name()));
+        }
+        if (model.getStart() != null) {
+            e.setStart(model.getStart().toInstant());
+        }
+        if (model.getSubject() != null) {
+            e.setSubject(Patient.convertFrom(model.getSubject()));
+        }
+        return e;
     }
 }

@@ -3,10 +3,23 @@ package com.platformsandsolutions.hcpnphiesportal.domain;
 import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.AccidentTypeEnum;
 import java.io.Serializable;
 import java.time.Instant;
-import javax.persistence.*;
-import javax.validation.constraints.*;
+import java.util.ArrayList;
+import java.util.Date;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import platform.fhir_client.models.AccidentModel;
+import platform.fhir_client.models.CoreResourceModel;
 
 /**
  * A Accident.
@@ -31,10 +44,9 @@ public class Accident implements Serializable {
     @Column(name = "type", nullable = false)
     private AccidentTypeEnum type;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private Address location;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
     }
@@ -87,8 +99,6 @@ public class Accident implements Serializable {
         this.location = address;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -102,17 +112,42 @@ public class Accident implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        // see
+        // https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
     }
 
     // prettier-ignore
     @Override
     public String toString() {
-        return "Accident{" +
-            "id=" + getId() +
-            ", date='" + getDate() + "'" +
-            ", type='" + getType() + "'" +
-            "}";
+        return "Accident{" + "id=" + getId() + ", date='" + getDate() + "'" + ", type='" + getType() + "'" + "}";
+    }
+
+    public AccidentModel convert(ArrayList<CoreResourceModel> coreResources) {
+        AccidentModel acc = new AccidentModel();
+        if (this.getDate() != null) {
+            acc.setDate(Date.from(this.getDate()));
+        }
+        if (this.getLocation() != null) {
+            acc.setLocation(this.getLocation().convert());
+        }
+        if (this.getType() != null) {
+            acc.setType(this.getType().convert());
+        }
+        return acc;
+    }
+
+    public static Accident convertFrom(AccidentModel model) {
+        Accident acc = new Accident();
+        if (model.getDate() != null) {
+            acc.setDate(model.getDate().toInstant());
+        }
+        if (model.getLocation() != null) {
+            acc.setLocation(Address.convertFrom(model.getLocation()));
+        }
+        if (model.getType() != null) {
+            acc.setType(AccidentTypeEnum.valueOf(model.getType().name()));
+        }
+        return acc;
     }
 }

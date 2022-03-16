@@ -1,5 +1,7 @@
 package com.platformsandsolutions.hcpnphiesportal.domain.enumeration;
 
+import platform.fhir_client.utils.Enums;
+
 /**
  * The RoleCodeEnum enumeration.
  */
@@ -22,5 +24,14 @@ public enum RoleCodeEnum {
 
     public String getValue() {
         return value;
+    }
+
+    public Enums.RoleCodeEnum convert() {
+        for (Enums.RoleCodeEnum e : Enums.RoleCodeEnum.values()) {
+            if (e.getDescription() == this.getValue()) {
+                return e;
+            }
+        }
+        return null;
     }
 }

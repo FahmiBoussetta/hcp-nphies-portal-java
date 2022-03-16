@@ -23,7 +23,7 @@ public class AdjudicationDetailNotes implements Serializable {
     @Column(name = "note")
     private String note;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JsonIgnoreProperties(value = { "notes", "adjudications", "subDetails", "adjudicationItem" }, allowSetters = true)
     private AdjudicationDetailItem adjudicationDetailItem;
 
@@ -67,7 +67,8 @@ public class AdjudicationDetailNotes implements Serializable {
         this.adjudicationDetailItem = adjudicationDetailItem;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and
+    // setters here
 
     @Override
     public boolean equals(Object o) {
@@ -82,7 +83,8 @@ public class AdjudicationDetailNotes implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        // see
+        // https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
     }
 
@@ -90,8 +92,14 @@ public class AdjudicationDetailNotes implements Serializable {
     @Override
     public String toString() {
         return "AdjudicationDetailNotes{" +
-            "id=" + getId() +
-            ", note='" + getNote() + "'" +
-            "}";
+                "id=" + getId() +
+                ", note='" + getNote() + "'" +
+                "}";
+    }
+
+    public static AdjudicationDetailNotes convertFrom(Integer y) {
+        AdjudicationDetailNotes n = new AdjudicationDetailNotes();
+        n.setNote(y.toString());
+        return n;
     }
 }

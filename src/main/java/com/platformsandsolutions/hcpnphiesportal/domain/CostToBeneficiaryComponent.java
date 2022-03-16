@@ -39,7 +39,7 @@ public class CostToBeneficiaryComponent implements Serializable {
     @Column(name = "value", precision = 21, scale = 2, nullable = false)
     private BigDecimal value;
 
-    @OneToMany(mappedBy = "costToBeneficiary", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "costToBeneficiary", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "costToBeneficiary" }, allowSetters = true)
     private Set<ExemptionComponent> exceptions = new HashSet<>();
@@ -53,7 +53,6 @@ public class CostToBeneficiaryComponent implements Serializable {
     )
     private Coverage coverage;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
     }
@@ -150,8 +149,6 @@ public class CostToBeneficiaryComponent implements Serializable {
         this.coverage = coverage;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -165,27 +162,49 @@ public class CostToBeneficiaryComponent implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        // see
+        // https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
     }
 
     // prettier-ignore
     @Override
     public String toString() {
-        return "CostToBeneficiaryComponent{" +
-            "id=" + getId() +
-            ", type='" + getType() + "'" +
-            ", isMoney='" + getIsMoney() + "'" +
-            ", value=" + getValue() +
-            "}";
+        return "CostToBeneficiaryComponent{" + "id=" + getId() + ", type='" + getType() + "'" + ", isMoney='"
+                + getIsMoney() + "'" + ", value=" + getValue() + "}";
     }
 
     public CostToBeneficiaryComponentModel convert() {
         CostToBeneficiaryComponentModel model = new CostToBeneficiaryComponentModel();
-        model.setExceptions(this.getExceptions().stream().map(i -> i.convert()).collect(Collectors.toCollection(ArrayList::new)));
-        model.setIsMoney(this.getIsMoney());
-        model.setType(this.getType().convert());
-        model.setValue(this.getValue());
+        if (this.getExceptions() != null) {
+            model.setExceptions(this.getExceptions().stream().map(i -> i.convert()).collect(Collectors.toCollection(ArrayList::new)));
+        }
+        if (this.getIsMoney() != null) {
+            model.setIsMoney(this.getIsMoney());
+        }
+        if (this.getType() != null) {
+            model.setType(this.getType().convert());
+        }
+        if (this.getValue() != null) {
+            model.setValue(this.getValue());
+        }
         return model;
+    }
+
+    public static CostToBeneficiaryComponent convertFrom(CostToBeneficiaryComponentModel model) {
+        CostToBeneficiaryComponent c = new CostToBeneficiaryComponent();
+        if (model.getExceptions() != null) {
+            c.setExceptions(model.getExceptions().stream().map(i -> ExemptionComponent.convertFrom(i)).collect(Collectors.toSet()));
+        }
+        if (model.getIsMoney() != null) {
+            c.setIsMoney(model.getIsMoney());
+        }
+        if (model.getType() != null) {
+            c.setType(CostToBeneficiaryTypeEnum.valueOf(model.getType().name()));
+        }
+        if (model.getValue() != null) {
+            c.setValue(model.getValue());
+        }
+        return c;
     }
 }

@@ -142,17 +142,6 @@ export const ItemUpdate = (props: RouteComponentProps<{ id: string }>) => {
                 }}
               />
               <ValidatedField
-                label={translate('hcpNphiesPortalApp.item.careTeamSequence')}
-                id="item-careTeamSequence"
-                name="careTeamSequence"
-                data-cy="careTeamSequence"
-                type="text"
-                validate={{
-                  required: { value: true, message: translate('entity.validation.required') },
-                  validate: v => isNumber(v) || translate('entity.validation.number'),
-                }}
-              />
-              <ValidatedField
                 label={translate('hcpNphiesPortalApp.item.transportationSRCA')}
                 id="item-transportationSRCA"
                 name="transportationSRCA"

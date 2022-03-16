@@ -217,7 +217,8 @@ class TaskResourceIT {
 
         // Update the task
         Task updatedTask = taskRepository.findById(task.getId()).get();
-        // Disconnect from session so that the updates on updatedTask are not directly saved in db
+        // Disconnect from session so that the updates on updatedTask are not directly
+        // saved in db
         em.detach(updatedTask);
         updatedTask
             .guid(UPDATED_GUID)

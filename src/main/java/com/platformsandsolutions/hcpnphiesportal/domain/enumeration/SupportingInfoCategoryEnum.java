@@ -1,5 +1,7 @@
 package com.platformsandsolutions.hcpnphiesportal.domain.enumeration;
 
+import platform.fhir_client.utils.Enums;
+
 /**
  * The SupportingInfoCategoryEnum enumeration.
  */
@@ -15,7 +17,7 @@ public enum SupportingInfoCategoryEnum {
     Prosthesis("Prosthesis"),
     Other("Other"),
     Hospitalized("Hospitalized"),
-    EmploymentImpacted("EmploymentImpacted"),
+    EmploymentImpacted("Employment Impacted"),
     External_Cause("External Caause"),
     Patient_Reason_for_Visit("Patient Reason for Visit"),
     Lab_test("lab-test"),
@@ -26,7 +28,8 @@ public enum SupportingInfoCategoryEnum {
     Vital_Sign_Diastolic("Vital Sign Diastolic"),
     Icu_hours("ICU Hours"),
     Ventilation_hours("Ventilation Hours"),
-    Vital_Sign_Height("Vital Sign Height");
+    Vital_Sign_Height("Vital Sign Height"),
+    Chief_complaint("Chief complaint");
 
     private final String value;
 
@@ -36,5 +39,14 @@ public enum SupportingInfoCategoryEnum {
 
     public String getValue() {
         return value;
+    }
+
+    public Enums.SupportingInfoCategoryEnum convert() {
+        for (Enums.SupportingInfoCategoryEnum e : Enums.SupportingInfoCategoryEnum.values()) {
+            if (e.getDescription() == this.getValue()) {
+                return e;
+            }
+        }
+        return null;
     }
 }

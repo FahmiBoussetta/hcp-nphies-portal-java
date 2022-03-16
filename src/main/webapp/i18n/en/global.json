@@ -1,12 +1,12 @@
 {
   "global": {
-    "title": "HcpNphiesPortal",
+    "title": "Provider onBoarding",
     "browsehappy": "You are using an <strong>outdated</strong> browser. Please <a href=\"http://browsehappy.com/?locale=en\">upgrade your browser</a> to improve your experience.",
     "menu": {
       "home": "Home",
       "jhipster-needle-menu-add-element": "JHipster will add additional menu entries here (do not translate!)",
       "entities": {
-        "main": "Entities",
+        "main": "Resources",
         "ackErrorMessages": "Ack Error Messages",
         "claimErrorMessages": "Claim Error Messages",
         "crErrorMessages": "CR Error Messages",
@@ -15,6 +15,7 @@
         "covEliRespErrorMessages": "Cov Eli Resp Error Messages",
         "opeOutErrorMessages": "Ope Out Error Messages",
         "payNotErrorMessages": "Pay Not Error Messages",
+        "careTeamSequence": "Care Team Sequence",
         "diagnosisSequence": "Diagnosis Sequence",
         "informationSequence": "Information Sequence",
         "adjudicationNotes": "Adjudication Notes",
@@ -163,6 +164,12 @@
       "addblob": "Add blob",
       "addimage": "Add image",
       "addgiven": "Add given",
+      "addrelated": "Add related",
+      "addcareTeam": "Add careteam",
+      "addinsurance": "Add insurance",
+      "addsupportingInfo": "Add supporting info",
+      "adddiagnosis": "Add diagnosis",
+      "additem": "Add item",
       "addname": "Add name",
       "addclass": "Add class",
       "addcost": "Add cost",
@@ -177,6 +184,9 @@
       "deletecost": "Delete cost",
       "deleteexemption": "Delete exception",
       "deletecoverage": "Delete coverage",
+      "deleterelated": "Delete related",
+      "deletelatest": "Delete latest",
+      "deleteudi": "Delete udi",
       "edit": "Edit",
       "open": "Open",
       "save": "Save",
@@ -223,5 +233,5 @@
       "not.image": "File was expected to be an image but was found to be \"{{ fileType }}\""
     }
   },
-  "footer": "This is your footer"
+  "footer": ""
 }

@@ -58,6 +58,7 @@
             <column name="force_id" type="string"/>
             <column name="start" type="${datetimeType}"/>
             <column name="end" type="${datetimeType}"/>
+            <column name="practitioner_id" type="numeric"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
     </changeSet>

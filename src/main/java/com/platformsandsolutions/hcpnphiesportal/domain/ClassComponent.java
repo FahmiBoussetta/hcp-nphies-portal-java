@@ -3,6 +3,7 @@ package com.platformsandsolutions.hcpnphiesportal.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.ClassTypeEnum;
 import java.io.Serializable;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -52,7 +53,6 @@ public class ClassComponent implements Serializable {
     )
     private Coverage coverage;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
     }
@@ -118,8 +118,6 @@ public class ClassComponent implements Serializable {
         this.coverage = coverage;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -133,26 +131,43 @@ public class ClassComponent implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        // see
+        // https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
     }
 
     // prettier-ignore
     @Override
     public String toString() {
-        return "ClassComponent{" +
-            "id=" + getId() +
-            ", type='" + getType() + "'" +
-            ", value='" + getValue() + "'" +
-            ", name='" + getName() + "'" +
-            "}";
+        return "ClassComponent{" + "id=" + getId() + ", type='" + getType() + "'" + ", value='" + getValue() + "'"
+                + ", name='" + getName() + "'" + "}";
     }
 
     public ClassComponentModel convert() {
         ClassComponentModel model = new ClassComponentModel();
-        model.setName(this.getName());
-        model.setType(this.getType().convert());
-        model.setValue(this.getValue());
+        if (this.getName() != null) {
+            model.setName(this.getName());
+        }
+        if (this.getType() != null) {
+            model.setType(this.getType().convert());
+        }
+        if (this.getValue() != null) {
+            model.setValue(this.getValue());
+        }
         return model;
+    }
+
+    public static ClassComponent convertFrom(ClassComponentModel model) {
+        ClassComponent c = new ClassComponent();
+        if (model.getName() != null) {
+            c.setName(model.getName());
+        }
+        if (model.getType() != null) {
+            c.setType(ClassTypeEnum.valueOf(model.getType().name()));
+        }
+        if (model.getValue() != null) {
+            c.setValue(model.getValue());
+        }
+        return c;
     }
 }

@@ -20,7 +20,7 @@ public class LoggingConfiguration {
 
     public LoggingConfiguration(
         @Value("${spring.application.name}") String appName,
-        @Value("${server.port}") String serverPort,
+        @Value("${spring.application.name}") String serverPort,
         JHipsterProperties jHipsterProperties,
         ObjectMapper mapper
     ) throws JsonProcessingException {
@@ -28,7 +28,7 @@ public class LoggingConfiguration {
 
         Map<String, String> map = new HashMap<>();
         map.put("app_name", appName);
-        map.put("app_port", serverPort);
+        map.put("app_port", "10344");
         String customFields = mapper.writeValueAsString(map);
 
         JHipsterProperties.Logging loggingProperties = jHipsterProperties.getLogging();

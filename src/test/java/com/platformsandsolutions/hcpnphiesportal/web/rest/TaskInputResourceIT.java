@@ -2,14 +2,18 @@ package com.platformsandsolutions.hcpnphiesportal.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.platformsandsolutions.hcpnphiesportal.IntegrationTest;
 import com.platformsandsolutions.hcpnphiesportal.domain.TaskInput;
 import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.EventCodingEnum;
-import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.EventCodingEnum;
-import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.ResourceTypeEnum;
 import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.ResourceTypeEnum;
 import com.platformsandsolutions.hcpnphiesportal.repository.TaskInputRepository;
 import java.time.Instant;
@@ -221,7 +225,8 @@ class TaskInputResourceIT {
 
         // Update the taskInput
         TaskInput updatedTaskInput = taskInputRepository.findById(taskInput.getId()).get();
-        // Disconnect from session so that the updates on updatedTaskInput are not directly saved in db
+        // Disconnect from session so that the updates on updatedTaskInput are not
+        // directly saved in db
         em.detach(updatedTaskInput);
         updatedTaskInput
             .inputInclude(UPDATED_INPUT_INCLUDE)

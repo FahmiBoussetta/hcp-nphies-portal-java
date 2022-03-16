@@ -12,6 +12,7 @@ import CovEliErrorMessages from './cov-eli-error-messages';
 import CovEliRespErrorMessages from './cov-eli-resp-error-messages';
 import OpeOutErrorMessages from './ope-out-error-messages';
 import PayNotErrorMessages from './pay-not-error-messages';
+import CareTeamSequence from './care-team-sequence';
 import DiagnosisSequence from './diagnosis-sequence';
 import InformationSequence from './information-sequence';
 import AdjudicationNotes from './adjudication-notes';
@@ -89,6 +90,7 @@ const Routes = ({ match }) => (
       <ErrorBoundaryRoute path={`${match.url}cov-eli-resp-error-messages`} component={CovEliRespErrorMessages} />
       <ErrorBoundaryRoute path={`${match.url}ope-out-error-messages`} component={OpeOutErrorMessages} />
       <ErrorBoundaryRoute path={`${match.url}pay-not-error-messages`} component={PayNotErrorMessages} />
+      <ErrorBoundaryRoute path={`${match.url}care-team-sequence`} component={CareTeamSequence} />
       <ErrorBoundaryRoute path={`${match.url}diagnosis-sequence`} component={DiagnosisSequence} />
       <ErrorBoundaryRoute path={`${match.url}information-sequence`} component={InformationSequence} />
       <ErrorBoundaryRoute path={`${match.url}adjudication-notes`} component={AdjudicationNotes} />

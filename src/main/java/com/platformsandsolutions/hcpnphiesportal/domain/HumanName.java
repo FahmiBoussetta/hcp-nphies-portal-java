@@ -6,8 +6,18 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.persistence.*;
-import javax.validation.constraints.*;
+import java.util.stream.IntStream;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import platform.fhir_client.models.HumanNameModel;
@@ -30,7 +40,7 @@ public class HumanName implements Serializable {
     @Column(name = "family", nullable = false)
     private String family;
 
-    @OneToMany(mappedBy = "human", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "human", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "human" }, allowSetters = true)
     private Set<Givens> givens = new HashSet<>();
@@ -43,7 +53,6 @@ public class HumanName implements Serializable {
     @JsonIgnoreProperties(value = { "names" }, allowSetters = true)
     private Practitioner practitioner;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
     }
@@ -127,8 +136,6 @@ public class HumanName implements Serializable {
         this.practitioner = practitioner;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -142,17 +149,15 @@ public class HumanName implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        // see
+        // https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
     }
 
     // prettier-ignore
     @Override
     public String toString() {
-        return "HumanName{" +
-            "id=" + getId() +
-            ", family='" + getFamily() + "'" +
-            "}";
+        return "HumanName{" + "id=" + getId() + ", family='" + getFamily() + "'" + "}";
     }
 
     public HumanNameModel convert() {
@@ -161,6 +166,32 @@ public class HumanName implements Serializable {
         name.setGiven(this.getGivens().stream().map(i -> i.getGiven()).collect(Collectors.toCollection(ArrayList::new)));
         name.setPrefix(this.getGivens().stream().map(i -> i.getPrefix()).collect(Collectors.toCollection(ArrayList::new)));
         name.setSuffix(this.getGivens().stream().map(i -> i.getSuffix()).collect(Collectors.toCollection(ArrayList::new)));
+        return name;
+    }
+
+    public static HumanName convertFrom(HumanNameModel model) {
+        HumanName name = new HumanName();
+        name.setFamily(model.getFamily());
+        name.setGivens(
+            IntStream
+                .range(0, model.getGiven().size())
+                .mapToObj(
+                    index -> {
+                        Givens g = new Givens();
+                        if (model.getGiven() != null) {
+                            g.setGiven(model.getGiven().get(index));
+                        }
+                        if (model.getPrefix() != null) {
+                            g.setPrefix(model.getPrefix().get(index));
+                        }
+                        if (model.getSuffix() != null) {
+                            g.setSuffix(model.getSuffix().get(index));
+                        }
+                        return g;
+                    }
+                )
+                .collect(Collectors.toSet())
+        );
         return name;
     }
 }

@@ -5,6 +5,7 @@ import java.io.Serializable;
 import javax.persistence.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import platform.fhir_client.models.ClaimResponseErrorModel;
 
 /**
  * A CRErrorMessages.
@@ -67,7 +68,8 @@ public class CRErrorMessages implements Serializable {
         this.claimResponse = claimResponse;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and
+    // setters here
 
     @Override
     public boolean equals(Object o) {
@@ -82,7 +84,8 @@ public class CRErrorMessages implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        // see
+        // https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
     }
 
@@ -90,8 +93,16 @@ public class CRErrorMessages implements Serializable {
     @Override
     public String toString() {
         return "CRErrorMessages{" +
-            "id=" + getId() +
-            ", message='" + getMessage() + "'" +
-            "}";
+                "id=" + getId() +
+                ", message='" + getMessage() + "'" +
+                "}";
+    }
+
+    public static CRErrorMessages convertFrom(ClaimResponseErrorModel x) {
+        CRErrorMessages model = new CRErrorMessages();
+        if (x.getCode() != null) {
+            model.setMessage(x.getCode().toString());
+        }
+        return model;
     }
 }

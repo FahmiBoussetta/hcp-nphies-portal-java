@@ -2,21 +2,70 @@ package com.platformsandsolutions.hcpnphiesportal.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.platformsandsolutions.hcpnphiesportal.IntegrationTest;
+import com.platformsandsolutions.hcpnphiesportal.domain.CareTeam;
+import com.platformsandsolutions.hcpnphiesportal.domain.CareTeamSequence;
 import com.platformsandsolutions.hcpnphiesportal.domain.Claim;
+import com.platformsandsolutions.hcpnphiesportal.domain.ClaimResponse;
+import com.platformsandsolutions.hcpnphiesportal.domain.Coverage;
+import com.platformsandsolutions.hcpnphiesportal.domain.Diagnosis;
+import com.platformsandsolutions.hcpnphiesportal.domain.DiagnosisSequence;
+import com.platformsandsolutions.hcpnphiesportal.domain.Givens;
+import com.platformsandsolutions.hcpnphiesportal.domain.HumanName;
+import com.platformsandsolutions.hcpnphiesportal.domain.InformationSequence;
+import com.platformsandsolutions.hcpnphiesportal.domain.Insurance;
+import com.platformsandsolutions.hcpnphiesportal.domain.Item;
+import com.platformsandsolutions.hcpnphiesportal.domain.ListRoleCodeEnum;
+import com.platformsandsolutions.hcpnphiesportal.domain.ListSpecialtyEnum;
+import com.platformsandsolutions.hcpnphiesportal.domain.Organization;
+import com.platformsandsolutions.hcpnphiesportal.domain.Patient;
+import com.platformsandsolutions.hcpnphiesportal.domain.Payee;
+import com.platformsandsolutions.hcpnphiesportal.domain.Practitioner;
+import com.platformsandsolutions.hcpnphiesportal.domain.PractitionerRole;
+import com.platformsandsolutions.hcpnphiesportal.domain.SupportingInfo;
+import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.AdministrativeGenderEnum;
+import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.BodySiteEnum;
+import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.CareTeamRoleEnum;
 import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.ClaimSubTypeEnum;
 import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.ClaimTypeEnum;
+import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.CoverageTypeEnum;
+import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.DiagnosisOnAdmissionEnum;
+import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.DiagnosisTypeEnum;
 import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.FundsReserveEnum;
+import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.MaritalStatusEnum;
+import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.OrganizationTypeEnum;
+import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.PayeeTypeEnum;
 import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.PriorityEnum;
+import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.RelationShipEnum;
+import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.ReligionEnum;
+import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.RoleCodeEnum;
+import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.SpecialtyEnum;
+import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.SubSiteEnum;
+import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.SupportingInfoCategoryEnum;
+import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.SupportingInfoCodeVisitEnum;
 import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.Use;
 import com.platformsandsolutions.hcpnphiesportal.repository.ClaimRepository;
+import java.io.File;
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,6 +76,11 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+import platform.fhir_client.models.ClaimModel;
+import platform.fhir_client.models.ClaimResponseModel;
+import platform.fhir_client.models.CoreResourceModel;
+import platform.fhir_client.utils.Constants;
+import platform.fhir_client.utils.FHIRHelper;
 
 /**
  * Integration tests for the {@link ClaimResource} REST controller.
@@ -311,6 +365,251 @@ class ClaimResourceIT {
         restClaimMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
+    Claim createCompleteClaim() throws Exception {
+        Claim claim = new Claim()
+            .guid(UUID.randomUUID().toString())
+            .isQueued(false)
+            .parsed("")
+            .identifier("claim-")
+            .use(Use.Claim)
+            .type(ClaimTypeEnum.Institutional)
+            .subType(ClaimSubTypeEnum.Ip)
+            .eligibilityOffline("")
+            .eligibilityOfflineDate(UPDATED_ELIGIBILITY_OFFLINE_DATE)
+            .authorizationOfflineDate(UPDATED_AUTHORIZATION_OFFLINE_DATE)
+            .billableStart(UPDATED_BILLABLE_START)
+            .billableEnd(UPDATED_BILLABLE_END)
+            .priority(PriorityEnum.Normal)
+            .fundsReserve(FundsReserveEnum.None);
+        Organization provider = new Organization()
+            .baseUrl("http://pr-fhir.com.sa")
+            .guid(UUID.randomUUID().toString())
+            .name("PR-FHIR")
+            .organizationLicense("PR-FHIR")
+            .organizationType(OrganizationTypeEnum.prov);
+        claim.setProvider(provider);
+        Organization insurer = new Organization()
+            .baseUrl("http://almerys-payer.com.sa")
+            .guid(UUID.randomUUID().toString())
+            .name("ALMERYS-PAYER")
+            .organizationLicense("ALMERYS-PAYER")
+            .organizationType(OrganizationTypeEnum.ins);
+        claim.setInsurer(insurer);
+        HumanName humanName = new HumanName().addGiven(new Givens().given("given").prefix("pat").suffix("ient")).family("family");
+        Long id = (long) 1;
+        Patient patient = new Patient()
+            .id(id)
+            .guid(UUID.randomUUID().toString())
+            .residentNumber("DEFAULT_RESIDENT_NUMBER")
+            // .passportNumber(DEFAULT_PASSPORT_NUMBER)
+            // .nationalHealthId(DEFAULT_NATIONAL_HEALTH_ID)
+            // .iqama(DEFAULT_IQAMA)
+            .religion(ReligionEnum.N1)
+            .gender(AdministrativeGenderEnum.male)
+            .birthDate(Instant.now().minus(20, ChronoUnit.DAYS).truncatedTo(ChronoUnit.MILLIS))
+            // .deceasedDate(DEFAULT_DECEASED_DATE)
+            .maritalStatus(MaritalStatusEnum.M)
+            .addNames(humanName);
+        claim.setPatient(patient);
+        Set<CareTeam> careTeams = new HashSet<CareTeam>();
+        humanName = new HumanName().addGiven(new Givens().given("given").prefix("prac").suffix("titioner")).family("family");
+        Practitioner practitioner = new Practitioner()
+            .gender(AdministrativeGenderEnum.male)
+            .practitionerLicense("practitionerLicense")
+            .guid(UUID.randomUUID().toString())
+            .addNames(humanName);
+        ListRoleCodeEnum code = new ListRoleCodeEnum().r(RoleCodeEnum.Doctor);
+        ListSpecialtyEnum listSpecialtyEnum = new ListSpecialtyEnum().s(SpecialtyEnum.DOT01_00);
+        PractitionerRole practitionerRole = new PractitionerRole()
+            .practitioner(practitioner)
+            .guid(UUID.randomUUID().toString())
+            .addCodes(code)
+            .addSpecialties(listSpecialtyEnum)
+            .organization(provider);
+        CareTeam c = new CareTeam()
+            .providerRole(practitionerRole)
+            .role(CareTeamRoleEnum.Primary)
+            .sequence(1)
+            .qualification(SpecialtyEnum.DOT01_00);
+        careTeams.add(c);
+        claim.setCareTeams(careTeams);
+        Set<Diagnosis> diagnoses = new HashSet<Diagnosis>();
+        Diagnosis diag = new Diagnosis()
+            .diagnosis("A00.0")
+            .onAdmission(DiagnosisOnAdmissionEnum.N)
+            .sequence(1)
+            .type(DiagnosisTypeEnum.Principal);
+        diagnoses.add(diag);
+        claim.setDiagnoses(diagnoses);
+        Set<Insurance> insurances = new HashSet<Insurance>();
+        Coverage coverage = new Coverage()
+            .id(id)
+            .beneficiary(patient)
+            .coverageType(CoverageTypeEnum.EHCPOL)
+            .dependent("dependent")
+            .guid(UUID.randomUUID().toString())
+            .network("network")
+            .payor(insurer)
+            .relationShip(RelationShipEnum.self)
+            .subrogation(false)
+            .subscriberId("subscriberId")
+            .subscriberPatient(patient);
+        Insurance insurance = new Insurance().coverage(coverage).focal(true).preAuthRef("preAuthRef").sequence(1);
+        insurances.add(insurance);
+        claim.setInsurances(insurances);
+        SupportingInfo sup = new SupportingInfo()
+            .sequence(1)
+            .category(SupportingInfoCategoryEnum.Attachment)
+            .codeVisit(SupportingInfoCodeVisitEnum.Referral)
+            .timing(Instant.now().minus(20, ChronoUnit.DAYS).truncatedTo(ChronoUnit.MILLIS));
+        claim.addSupportingInfos(sup);
+        Payee payee = new Payee().type(PayeeTypeEnum.Provider);
+        claim.setPayee(payee);
+        Item item = new Item()
+            .sequence(1)
+            .isPackage(false)
+            .tax(new BigDecimal(10))
+            // .payerShare(new BigDecimal(10))
+            .patientShare(new BigDecimal(10))
+            .transportationSRCA("83500-00-00")
+            // .imaging(UPDATED_IMAGING)
+            // .laboratory(UPDATED_LABORATORY)
+            // .medicalDevice(UPDATED_MEDICAL_DEVICE)
+            // .oralHealthIP(UPDATED_ORAL_HEALTH_IP)
+            // .oralHealthOP(UPDATED_ORAL_HEALTH_OP)
+            // .procedure(UPDATED_PROCEDURE)
+            // .services(UPDATED_SERVICES)
+            // .medicationCode(UPDATED_MEDICATION_CODE)
+            // .servicedDate(Instant.now().minus(20,
+            // ChronoUnit.DAYS).truncatedTo(ChronoUnit.MILLIS))
+            .servicedDateStart(Instant.now().minus(20, ChronoUnit.DAYS).truncatedTo(ChronoUnit.MILLIS))
+            .servicedDateEnd(Instant.now().minus(10, ChronoUnit.DAYS).truncatedTo(ChronoUnit.MILLIS))
+            .quantity(2)
+            .unitPrice(25)
+            .factor(new BigDecimal(0.95))
+            .bodySite(BodySiteEnum.E1)
+            .subSite(SubSiteEnum.A);
+        Set<CareTeamSequence> careTeamSequences = new HashSet<CareTeamSequence>();
+        CareTeamSequence cts = new CareTeamSequence().careSeq(1);
+        careTeamSequences.add(cts);
+        item.setCareTeamSequences(careTeamSequences);
+        Set<DiagnosisSequence> diagnosisSequences = new HashSet<DiagnosisSequence>();
+        DiagnosisSequence d = new DiagnosisSequence().diagSeq(1);
+        diagnosisSequences.add(d);
+        item.setDiagnosisSequences(diagnosisSequences);
+        Set<InformationSequence> informationSequences = new HashSet<InformationSequence>();
+        InformationSequence informationSequence = new InformationSequence().infSeq(1);
+        informationSequences.add(informationSequence);
+        item.setInformationSequences(informationSequences);
+        Item item2 = new Item()
+            .sequence(1)
+            .isPackage(false)
+            .tax(new BigDecimal(10))
+            // .payerShare(new BigDecimal(10))
+            .patientShare(new BigDecimal(10))
+            // .transportationSRCA("83500-00-00")
+            .imaging("58900-00-90")
+            // .laboratory(UPDATED_LABORATORY)
+            // .medicalDevice(UPDATED_MEDICAL_DEVICE)
+            // .oralHealthIP(UPDATED_ORAL_HEALTH_IP)
+            // .oralHealthOP(UPDATED_ORAL_HEALTH_OP)
+            // .procedure(UPDATED_PROCEDURE)
+            // .services(UPDATED_SERVICES)
+            // .medicationCode(UPDATED_MEDICATION_CODE)
+            // .servicedDate(Instant.now().minus(20,
+            // ChronoUnit.DAYS).truncatedTo(ChronoUnit.MILLIS))
+            .servicedDateStart(Instant.now().minus(20, ChronoUnit.DAYS).truncatedTo(ChronoUnit.MILLIS))
+            .servicedDateEnd(Instant.now().minus(10, ChronoUnit.DAYS).truncatedTo(ChronoUnit.MILLIS))
+            .quantity(2)
+            .unitPrice(25)
+            .factor(new BigDecimal(0.95))
+            .bodySite(BodySiteEnum.E1)
+            .subSite(SubSiteEnum.A);
+        item2.setCareTeamSequences(careTeamSequences);
+        item2.setDiagnosisSequences(diagnosisSequences);
+        item2.setInformationSequences(informationSequences);
+        Item item3 = new Item()
+            .sequence(1)
+            .isPackage(false)
+            .tax(new BigDecimal(10))
+            // .payerShare(new BigDecimal(10))
+            .patientShare(new BigDecimal(10))
+            // .transportationSRCA("83500-00-00")
+            // .imaging("58900-00-90")
+            .laboratory("73250-00-80")
+            // .medicalDevice(UPDATED_MEDICAL_DEVICE)
+            // .oralHealthIP(UPDATED_ORAL_HEALTH_IP)
+            // .oralHealthOP(UPDATED_ORAL_HEALTH_OP)
+            // .procedure(UPDATED_PROCEDURE)
+            // .services(UPDATED_SERVICES)
+            // .medicationCode(UPDATED_MEDICATION_CODE)
+            // .servicedDate(Instant.now().minus(20,
+            // ChronoUnit.DAYS).truncatedTo(ChronoUnit.MILLIS))
+            .servicedDateStart(Instant.now().minus(20, ChronoUnit.DAYS).truncatedTo(ChronoUnit.MILLIS))
+            .servicedDateEnd(Instant.now().minus(10, ChronoUnit.DAYS).truncatedTo(ChronoUnit.MILLIS))
+            .quantity(2)
+            .unitPrice(25)
+            .factor(new BigDecimal(0.95))
+            .bodySite(BodySiteEnum.E1)
+            .subSite(SubSiteEnum.A);
+        item3.setCareTeamSequences(careTeamSequences);
+        item3.setDiagnosisSequences(diagnosisSequences);
+        item3.setInformationSequences(informationSequences);
+        Set<Item> items = new HashSet<Item>();
+        items.add(item);
+        items.add(item2);
+        items.add(item3);
+        claim.setItems(items);
+        return claim;
+    }
+
+    @Test
+    void sendClaim() throws Exception {
+        Claim claim = createCompleteClaim();
+        FHIRHelper fhirHelper = new FHIRHelper();
+
+        String path = System.getProperty("user.dir");
+        String fileName = (new File(path, "PR-FHIR.p12")).getPath();
+        try {
+            fhirHelper.useServerWithProviderCertificate(
+                Constants.SERVER_URL,
+                Constants.SERVER_VERSION,
+                fileName,
+                "puyjdDe4A2dh",
+                "http://www.pr-fhir.sa"
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<CoreResourceModel> coreResources1 = new ArrayList<CoreResourceModel>();
+        coreResources1.add(fhirHelper.getSender());
+        ClaimModel cl = claim.convert(coreResources1);
+        cl.setProvider(fhirHelper.getSender());
+
+        fhirHelper.initCoreResources(coreResources1);
+        ObjectMapper mapper = new ObjectMapper();
+        String json = "";
+        String json2 = "";
+
+        fhirHelper.sendMessage(cl, false);
+        try {
+            json = mapper.writeValueAsString(cl);
+            json2 = mapper.writeValueAsString(fhirHelper.getInputResources().entrySet().iterator().next().getValue());
+        } catch (JsonProcessingException e1) {
+            e1.printStackTrace();
+        }
+        if (fhirHelper.getInputResources().entrySet().iterator().next().getValue().getParsedRequest() != null) {
+            claim.setParsed(fhirHelper.getInputResources().entrySet().iterator().next().getValue().getParsedRequest());
+            // claimRepository.save(claim);
+        }
+
+        if (fhirHelper.getOutputResources() != null && fhirHelper.getOutputResources().size() > 0) {
+            ClaimResponseModel model = fhirHelper.getClaimResponses(true).get(0);
+            ClaimResponse claimResponse = ClaimResponse.convertFrom(model);
+        }
+    }
+
     @Test
     @Transactional
     void putNewClaim() throws Exception {
@@ -321,7 +620,8 @@ class ClaimResourceIT {
 
         // Update the claim
         Claim updatedClaim = claimRepository.findById(claim.getId()).get();
-        // Disconnect from session so that the updates on updatedClaim are not directly saved in db
+        // Disconnect from session so that the updates on updatedClaim are not directly
+        // saved in db
         em.detach(updatedClaim);
         updatedClaim
             .guid(UPDATED_GUID)

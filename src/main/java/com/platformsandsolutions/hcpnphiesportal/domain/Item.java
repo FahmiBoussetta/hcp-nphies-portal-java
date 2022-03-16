@@ -6,12 +6,17 @@ import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.SubSiteEnum;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import platform.fhir_client.models.CoreResourceModel;
+import platform.fhir_client.models.ItemModel;
 
 /**
  * A Item.
@@ -43,10 +48,6 @@ public class Item implements Serializable {
     @NotNull
     @Column(name = "patient_share", precision = 21, scale = 2, nullable = false)
     private BigDecimal patientShare;
-
-    @NotNull
-    @Column(name = "care_team_sequence", nullable = false)
-    private Integer careTeamSequence;
 
     @Column(name = "transportation_srca")
     private String transportationSRCA;
@@ -103,22 +104,27 @@ public class Item implements Serializable {
     @Column(name = "sub_site")
     private SubSiteEnum subSite;
 
-    @OneToMany(mappedBy = "item")
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "item" }, allowSetters = true)
     private Set<DiagnosisSequence> diagnosisSequences = new HashSet<>();
 
-    @OneToMany(mappedBy = "item")
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = { "item" }, allowSetters = true)
+    private Set<CareTeamSequence> careTeamSequences = new HashSet<>();
+
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "item" }, allowSetters = true)
     private Set<InformationSequence> informationSequences = new HashSet<>();
 
-    @OneToMany(mappedBy = "item")
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "item", "detailItem", "subDetailItem" }, allowSetters = true)
     private Set<ReferenceIdentifier> udis = new HashSet<>();
 
-    @OneToMany(mappedBy = "item")
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "udis", "subDetails", "item" }, allowSetters = true)
     private Set<DetailItem> details = new HashSet<>();
@@ -226,19 +232,6 @@ public class Item implements Serializable {
 
     public void setPatientShare(BigDecimal patientShare) {
         this.patientShare = patientShare;
-    }
-
-    public Integer getCareTeamSequence() {
-        return this.careTeamSequence;
-    }
-
-    public Item careTeamSequence(Integer careTeamSequence) {
-        this.careTeamSequence = careTeamSequence;
-        return this;
-    }
-
-    public void setCareTeamSequence(Integer careTeamSequence) {
-        this.careTeamSequence = careTeamSequence;
     }
 
     public String getTransportationSRCA() {
@@ -493,6 +486,37 @@ public class Item implements Serializable {
         this.diagnosisSequences = diagnosisSequences;
     }
 
+    public Set<CareTeamSequence> getCareTeamSequences() {
+        return this.careTeamSequences;
+    }
+
+    public Item careTeamSequences(Set<CareTeamSequence> careTeamSequences) {
+        this.setCareTeamSequences(careTeamSequences);
+        return this;
+    }
+
+    public Item addCareTeamSequence(CareTeamSequence careTeamSequence) {
+        this.careTeamSequences.add(careTeamSequence);
+        careTeamSequence.setItem(this);
+        return this;
+    }
+
+    public Item removeCareTeamSequence(CareTeamSequence careTeamSequence) {
+        this.careTeamSequences.remove(careTeamSequence);
+        careTeamSequence.setItem(null);
+        return this;
+    }
+
+    public void setCareTeamSequences(Set<CareTeamSequence> careTeamSequences) {
+        if (this.careTeamSequences != null) {
+            this.careTeamSequences.forEach(i -> i.setItem(null));
+        }
+        if (careTeamSequences != null) {
+            careTeamSequences.forEach(i -> i.setItem(this));
+        }
+        this.careTeamSequences = careTeamSequences;
+    }
+
     public Set<InformationSequence> getInformationSequences() {
         return this.informationSequences;
     }
@@ -599,7 +623,8 @@ public class Item implements Serializable {
         this.claim = claim;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and
+    // setters here
 
     @Override
     public boolean equals(Object o) {
@@ -614,38 +639,201 @@ public class Item implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        // see
+        // https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
     }
 
     // prettier-ignore
     @Override
     public String toString() {
-        return "Item{" +
-            "id=" + getId() +
-            ", sequence=" + getSequence() +
-            ", isPackage='" + getIsPackage() + "'" +
-            ", tax=" + getTax() +
-            ", payerShare=" + getPayerShare() +
-            ", patientShare=" + getPatientShare() +
-            ", careTeamSequence=" + getCareTeamSequence() +
-            ", transportationSRCA='" + getTransportationSRCA() + "'" +
-            ", imaging='" + getImaging() + "'" +
-            ", laboratory='" + getLaboratory() + "'" +
-            ", medicalDevice='" + getMedicalDevice() + "'" +
-            ", oralHealthIP='" + getOralHealthIP() + "'" +
-            ", oralHealthOP='" + getOralHealthOP() + "'" +
-            ", procedure='" + getProcedure() + "'" +
-            ", services='" + getServices() + "'" +
-            ", medicationCode='" + getMedicationCode() + "'" +
-            ", servicedDate='" + getServicedDate() + "'" +
-            ", servicedDateStart='" + getServicedDateStart() + "'" +
-            ", servicedDateEnd='" + getServicedDateEnd() + "'" +
-            ", quantity=" + getQuantity() +
-            ", unitPrice=" + getUnitPrice() +
-            ", factor=" + getFactor() +
-            ", bodySite='" + getBodySite() + "'" +
-            ", subSite='" + getSubSite() + "'" +
-            "}";
+        return "Item{" + "id=" + getId() + ", sequence=" + getSequence() + ", isPackage='" + getIsPackage() + "'"
+                + ", tax=" + getTax() + ", payerShare=" + getPayerShare() + ", patientShare=" + getPatientShare()
+                + ", transportationSRCA='" + getTransportationSRCA() + "'" + ", imaging='" + getImaging() + "'"
+                + ", laboratory='" + getLaboratory() + "'" + ", medicalDevice='" + getMedicalDevice() + "'"
+                + ", oralHealthIP='" + getOralHealthIP() + "'" + ", oralHealthOP='" + getOralHealthOP() + "'"
+                + ", procedure='" + getProcedure() + "'" + ", services='" + getServices() + "'" + ", medicationCode='"
+                + getMedicationCode() + "'" + ", servicedDate='" + getServicedDate() + "'" + ", servicedDateStart='"
+                + getServicedDateStart() + "'" + ", servicedDateEnd='" + getServicedDateEnd() + "'" + ", quantity="
+                + getQuantity() + ", unitPrice=" + getUnitPrice() + ", factor=" + getFactor() + ", bodySite='"
+                + getBodySite() + "'" + ", subSite='" + getSubSite() + "'" + "}";
+    }
+
+    public ItemModel convert(ArrayList<CoreResourceModel> coreResources) {
+        ItemModel it = new ItemModel();
+        if (this.getBodySite() != null) {
+            it.setBodySite(this.getBodySite().convert());
+        }
+        if (this.getCareTeamSequences() != null) {
+            it.setCareTeamSequence(this.getCareTeamSequences().stream().map(i -> i.getCareSeq()).collect(Collectors.toList()));
+        }
+        if (this.getDetails() != null) {
+            it.setDetails(this.getDetails().stream().map(i -> i.convert(coreResources)).collect(Collectors.toList()));
+        }
+        if (this.getDiagnosisSequences() != null) {
+            it.setDiagnosisSequence(this.getDiagnosisSequences().stream().map(i -> i.getDiagSeq()).collect(Collectors.toList()));
+        }
+        if (this.getFactor() != null) {
+            it.setFactor(this.getFactor());
+        }
+        if (this.getImaging() != null) {
+            it.setImaging(this.getImaging());
+        }
+        if (this.getInformationSequences() != null) {
+            it.setInformationSequence(this.getInformationSequences().stream().map(i -> i.getInfSeq()).collect(Collectors.toList()));
+        }
+        if (this.getLaboratory() != null) {
+            it.setLaboratory(this.getLaboratory());
+        }
+        if (this.getMedicalDevice() != null) {
+            it.setMedicalDevice(this.getMedicalDevice());
+        }
+        if (this.getMedicationCode() != null) {
+            it.setMedicationCode(this.getMedicationCode());
+        }
+        if (this.getOralHealthIP() != null) {
+            it.setOralHealthIP(this.getOralHealthIP());
+        }
+        if (this.getOralHealthOP() != null) {
+            it.setOralHealthOP(this.getOralHealthOP());
+        }
+        if (this.getIsPackage() != null) {
+            it.setPackage(this.getIsPackage());
+        }
+        if (this.getPatientShare() != null) {
+            it.setPatientShare(this.getPatientShare());
+        }
+        if (this.getPayerShare() != null) {
+            it.setPayerShare(this.getPayerShare());
+        }
+        if (this.getProcedure() != null) {
+            it.setProcedure(this.getProcedure());
+        }
+        if (this.getQuantity() != null) {
+            it.setQuantity(this.getQuantity());
+        }
+        if (this.getSequence() != null) {
+            it.setSequence(this.getSequence());
+        }
+        if (this.getServices() != null) {
+            it.setService(this.getServices());
+        }
+        if (this.getServicedDate() != null) {
+            it.setServicedDate(Date.from(this.getServicedDate()));
+        }
+        if (this.getServicedDateEnd() != null) {
+            it.setServicedDateEnd(Date.from(this.getServicedDateEnd()));
+        }
+        if (this.getServicedDateStart() != null) {
+            it.setServicedDateStart(Date.from(this.getServicedDateStart()));
+        }
+        if (this.getSubSite() != null) {
+            it.setSubSite(this.getSubSite().convert());
+        }
+        if (this.getTax() != null) {
+            it.setTax(this.getTax());
+        }
+        if (this.getTransportationSRCA() != null) {
+            it.setTransportationSRCA(this.getTransportationSRCA());
+        }
+        if (this.getUdis() != null) {
+            it.setUdi(this.getUdis().stream().map(i -> i.convert()).collect(Collectors.toList()));
+        }
+        if (this.getUnitPrice() != null) {
+            it.setUnitPrice(this.getUnitPrice());
+        }
+        return it;
+    }
+
+    public static Item convertFrom(ItemModel model) {
+        Item it = new Item();
+        if (model.getBodySite() != null) {
+            it.setBodySite(BodySiteEnum.valueOf(model.getBodySite().name()));
+        }
+        if (model.getCareTeamSequence() != null) {
+            it.setCareTeamSequences(
+                model.getCareTeamSequence().stream().map(i -> CareTeamSequence.convertFrom(i)).collect(Collectors.toSet())
+            );
+        }
+        if (model.getDetails() != null) {
+            it.setDetails(model.getDetails().stream().map(i -> DetailItem.convertFrom(i)).collect(Collectors.toSet()));
+        }
+        if (model.getDiagnosisSequence() != null) {
+            it.setDiagnosisSequences(
+                model.getDiagnosisSequence().stream().map(i -> DiagnosisSequence.convertFrom(i)).collect(Collectors.toSet())
+            );
+        }
+        if (model.getFactor() != null) {
+            it.setFactor(model.getFactor());
+        }
+        if (model.getImaging() != null) {
+            it.setImaging(model.getImaging());
+        }
+        if (model.getInformationSequence() != null) {
+            it.setInformationSequences(
+                model.getInformationSequence().stream().map(i -> InformationSequence.convertFrom(i)).collect(Collectors.toSet())
+            );
+        }
+        if (model.getLaboratory() != null) {
+            it.setLaboratory(model.getLaboratory());
+        }
+        if (model.getMedicalDevice() != null) {
+            it.setMedicalDevice(model.getMedicalDevice());
+        }
+        if (model.getMedicationCode() != null) {
+            it.setMedicationCode(model.getMedicationCode());
+        }
+        if (model.getOralHealthIP() != null) {
+            it.setOralHealthIP(model.getOralHealthIP());
+        }
+        if (model.getOralHealthOP() != null) {
+            it.setOralHealthOP(model.getOralHealthOP());
+        }
+        if (model.getPackage() != null) {
+            it.setIsPackage(model.getPackage());
+        }
+        if (model.getPatientShare() != null) {
+            it.setPatientShare(model.getPatientShare());
+        }
+        if (model.getPayerShare() != null) {
+            it.setPayerShare(model.getPayerShare());
+        }
+        if (model.getProcedure() != null) {
+            it.setProcedure(model.getProcedure());
+        }
+        if (model.getQuantity() != null) {
+            it.setQuantity(model.getQuantity());
+        }
+        if (model.getSequence() != null) {
+            it.setSequence(model.getSequence());
+        }
+        if (model.getService() != null) {
+            it.setServices(model.getService());
+        }
+        if (model.getServicedDate() != null) {
+            it.setServicedDate(model.getServicedDate().toInstant());
+        }
+        if (model.getServicedDateEnd() != null) {
+            it.setServicedDateEnd(model.getServicedDateEnd().toInstant());
+        }
+        if (model.getServicedDateStart() != null) {
+            it.setServicedDateStart(model.getServicedDateStart().toInstant());
+        }
+        if (model.getSubSite() != null) {
+            it.setSubSite(SubSiteEnum.valueOf(model.getSubSite().name()));
+        }
+        if (model.getTax() != null) {
+            it.setTax(model.getTax());
+        }
+        if (model.getTransportationSRCA() != null) {
+            it.setTransportationSRCA(model.getTransportationSRCA());
+        }
+        if (model.getUdi() != null) {
+            it.setUdis(model.getUdi().stream().map(i -> ReferenceIdentifier.convertFrom(i)).collect(Collectors.toSet()));
+        }
+        if (model.getUnitPrice() != null) {
+            it.setUnitPrice(model.getUnitPrice());
+        }
+        return it;
     }
 }

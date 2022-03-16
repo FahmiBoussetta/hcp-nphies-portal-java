@@ -74,7 +74,7 @@ export const TaskResponse = (props: RouteComponentProps<{ url: string }>) => {
                   </td>
                   <td>{taskResponse.value}</td>
                   <td>{taskResponse.system}</td>
-                  <td>{taskResponse.parsed}</td>
+                  <td>{taskResponse.parsed?.substring(0, 80)}...</td>
                   <td>{taskResponse.status}</td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">

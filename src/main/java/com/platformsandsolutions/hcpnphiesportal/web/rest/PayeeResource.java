@@ -20,7 +20,8 @@ import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.ResponseUtil;
 
 /**
- * REST controller for managing {@link com.platformsandsolutions.hcpnphiesportal.domain.Payee}.
+ * REST controller for managing
+ * {@link com.platformsandsolutions.hcpnphiesportal.domain.Payee}.
  */
 @RestController
 @RequestMapping("/api")
@@ -44,7 +45,9 @@ public class PayeeResource {
      * {@code POST  /payees} : Create a new payee.
      *
      * @param payee the payee to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new payee, or with status {@code 400 (Bad Request)} if the payee has already an ID.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with
+     *         body the new payee, or with status {@code 400 (Bad Request)} if the
+     *         payee has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/payees")
@@ -63,11 +66,12 @@ public class PayeeResource {
     /**
      * {@code PUT  /payees/:id} : Updates an existing payee.
      *
-     * @param id the id of the payee to save.
+     * @param id    the id of the payee to save.
      * @param payee the payee to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated payee,
-     * or with status {@code 400 (Bad Request)} if the payee is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the payee couldn't be updated.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
+     *         the updated payee, or with status {@code 400 (Bad Request)} if the
+     *         payee is not valid, or with status
+     *         {@code 500 (Internal Server Error)} if the payee couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/payees/{id}")
@@ -93,14 +97,16 @@ public class PayeeResource {
     }
 
     /**
-     * {@code PATCH  /payees/:id} : Partial updates given fields of an existing payee, field will ignore if it is null
+     * {@code PATCH  /payees/:id} : Partial updates given fields of an existing
+     * payee, field will ignore if it is null
      *
-     * @param id the id of the payee to save.
+     * @param id    the id of the payee to save.
      * @param payee the payee to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated payee,
-     * or with status {@code 400 (Bad Request)} if the payee is not valid,
-     * or with status {@code 404 (Not Found)} if the payee is not found,
-     * or with status {@code 500 (Internal Server Error)} if the payee couldn't be updated.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
+     *         the updated payee, or with status {@code 400 (Bad Request)} if the
+     *         payee is not valid, or with status {@code 404 (Not Found)} if the
+     *         payee is not found, or with status
+     *         {@code 500 (Internal Server Error)} if the payee couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/payees/{id}", consumes = "application/merge-patch+json")
@@ -142,19 +148,23 @@ public class PayeeResource {
     /**
      * {@code GET  /payees} : get all the payees.
      *
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of payees in body.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list
+     *         of payees in body.
      */
     @GetMapping("/payees")
     public List<Payee> getAllPayees() {
         log.debug("REST request to get all Payees");
-        return payeeRepository.findAll();
+        List<Payee> payees = payeeRepository.findAll();
+        log.debug("payee : {}", payees.get(0));
+        return payees;
     }
 
     /**
      * {@code GET  /payees/:id} : get the "id" payee.
      *
      * @param id the id of the payee to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the payee, or with status {@code 404 (Not Found)}.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
+     *         the payee, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/payees/{id}")
     public ResponseEntity<Payee> getPayee(@PathVariable Long id) {

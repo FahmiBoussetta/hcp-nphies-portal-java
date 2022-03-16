@@ -6,13 +6,13 @@ import platform.fhir_client.utils.*;
  * The RelationShipEnum enumeration.
  */
 public enum RelationShipEnum {
-    Child("Child"),
-    Parent("Parent"),
-    Spouse("Spouse"),
-    Common("Common Law Spouse"),
-    Other("Other"),
-    Self("Self"),
-    Injured("Injured");
+    child("Child"),
+    parent("Parent"),
+    spouse("Spouse"),
+    common("Common Law Spouse"),
+    other("Other"),
+    self("Self"),
+    injured("Injured");
 
     private final String value;
 

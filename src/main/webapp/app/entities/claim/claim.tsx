@@ -4,7 +4,7 @@ import { Button, Col, Row, Table } from 'reactstrap';
 import { Translate, TextFormat } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { getEntities } from './claim.reducer';
+import { getEntities, sendEntity } from './claim.reducer';
 import { IClaim } from 'app/shared/model/claim.model';
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
@@ -21,6 +21,10 @@ export const Claim = (props: RouteComponentProps<{ url: string }>) => {
 
   const handleSyncList = () => {
     dispatch(getEntities({}));
+  };
+
+  const send = entity => {
+    dispatch(sendEntity(entity));
   };
 
   const { match } = props;
@@ -46,6 +50,7 @@ export const Claim = (props: RouteComponentProps<{ url: string }>) => {
           <Table responsive>
             <thead>
               <tr>
+                <th />
                 <th>
                   <Translate contentKey="hcpNphiesPortalApp.claim.id">ID</Translate>
                 </th>
@@ -124,12 +129,39 @@ export const Claim = (props: RouteComponentProps<{ url: string }>) => {
                 <th>
                   <Translate contentKey="hcpNphiesPortalApp.claim.accident">Accident</Translate>
                 </th>
-                <th />
               </tr>
             </thead>
             <tbody>
               {claimList.map((claim, i) => (
                 <tr key={`entity-${i}`} data-cy="entityTable">
+                  <td className="text-left">
+                    <div className="btn-group flex-btn-group-container">
+                      <Button tag={Link} to={`${match.url}/${claim.id}`} color="info" size="sm" data-cy="entityDetailsButton">
+                        <FontAwesomeIcon icon="eye" />{' '}
+                        <span className="d-none d-md-inline">
+                          <Translate contentKey="entity.action.view">View</Translate>
+                        </span>
+                      </Button>
+                      <Button onClick={() => send(claim)} color="warning" size="sm" data-cy="entitySendButton">
+                        <FontAwesomeIcon icon="paper-plane" />{' '}
+                        <span className="d-none d-md-inline">
+                          <Translate contentKey="entity.action.send">Send</Translate>
+                        </span>
+                      </Button>
+                      <Button tag={Link} to={`${match.url}/${claim.id}/edit`} color="primary" size="sm" data-cy="entityEditButton">
+                        <FontAwesomeIcon icon="pencil-alt" />{' '}
+                        <span className="d-none d-md-inline">
+                          <Translate contentKey="entity.action.edit">Edit</Translate>
+                        </span>
+                      </Button>
+                      <Button tag={Link} to={`${match.url}/${claim.id}/delete`} color="danger" size="sm" data-cy="entityDeleteButton">
+                        <FontAwesomeIcon icon="trash" />{' '}
+                        <span className="d-none d-md-inline">
+                          <Translate contentKey="entity.action.delete">Delete</Translate>
+                        </span>
+                      </Button>
+                    </div>
+                  </td>
                   <td>
                     <Button tag={Link} to={`${match.url}/${claim.id}`} color="link" size="sm">
                       {claim.id}
@@ -137,7 +169,7 @@ export const Claim = (props: RouteComponentProps<{ url: string }>) => {
                   </td>
                   <td>{claim.guid}</td>
                   <td>{claim.isQueued ? 'true' : 'false'}</td>
-                  <td>{claim.parsed}</td>
+                  <td>{claim.parsed?.substring(0, 80)}...</td>
                   <td>{claim.identifier}</td>
                   <td>
                     <Translate contentKey={`hcpNphiesPortalApp.Use.${claim.use}`} />
@@ -192,28 +224,6 @@ export const Claim = (props: RouteComponentProps<{ url: string }>) => {
                   <td>{claim.referral ? <Link to={`reference-identifier/${claim.referral.id}`}>{claim.referral.id}</Link> : ''}</td>
                   <td>{claim.facility ? <Link to={`location/${claim.facility.id}`}>{claim.facility.id}</Link> : ''}</td>
                   <td>{claim.accident ? <Link to={`accident/${claim.accident.id}`}>{claim.accident.id}</Link> : ''}</td>
-                  <td className="text-right">
-                    <div className="btn-group flex-btn-group-container">
-                      <Button tag={Link} to={`${match.url}/${claim.id}`} color="info" size="sm" data-cy="entityDetailsButton">
-                        <FontAwesomeIcon icon="eye" />{' '}
-                        <span className="d-none d-md-inline">
-                          <Translate contentKey="entity.action.view">View</Translate>
-                        </span>
-                      </Button>
-                      <Button tag={Link} to={`${match.url}/${claim.id}/edit`} color="primary" size="sm" data-cy="entityEditButton">
-                        <FontAwesomeIcon icon="pencil-alt" />{' '}
-                        <span className="d-none d-md-inline">
-                          <Translate contentKey="entity.action.edit">Edit</Translate>
-                        </span>
-                      </Button>
-                      <Button tag={Link} to={`${match.url}/${claim.id}/delete`} color="danger" size="sm" data-cy="entityDeleteButton">
-                        <FontAwesomeIcon icon="trash" />{' '}
-                        <span className="d-none d-md-inline">
-                          <Translate contentKey="entity.action.delete">Delete</Translate>
-                        </span>
-                      </Button>
-                    </div>
-                  </td>
                 </tr>
               ))}
             </tbody>

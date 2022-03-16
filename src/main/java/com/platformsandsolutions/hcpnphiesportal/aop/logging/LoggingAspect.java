@@ -36,7 +36,8 @@ public class LoggingAspect {
         " || within(@org.springframework.web.bind.annotation.RestController *)"
     )
     public void springBeanPointcut() {
-        // Method is empty as this is just a Pointcut, the implementations are in the advices.
+        // Method is empty as this is just a Pointcut, the implementations are in the
+        // advices.
     }
 
     /**
@@ -48,7 +49,8 @@ public class LoggingAspect {
         " || within(com.platformsandsolutions.hcpnphiesportal.web.rest..*)"
     )
     public void applicationPackagePointcut() {
-        // Method is empty as this is just a Pointcut, the implementations are in the advices.
+        // Method is empty as this is just a Pointcut, the implementations are in the
+        // advices.
     }
 
     /**
@@ -65,7 +67,7 @@ public class LoggingAspect {
      * Advice that logs methods throwing exceptions.
      *
      * @param joinPoint join point for advice.
-     * @param e exception.
+     * @param e         exception.
      */
     @AfterThrowing(pointcut = "applicationPackagePointcut() && springBeanPointcut()", throwing = "e")
     public void logAfterThrowing(JoinPoint joinPoint, Throwable e) {
@@ -99,12 +101,14 @@ public class LoggingAspect {
     public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
         Logger log = logger(joinPoint);
         if (log.isDebugEnabled()) {
-            log.debug("Enter: {}() with argument[s] = {}", joinPoint.getSignature().getName(), Arrays.toString(joinPoint.getArgs()));
+            // log.debug("Enter: {}() with argument[s] = {}",
+            // joinPoint.getSignature().getName(), Arrays.toString(joinPoint.getArgs()));
         }
         try {
             Object result = joinPoint.proceed();
             if (log.isDebugEnabled()) {
-                log.debug("Exit: {}() with result = {}", joinPoint.getSignature().getName(), result);
+                // log.debug("Exit: {}() with result = {}", joinPoint.getSignature().getName(),
+                // result);
             }
             return result;
         } catch (IllegalArgumentException e) {

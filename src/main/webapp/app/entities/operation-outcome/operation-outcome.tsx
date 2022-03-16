@@ -71,7 +71,7 @@ export const OperationOutcome = (props: RouteComponentProps<{ url: string }>) =>
                   </td>
                   <td>{operationOutcome.value}</td>
                   <td>{operationOutcome.system}</td>
-                  <td>{operationOutcome.parsed}</td>
+                  <td>{operationOutcome.parsed?.substring(0, 80)}...</td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`${match.url}/${operationOutcome.id}`} color="info" size="sm" data-cy="entityDetailsButton">

@@ -1,13 +1,27 @@
 package com.platformsandsolutions.hcpnphiesportal.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.platformsandsolutions.hcpnphiesportal.domain.enumeration.NotInForceReasonEnum;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.*;
+import java.util.stream.Collectors;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import platform.fhir_client.models.CoverageEligibilityResponseModel;
+import platform.fhir_client.models.IdentifierModel;
 
 /**
  * A CoverageEligibilityResponse.
@@ -45,14 +59,14 @@ public class CoverageEligibilityResponse implements Serializable {
     private String disposition;
 
     @Column(name = "not_inforce_reason")
-    private String notInforceReason;
+    private NotInForceReasonEnum notInforceReason;
 
-    @OneToMany(mappedBy = "coverageEligibilityResponse")
+    @OneToMany(mappedBy = "coverageEligibilityResponse", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "coverageEligibilityResponse" }, allowSetters = true)
     private Set<CovEliRespErrorMessages> errors = new HashSet<>();
 
-    @OneToMany(mappedBy = "coverageEligibilityResponse")
+    @OneToMany(mappedBy = "coverageEligibilityResponse", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "items", "coverage", "coverageEligibilityResponse" }, allowSetters = true)
     private Set<ResponseInsurance> insurances = new HashSet<>();
@@ -65,7 +79,18 @@ public class CoverageEligibilityResponse implements Serializable {
     @JsonIgnoreProperties(value = { "contacts", "address" }, allowSetters = true)
     private Organization insurer;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here
+    @ManyToMany(mappedBy = "covEliRespIdentifiers")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    private Set<ReferenceIdentifier> identifiers = new HashSet<>();
+
+    public Set<ReferenceIdentifier> getIdentifiers() {
+        return identifiers;
+    }
+
+    public void setIdentifiers(Set<ReferenceIdentifier> identifiers) {
+        this.identifiers = identifiers;
+    }
+
     public Long getId() {
         return id;
     }
@@ -170,16 +195,16 @@ public class CoverageEligibilityResponse implements Serializable {
         this.disposition = disposition;
     }
 
-    public String getNotInforceReason() {
+    public NotInForceReasonEnum getNotInforceReason() {
         return this.notInforceReason;
     }
 
-    public CoverageEligibilityResponse notInforceReason(String notInforceReason) {
+    public CoverageEligibilityResponse notInforceReason(NotInForceReasonEnum notInforceReason) {
         this.notInforceReason = notInforceReason;
         return this;
     }
 
-    public void setNotInforceReason(String notInforceReason) {
+    public void setNotInforceReason(NotInForceReasonEnum notInforceReason) {
         this.notInforceReason = notInforceReason;
     }
 
@@ -271,8 +296,6 @@ public class CoverageEligibilityResponse implements Serializable {
         this.insurer = organization;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -286,23 +309,64 @@ public class CoverageEligibilityResponse implements Serializable {
 
     @Override
     public int hashCode() {
-        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        // see
+        // https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
     }
 
     // prettier-ignore
     @Override
     public String toString() {
-        return "CoverageEligibilityResponse{" +
-            "id=" + getId() +
-            ", value='" + getValue() + "'" +
-            ", system='" + getSystem() + "'" +
-            ", parsed='" + getParsed() + "'" +
-            ", outcome='" + getOutcome() + "'" +
-            ", serviced='" + getServiced() + "'" +
-            ", servicedEnd='" + getServicedEnd() + "'" +
-            ", disposition='" + getDisposition() + "'" +
-            ", notInforceReason='" + getNotInforceReason() + "'" +
-            "}";
+        return "CoverageEligibilityResponse{" + "id=" + getId() + ", value='" + getValue() + "'" + ", system='"
+                + getSystem() + "'" + ", parsed='" + getParsed() + "'" + ", outcome='" + getOutcome() + "'"
+                + ", serviced='" + getServiced() + "'" + ", servicedEnd='" + getServicedEnd() + "'" + ", disposition='"
+                + getDisposition() + "'" + ", notInforceReason='" + getNotInforceReason() + "'" + "}";
+    }
+
+    public static CoverageEligibilityResponse convertFrom(CoverageEligibilityResponseModel model) {
+        CoverageEligibilityResponse resp = new CoverageEligibilityResponse();
+        if (model.getIdentifiers() != null) {
+            resp.setIdentifiers(model.getIdentifiers().stream().map(i -> ReferenceIdentifier.convertFrom(i)).collect(Collectors.toSet()));
+        }
+        if (model.getErrors() != null) {
+            resp.setErrors(model.getErrors().stream().map(x -> CovEliRespErrorMessages.convertFrom(x)).collect(Collectors.toSet()));
+        }
+        resp.setDisposition(model.getDisposition());
+        if (model.getInsurance() != null) {
+            resp.setInsurances(model.getInsurance().stream().map(x -> ResponseInsurance.convertFrom(x)).collect(Collectors.toSet()));
+        }
+        resp.setInsurer(Organization.convertFrom(model.getInsurer()));
+        if (model.getNotInforceReason() != null) {
+            resp.setNotInforceReason(NotInForceReasonEnum.valueOf(model.getNotInforceReason().name()));
+        }
+        if (model.getOutcome() != null) {
+            resp.setOutcome(model.getOutcome().toString());
+        }
+        if (model.getParsedRequest() != null) {
+            resp.setParsed(model.getParsedRequest());
+        }
+        if (model.getPatient() != null) {
+            resp.setPatient(Patient.convertFrom(model.getPatient()));
+        }
+        if (model.getServicedDate() != null) {
+            resp.setServiced(model.getServicedDate().toInstant());
+        }
+        if (model.getServicedDateEnd() != null) {
+            resp.setServicedEnd(model.getServicedDateEnd().toInstant());
+        }
+        if (model.getIdentifiers() != null) {
+            resp.setSystem(model.getIdentifiers().get(0).getSystem());
+            resp.setValue(model.getIdentifiers().get(0).getValue());
+        }
+        return resp;
+    }
+
+    public CoverageEligibilityResponseModel convertIdentifier() {
+        CoverageEligibilityResponseModel cr = new CoverageEligibilityResponseModel();
+        IdentifierModel i = new IdentifierModel();
+        i.setValue(this.getValue());
+        i.setSystem(this.getSystem());
+        cr.addIdentifier(i);
+        return cr;
     }
 }

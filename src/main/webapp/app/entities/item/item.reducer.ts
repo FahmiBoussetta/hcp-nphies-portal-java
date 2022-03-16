@@ -9,6 +9,7 @@ const initialState: EntityState<IItem> = {
   loading: false,
   errorMessage: null,
   entities: [],
+  links: [],
   entity: defaultValue,
   updating: false,
   updateSuccess: false,
@@ -20,6 +21,11 @@ const apiUrl = 'api/items';
 
 export const getEntities = createAsyncThunk('item/fetch_entity_list', async ({ page, size, sort }: IQueryParams) => {
   const requestUrl = `${apiUrl}?cacheBuster=${new Date().getTime()}`;
+  return axios.get<IItem[]>(requestUrl);
+});
+
+export const getProducts = createAsyncThunk('item/fetch_entity_product_list', async ({ page, size, sort }: IQueryParams) => {
+  const requestUrl = `${apiUrl}/products?cacheBuster=${new Date().getTime()}`;
   return axios.get<IItem[]>(requestUrl);
 });
 
@@ -94,6 +100,13 @@ export const ItemSlice = createEntitySlice({
           ...state,
           loading: false,
           entities: action.payload.data,
+        };
+      })
+      .addMatcher(isFulfilled(getProducts), (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          links: action.payload.data,
         };
       })
       .addMatcher(isFulfilled(createEntity, updateEntity, partialUpdateEntity), (state, action) => {

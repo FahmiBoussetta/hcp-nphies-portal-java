@@ -132,54 +132,6 @@ export const ReferenceIdentifierUpdate = (props: RouteComponentProps<{ id: strin
                 data-cy="display"
                 type="text"
               />
-              <ValidatedField
-                id="reference-identifier-item"
-                name="itemId"
-                data-cy="item"
-                label={translate('hcpNphiesPortalApp.referenceIdentifier.item')}
-                type="select"
-              >
-                <option value="" key="0" />
-                {items
-                  ? items.map(otherEntity => (
-                      <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.id}
-                      </option>
-                    ))
-                  : null}
-              </ValidatedField>
-              <ValidatedField
-                id="reference-identifier-detailItem"
-                name="detailItemId"
-                data-cy="detailItem"
-                label={translate('hcpNphiesPortalApp.referenceIdentifier.detailItem')}
-                type="select"
-              >
-                <option value="" key="0" />
-                {detailItems
-                  ? detailItems.map(otherEntity => (
-                      <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.id}
-                      </option>
-                    ))
-                  : null}
-              </ValidatedField>
-              <ValidatedField
-                id="reference-identifier-subDetailItem"
-                name="subDetailItemId"
-                data-cy="subDetailItem"
-                label={translate('hcpNphiesPortalApp.referenceIdentifier.subDetailItem')}
-                type="select"
-              >
-                <option value="" key="0" />
-                {subDetailItems
-                  ? subDetailItems.map(otherEntity => (
-                      <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.id}
-                      </option>
-                    ))
-                  : null}
-              </ValidatedField>
               <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/reference-identifier" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;

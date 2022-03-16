@@ -20,7 +20,7 @@
             <column name="jhi_system" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
-            <column name="parsed" type="varchar(255)">
+            <column name="parsed" type="varchar(max)">
                 <constraints nullable="true" />
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->

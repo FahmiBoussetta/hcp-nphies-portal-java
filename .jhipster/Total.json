@@ -7,7 +7,7 @@
     },
     {
       "fieldName": "amount",
-      "fieldType": "Integer"
+      "fieldType": "BigDecimal"
     }
   ],
   "relationships": [

@@ -56,6 +56,9 @@ export const SupportingInfo = (props: RouteComponentProps<{ url: string }>) => {
                   <Translate contentKey="hcpNphiesPortalApp.supportingInfo.codeLOINC">Code LOINC</Translate>
                 </th>
                 <th>
+                  <Translate contentKey="hcpNphiesPortalApp.supportingInfo.codeIcd">Code Icd</Translate>
+                </th>
+                <th>
                   <Translate contentKey="hcpNphiesPortalApp.supportingInfo.category">Category</Translate>
                 </th>
                 <th>
@@ -107,6 +110,7 @@ export const SupportingInfo = (props: RouteComponentProps<{ url: string }>) => {
                   </td>
                   <td>{supportingInfo.sequence}</td>
                   <td>{supportingInfo.codeLOINC}</td>
+                  <td>{supportingInfo.codeIcd}</td>
                   <td>
                     <Translate contentKey={`hcpNphiesPortalApp.SupportingInfoCategoryEnum.${supportingInfo.category}`} />
                   </td>

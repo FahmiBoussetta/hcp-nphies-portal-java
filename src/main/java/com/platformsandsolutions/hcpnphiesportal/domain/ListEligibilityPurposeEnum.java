@@ -30,7 +30,6 @@ public class ListEligibilityPurposeEnum implements Serializable {
     @JsonIgnoreProperties(value = { "errors", "purposes", "patient", "provider", "insurer", "facility", "coverages" }, allowSetters = true)
     private CoverageEligibilityRequest coverageEligibilityRequest;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
     }
@@ -70,9 +69,6 @@ public class ListEligibilityPurposeEnum implements Serializable {
         this.coverageEligibilityRequest = coverageEligibilityRequest;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and
-    // setters here
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -92,10 +88,10 @@ public class ListEligibilityPurposeEnum implements Serializable {
     }
 
     // prettier-ignore
-	@Override
-	public String toString() {
-		return "ListEligibilityPurposeEnum{" + "id=" + getId() + ", erp='" + getErp() + "'" + "}";
-	}
+    @Override
+    public String toString() {
+        return "ListEligibilityPurposeEnum{" + "id=" + getId() + ", erp='" + getErp() + "'" + "}";
+    }
 
     public Enums.EligibilityPurposeEnum convert() {
         for (Enums.EligibilityPurposeEnum e : Enums.EligibilityPurposeEnum.values()) {
@@ -104,5 +100,11 @@ public class ListEligibilityPurposeEnum implements Serializable {
             }
         }
         return null;
+    }
+
+    public static ListEligibilityPurposeEnum convertFrom(Enums.EligibilityPurposeEnum i) {
+        ListEligibilityPurposeEnum l = new ListEligibilityPurposeEnum();
+        l.setErp(EligibilityPurposeEnum.valueOf(i.name()));
+        return l;
     }
 }
